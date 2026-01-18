@@ -28,13 +28,12 @@ const SOCIAL_LINKS = [
 
 const NAV_LINKS = [
   { text: 'Home', path: '/', active: true },
-  { text: 'Portfolio', path: '/projects', active: false },
+  { text: 'Portfolio', path: '/projects', active: true },
   { text: 'Services', path: '/services', active: true },
-  { text: 'Contact', path: '#contact', active: false },
-  { text: 'Blog', path: '#blog', active: false }
+  { text: 'Personal', path: '/personal', active: true }
 ];
 
-const POLICY_LINKS = ['Privacy Policy', 'Terms and conditions', 'Cookie Policy', 'Careers'];
+const POLICY_LINKS = ['Our Research', 'AI Solutions', 'Career & Internships', 'Privacy Policy'];
 
 const LOCATIONS = [
   {

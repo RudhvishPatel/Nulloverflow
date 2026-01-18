@@ -9,7 +9,6 @@ import Preloader from './component/Preloader/Preloader.jsx' // Import Preloader
 function App() {
   return (
     <BrowserRouter>
-      <Preloader /> {/* Global Preloader - shows only on initial load */}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/projects" element={<Projects />} />

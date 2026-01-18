@@ -99,7 +99,7 @@ const StudioAboutPage = () => {
           <h1 className="text-[68px] font-thin leading-[1.2] mb-[60px] text-black fade-in-up">
             <br />
             <span className="font-medium">Discover</span> <br />
-            <span className="font-medium">Our</span> Studio
+            <span className="font-medium">Our</span>Company
           </h1>
 
           <p className="text-base leading-6 w-[500px] text-[#666] mb-5 font-light fade-in-up delay-1">

@@ -6,13 +6,16 @@ import AgencyLandingPage from './HomeSection/agencyLanding';
 import StudioAboutPage from './HomeSection/studioAboutPage';
 import HeroSection from './HomeSection/herosection';
 import PopularPublications from './HomeSection/popularPublication';
+import CaseStudies from './HomeSection/caseStudies';
 import Navbar from '../component/Navbar/Navbar';
+import Preloader from '../component/Preloader/Preloader';
 
 const Home = () => {
   const topRef = useRef(null);
   const aboutRef = useRef(null);
   const heroRef = useRef(null);
   const servicesRef = useRef(null);
+  const caseStudiesRef = useRef(null);
   const teamRef = useRef(null);
   const testimonialsRef = useRef(null);
   const publicationsRef = useRef(null);
@@ -50,7 +53,11 @@ const Home = () => {
       else if (servicesRef.current && scrollPosition < servicesRef.current.offsetTop + servicesRef.current.offsetHeight) {
         setLogoColor('white');
       }
-      // Section 4+: Team, Testimonials, Publications (White backgrounds) - Black text
+      // Section 4: Case Studies (White background) - Black text
+      else if (caseStudiesRef.current && scrollPosition < caseStudiesRef.current.offsetTop + caseStudiesRef.current.offsetHeight) {
+        setLogoColor('black');
+      }
+      // Section 5+: Team, Testimonials, Publications (White backgrounds) - Black text
       else if (publicationsRef.current && scrollPosition < publicationsRef.current.offsetTop + publicationsRef.current.offsetHeight) {
         setLogoColor('black');
       }
@@ -93,7 +100,8 @@ const Home = () => {
 
   return (
     <div className="mil-wrapper" id="top" ref={topRef}>
-      {/* Preloader - Moved to App.jsx for global single-load behavior */}
+      {/* Preloader */}
+      <Preloader />
 
       {/* Cursor */}
       <div className="mil-ball">
@@ -278,6 +286,11 @@ const Home = () => {
           {/* Services */}
           <div ref={servicesRef}>
             <AgencyLandingPage />
+          </div>
+
+          {/* Case Studies */}
+          <div ref={caseStudiesRef}>
+            <CaseStudies />
           </div>
 
           {/* Team */}

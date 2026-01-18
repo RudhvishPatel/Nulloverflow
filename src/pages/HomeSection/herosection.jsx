@@ -113,7 +113,7 @@ const HeroSection = ({ scrollToAbout }) => {
             <div className="mil-animation mil-position-3 mil-scale" data-value-1="1.2" data-value-2=".1"></div>
           </div>
 
-            {/* <div class="mil-animation-frame">
+          {/* <div class="mil-animation-frame">
               <div class="mil-animation mil-position-1 mil-scale" data-value-1="2.4" data-value-2="1.4" style="top: 300px; right: -100px"></div>
               <div class="mil-animation mil-position-2 mil-scale" data-value-1="2" data-value-2="1" style="left: 150px"></div>
             </div> */}
@@ -132,10 +132,10 @@ const HeroSection = ({ scrollToAbout }) => {
                   </p>
                 </div>
               </div>
-              <a href="#." className="hero-cta-button mil-button mil-arrow-place mil-btn-space max-md:mx-auto max-md:mb-5">
+              <a href="/services" className="hero-cta-button mil-button mil-arrow-place mil-btn-space max-md:mx-auto max-md:mb-5">
                 <span>What we do</span>
               </a>
-              <a href="portfolio-1.html" className="hero-view-works mil-link mil-muted mil-arrow-place mil-view-works">
+              <a href="/projects" className="hero-view-works mil-link mil-muted mil-arrow-place mil-view-works">
                 <span>View works</span>
               </a>
               <div className="mil-circle-text">
@@ -157,7 +157,7 @@ const HeroSection = ({ scrollToAbout }) => {
                   <circle cx="60" cy="80" r="45" fill="none"></circle>
                   <g>
                     <use xlinkHref="#circlePath" fill="none"></use>
-                    <text style={{letterSpacing: '6.5px'}}>
+                    <text style={{ letterSpacing: '6.5px' }}>
                       <textPath xlinkHref="#circlePath">Scroll down - Scroll down - </textPath>
                     </text>
                   </g>

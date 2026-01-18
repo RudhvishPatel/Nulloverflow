@@ -5,7 +5,7 @@ import Navbar from '../component/Navbar/Navbar';
 import Preloader from '../component/Preloader/Preloader';
 
 // Portfolio Item Component with hover effect
-const PortfolioItem = ({ item }) => {
+const PortfolioItem = ({ item, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -31,6 +31,7 @@ const PortfolioItem = ({ item }) => {
     <div className={item.colSize}>
       <a
         href={`#project-${item.id}`}
+        onClick={(e) => { e.preventDefault(); onClick(item); }}
         className={`mil-portfolio-item mil-mb-60 ${item.parallax ? 'mil-parallax' : ''}`}
         data-value-1={item.parallax ? "60" : undefined}
         data-value-2={item.parallax ? "-60" : undefined}
@@ -75,7 +76,7 @@ const PortfolioItem = ({ item }) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            opacity: isHovered ? 1 : 0,
+            opacity: isHovered ? '0.8' : 0,
             transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
             pointerEvents: 'none',
             zIndex: 10
@@ -98,70 +99,184 @@ const PortfolioItem = ({ item }) => {
   );
 };
 
+// Project Modal Component
+const ProjectModal = ({ project, onClose }) => {
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow || '';
+    };
+  }, []);
+
+  if (!project) return null;
+
+  return (
+    <div className="mil-project-modal-backdrop" onClick={onClose}>
+      <div className="mil-project-modal" onClick={e => e.stopPropagation()}>
+        <button className="mil-modal-close" onClick={onClose}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <div className="mil-modal-content">
+          <div className="mil-labels mil-mb-15">
+            <div className="mil-label mil-upper mil-accent">{project.category}</div>
+            <div className="mil-label mil-upper">{project.date}</div>
+          </div>
+          <h2 className="mil-modal-title mil-up mil-mb-30" style={{ color: '#fff' }}>{project.title}</h2>
+          <p className="mil-type-label mil-mb-30" style={{ color: '#fff' }}>{project.type}</p>
+
+          <div className="mil-divider mil-mb-30"></div>
+
+          <div className="row">
+            <div className="col-lg-6 mil-mb-30">
+              <h5 className="mil-light mil-mb-15">Problem Statement</h5>
+              <p className="mil-descr mil-light-soft">{project.problem}</p>
+            </div>
+            <div className="col-lg-6 mil-mb-30">
+              <h5 className="mil-light mil-mb-15">Objective</h5>
+              <p className="mil-descr mil-light-soft">{project.objective}</p>
+            </div>
+          </div>
+
+          <div className="row mil-mb-30">
+            <div className="col-lg-12">
+              <h5 className="mil-light mil-mb-15">Key Features</h5>
+              <ul className="mil-modal-list">
+                {project.features.map((feature, index) => (
+                  <li key={index}>
+                    <span className="mil-accent-dot"></span>
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-lg-12">
+              <h5 className="mil-light mil-mb-15">Technologies & Methods</h5>
+              <div className="mil-tech-tags">
+                {project.tech.map((t, i) => (
+                  <span key={i} className="mil-tech-tag">{t}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Portfolio data
 const portfolioItems = [
   {
     id: 1,
-    image: '/images/Projects/1.jpg',
-    category: 'Branding',
-    date: 'may 24 2023',
-    title: 'Interior design studio',
-    layout: 'vert', // vertical image
+    image: '/images/Projects/recommender.png',
+    category: 'Graduate Research',
+    date: 'Jan 2024',
+    title: 'Structured & Cross-Domain Recommender Systems',
+    layout: 'vert',
     colSize: 'col-lg-5',
+    type: 'Graduate Research + Independent Research Project',
+    problem: 'Traditional systems optimize for engagement but lack learning structure, fail to transfer preferences across domains, and don\'t model long-term progression.',
+    objective: 'Design a system that guides users through educational content step-by-step and transfers preferences between education, entertainment, and travel.',
+    features: [
+      'Structured Recommendation Layer for learning continuity',
+      'Cross-Domain Preference Transfer using shared latent representations',
+      'Personalization Engine combining implicit behavior and personality traits',
+      'Evaluation Metrics focused on completion and retention'
+    ],
+    tech: ['Collaborative Filtering', 'Graph-based Learning', 'User Profiling', 'Research Frameworks']
   },
   {
     id: 2,
-    image: '/images/Projects/2.jpg',
-    category: 'Design',
-    date: 'may 24 2023',
-    title: 'Home Security Camera',
-    layout: 'hori', // horizontal image
+    image: '/images/Projects/vision37.png',
+    category: 'Edge AI / Computer Vision',
+    date: 'Nov 2023',
+    title: 'Vision37: Real-Time Theft Detection & Retail Intelligence',
+    layout: 'hori',
     colSize: 'col-lg-6',
     parallax: true,
+    type: 'Industry-Scale Computer Vision System (Edge AI)',
+    problem: 'Retail theft in liquor stores due to blind spots, lack of real-time tracking, and no automated evidence capture.',
+    objective: 'Build a fully automated, real-time edge system to detect humans, track behavior, identify theft, and monitor shelf gaps.',
+    features: [
+      'Real-time Human Detection using YOLOv8',
+      'Theft Detection Logic with spatial interaction heuristics',
+      'Automated Video Clip Generation for evidence',
+      'Shelf Monitoring for out-of-stock pattern analysis'
+    ],
+    tech: ['YOLOv8', 'Jetson Orin', 'Raspberry Pi', 'GStreamer', 'DBSCAN', 'Soft-NMS']
   },
   {
     id: 3,
-    image: '/images/Projects/3.jpg',
-    category: 'Design',
-    date: 'may 24 2023',
-    title: 'Kemia Honest Skincare',
+    image: '/images/Projects/roadsign.png',
+    category: 'Master\'s Project / CV',
+    date: 'Aug 2023',
+    title: 'Multilingual Road Sign Detection & OCR System',
     layout: 'hori',
     colSize: 'col-lg-6',
     parallax: true,
+    type: 'Master’s Final Computer Vision Project',
+    problem: 'ADAS systems require accurate detection and multilingual text reading under complex lighting and small object constraints.',
+    objective: 'Develop a two-stage CV pipeline to detect, classify, and recognize multilingual text on global road signs.',
+    features: [
+      'Two-stage Pipeline: Localization + Classification + OCR',
+      'Hybrid Feature Engineering (HOG, LBP, CNN embeddings)',
+      'Multilingual OCR using TrOCR',
+      'Adaptive Thresholding and Robust NMS'
+    ],
+    tech: ['YOLOv8', 'ResNet18 + SVM', 'TrOCR', 'VGG16', 'GPU Optimization']
   },
   {
     id: 4,
-    image: '/images/Projects/4.jpg',
-    category: 'Photography',
-    date: 'may 24 2023',
-    title: 'Cascade of Lava',
+    image: '/images/Projects/eeg.png',
+    category: 'BCI / Neuroscience',
+    date: 'Jun 2023',
+    title: 'EEG-Based Attention Detection & Analytics',
     layout: 'vert',
     colSize: 'col-lg-5',
+    type: 'Research Project (BCI + Data Analytics)',
+    problem: 'Educational environments lack objective attention measurement and real-time neuro-adaptive engagement feedback.',
+    objective: 'Build a BCI system to process raw EEG signals and detect attention levels in real time with high accuracy.',
+    features: [
+      'Real-time Signal Processing (Fourier Transform, Filtering)',
+      'RNN-based Attention Level Prediction',
+      'Engagement Visualization and Trend Analysis',
+      'Achieved >90% prediction accuracy'
+    ],
+    tech: ['EEG Signal Processing', 'RNN', 'Frequency-domain Analysis', 'Data Analytics']
   },
   {
     id: 5,
-    image: '/images/Projects/5.jpg',
-    category: 'Design',
-    date: 'may 24 2023',
-    title: 'Air Pro by Molekule',
-    layout: 'vert',
-    colSize: 'col-lg-5',
-  },
-  {
-    id: 6,
-    image: '/images/Projects/6.jpg',
-    category: 'Design',
-    date: 'may 24 2023',
-    title: "Tony's Chocolonely",
+    image: '/images/Projects/automation.png',
+    category: 'AI consulting / Automation',
+    date: '2023 - Present',
+    title: 'AI-Driven Digital Platforms & Business Systems',
     layout: 'hori',
     colSize: 'col-lg-6',
     parallax: true,
+    type: 'Professional + Entrepreneurial Project',
+    problem: 'Small businesses struggle with manual operations, weak digital presence, and lack of data-driven decision tools.',
+    objective: 'Design and deploy scalable digital platforms enhanced with AI and automation for business efficiency.',
+    features: [
+      'Dynamic Web Platforms with Content Management',
+      'AI-powered Content Generation & Marketing',
+      'Business Intelligence Dashboards',
+      'Workflow and Compliance Automation'
+    ],
+    tech: ['Full-stack Dev', 'Cloud Deployment', 'Business Intelligence', 'AI Automation']
   },
 ];
 
 const Projects = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoColor, setLogoColor] = useState('black');
+  const [selectedProject, setSelectedProject] = useState(null);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -358,6 +473,84 @@ const Projects = () => {
         }
 
 
+        /* Modal Styles */
+        .mil-project-modal-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.9);
+          backdrop-filter: blur(8px);
+          z-index: 9999;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 20px;
+        }
+
+        .mil-project-modal {
+          background: #111;
+          width: 100%;
+          max-width: 1000px;
+          max-height: 90vh;
+          overflow-y: auto;
+          position: relative;
+          padding: 60px;
+          border-radius: 40px;
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        }
+
+        .mil-type-label {
+          color: #FFA801;
+          font-size: 14px;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          font-weight: 500;
+        }
+
+        .mil-tech-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .mil-tech-tag {
+          padding: 8px 16px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .mil-modal-list {
+          list-style: none;
+          padding: 0;
+        }
+
+        .mil-modal-list li {
+          display: flex;
+          align-items: flex-start;
+          gap: 15px;
+          margin-bottom: 12px;
+          color: rgba(255, 255, 255, 0.7);
+        }
+
+        .mil-modal-list .mil-accent-dot {
+          width: 6px;
+          height: 6px;
+          background: #FFA801;
+          border-radius: 50%;
+          margin-top: 8px;
+        }
+
+        @media screen and (max-width: 768px) {
+          .mil-project-modal {
+            padding: 40px 20px;
+          }
+        }
       `}</style>
 
       <Navbar
@@ -437,12 +630,15 @@ const Projects = () => {
 
               <div className="row justify-content-between align-items-center">
                 {portfolioItems.map((item) => (
-                  <PortfolioItem key={item.id} item={item} />
+                  <PortfolioItem key={item.id} item={item} onClick={setSelectedProject} />
                 ))}
               </div>
             </div>
           </section>
           {/* Portfolio End */}
+
+          {/* Project Modal */}
+          {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
 
           {/* Call to Action */}
           <section className="mil-soft-bg">

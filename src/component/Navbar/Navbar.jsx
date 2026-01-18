@@ -155,10 +155,7 @@ const Navbar = ({
                       <Link to="/services" onClick={() => isMenuOpen && toggleMenu()}>Services</Link>
                     </li>
                     <li className="mil-has-children">
-                      <a href="#.">Newsletter</a>
-                    </li>
-                    <li className="mil-has-children">
-                      <a href="#.">Other pages</a>
+                      <Link to="/personal" onClick={() => isMenuOpen && toggleMenu()}>Personal</Link>
                     </li>
                   </ul>
                 </nav>
@@ -187,21 +184,21 @@ const Navbar = ({
                       <div className="col-lg-8 mil-mb-60">
                         <h6 className="mil-muted mil-mb-30">Projects</h6>
                         <ul className="mil-menu-list">
-                          <li><a href="/projects" className="mil-light-soft">Interior design studio</a></li>
-                          <li><a href="/projects" className="mil-light-soft">Home Security Camera</a></li>
-                          <li><a href="/projects" className="mil-light-soft">Kemia Honest Skincare</a></li>
-                          <li><a href="/projects" className="mil-light-soft">Cascade of Lava</a></li>
-                          <li><a href="/projects" className="mil-light-soft">Air Pro by Molekule</a></li>
-                          <li><a href="/projects" className="mil-light-soft">Tony&apos;s Chocolonely</a></li>
+                          <li><Link to="/projects" className="mil-light-soft" onClick={() => isMenuOpen && toggleMenu()}>Recommender Systems</Link></li>
+                          <li><Link to="/projects" className="mil-light-soft" onClick={() => isMenuOpen && toggleMenu()}>Vision37: Theft Detection</Link></li>
+                          <li><Link to="/projects" className="mil-light-soft" onClick={() => isMenuOpen && toggleMenu()}>Road Sign Detection & OCR</Link></li>
+                          <li><Link to="/projects" className="mil-light-soft" onClick={() => isMenuOpen && toggleMenu()}>EEG Attention Detection</Link></li>
+                          <li><Link to="/projects" className="mil-light-soft" onClick={() => isMenuOpen && toggleMenu()}>Indian Food Solutions</Link></li>
+                          <li><Link to="/projects" className="mil-light-soft" onClick={() => isMenuOpen && toggleMenu()}>AI CardVault</Link></li>
                         </ul>
                       </div>
                       <div className="col-lg-4 mil-mb-60">
-                        <h6 className="mil-muted mil-mb-30">Useful links</h6>
+                        <h6 className="mil-muted mil-mb-30">Our studio</h6>
                         <ul className="mil-menu-list">
-                          <li><a href="#." className="mil-light-soft">Privacy Policy</a></li>
-                          <li><a href="#." className="mil-light-soft">Terms and conditions</a></li>
-                          <li><a href="#." className="mil-light-soft">Cookie Policy</a></li>
-                          <li><a href="#." className="mil-light-soft">Careers</a></li>
+                          <li><Link to="/services" className="mil-light-soft" onClick={() => isMenuOpen && toggleMenu()}>AI Services</Link></li>
+                          <li><Link to="/services" className="mil-light-soft" onClick={() => isMenuOpen && toggleMenu()}>Agentic Systems</Link></li>
+                          <li><Link to="/services" className="mil-light-soft" onClick={() => isMenuOpen && toggleMenu()}>RAG Solutions</Link></li>
+                          <li><Link to="/personal" className="mil-light-soft" onClick={() => isMenuOpen && toggleMenu()}>Research Papers</Link></li>
                         </ul>
                       </div>
                     </div>
