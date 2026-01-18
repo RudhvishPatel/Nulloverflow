@@ -130,7 +130,10 @@ const Navbar = ({
       {/* Menu */}
       <div className={`mil-menu-frame ${isMenuOpen ? 'mil-active' : ''}`}>
         <div className="mil-frame-top">
-          <Link to="/" className="mil-logo" onClick={(e) => { e.preventDefault(); window.location.href = '/'; }}>∅verflow</Link>
+          <a href="/" className="mil-logo" onClick={(e) => {
+            if (isMenuOpen) toggleMenu();
+            window.location.href = '/';
+          }}>∅verflow</a>
           <MenuButton isOpen={isMenuOpen} onClick={toggleMenu} color="white" style={{ zIndex: 9999 }} />
         </div>
         <div className="container">
@@ -140,13 +143,16 @@ const Navbar = ({
                 <nav className="mil-main-menu" id="swupMenu">
                   <ul>
                     <li className={`mil-has-children ${activePage === 'home' ? 'mil-active' : ''}`}>
-                      <Link to="/" onClick={(e) => { e.preventDefault(); window.location.href = '/'; }}>Home</Link>
+                      <a href="/" onClick={(e) => {
+                        if (isMenuOpen) toggleMenu();
+                        window.location.href = '/';
+                      }}>Home</a>
                     </li>
                     <li className={`mil-has-children ${activePage === 'projects' ? 'mil-active' : ''}`}>
-                      <Link to="/projects" onClick={(e) => { e.preventDefault(); window.location.href = '/projects'; }}>Projects</Link>
+                      <Link to="/projects" onClick={() => isMenuOpen && toggleMenu()}>Projects</Link>
                     </li>
                     <li className={`mil-has-children ${activePage === 'services' ? 'mil-active' : ''}`}>
-                      <Link to="/services" onClick={(e) => { e.preventDefault(); window.location.href = '/services'; }}>Services</Link>
+                      <Link to="/services" onClick={() => isMenuOpen && toggleMenu()}>Services</Link>
                     </li>
                     <li className="mil-has-children">
                       <a href="#.">Newsletter</a>
@@ -202,12 +208,12 @@ const Navbar = ({
                     <div className="mil-divider mil-mb-60"></div>
                     <div className="row justify-content-between">
                       <div className="col-lg-4 mil-mb-60">
-                        <h6 className="mil-muted mil-mb-30">Canada</h6>
-                        <p className="mil-light-soft mil-up">71 South Los Carneros Road, California <span className="mil-no-wrap">+51 174 705 812</span></p>
+                        <h6 className="mil-muted mil-mb-30">Ahmedabad</h6>
+                        <p className="mil-light-soft mil-up">501, Solitaire Building, opp. meghdoot Petrol pump, Shahibag, Gujarat 380004, India</p>
                       </div>
                       <div className="col-lg-4 mil-mb-60">
-                        <h6 className="mil-muted mil-mb-30">Germany</h6>
-                        <p className="mil-light-soft">Leehove 40, 2678 MC De Lier, Netherlands <span className="mil-no-wrap">+31 174 705 811</span></p>
+                        <h6 className="mil-muted mil-mb-30">Chicago</h6>
+                        <p className="mil-light-soft">220 N Green St, Chicago, IL 60607</p>
                       </div>
                     </div>
                   </div>

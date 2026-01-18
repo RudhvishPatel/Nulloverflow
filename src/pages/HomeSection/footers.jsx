@@ -1,4 +1,5 @@
 import { memo, useCallback, useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../../index.css';
 
 // Social icons data
@@ -26,20 +27,25 @@ const SOCIAL_LINKS = [
 ];
 
 const NAV_LINKS = [
-  { text: 'Home', active: true },
-  { text: 'Portfolio', active: false },
-  { text: 'Services', active: true },
-  { text: 'Contact', active: false },
-  { text: 'Blog', active: false }
+  { text: 'Home', path: '/', active: true },
+  { text: 'Portfolio', path: '/projects', active: false },
+  { text: 'Services', path: '/services', active: true },
+  { text: 'Contact', path: '#contact', active: false },
+  { text: 'Blog', path: '#blog', active: false }
 ];
 
 const POLICY_LINKS = ['Privacy Policy', 'Terms and conditions', 'Cookie Policy', 'Careers'];
 
 const LOCATIONS = [
   {
-    title: 'Canada',
-    address: '71 South Los Carneros Road,',
-    city: 'California +51 174 705 812'
+    title: 'Ahmedabad',
+    address: '501, Solitaire Building, opp. meghdoot Petrol pump,',
+    city: 'Shahibag, Gujarat 380004, India'
+  },
+  {
+    title: 'Chicago',
+    address: '220 N Green St,',
+    city: 'Chicago, IL 60607'
   }
 ];
 
@@ -211,7 +217,7 @@ const Footer = () => {
                 onChange={handleEmailChange}
                 aria-label="Email address"
               />
-                <button
+              <button
                 style={{
                   width: '50px',
                   height: '50px',
@@ -286,33 +292,63 @@ const Footer = () => {
             `}</style>
             <div className="nav-column" style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
               {NAV_LINKS.map(link => (
-                <a
-                  key={link.text}
-                  href="#"
-                  style={{ textDecoration: 'none', color: '#ffffff', fontSize: '38px', fontWeight: '300', letterSpacing: '-0.02em', lineHeight: '1.2' }}
-                >
-                  <style>{`
-                    @media (max-width: 1024px) {
-                      .nav-link {
-                        font-size: 32px;
+                link.path.startsWith('#') ? (
+                  <a
+                    key={link.text}
+                    href={link.path}
+                    style={{ textDecoration: 'none', color: '#ffffff', fontSize: '38px', fontWeight: '300', letterSpacing: '-0.02em', lineHeight: '1.2' }}
+                  >
+                    <style>{`
+                      @media (max-width: 1024px) {
+                        .nav-link {
+                          font-size: 32px;
+                        }
                       }
-                    }
-                    @media (max-width: 768px) {
-                      .nav-link {
-                        font-size: 26px;
-                        text-align: center;
-                        display: block;
-                        width: 100%;
+                      @media (max-width: 768px) {
+                        .nav-link {
+                          font-size: 26px;
+                          text-align: center;
+                          display: block;
+                          width: 100%;
+                        }
                       }
-                    }
-                    @media (max-width: 640px) {
-                      .nav-link {
-                        font-size: 20px;
+                      @media (max-width: 640px) {
+                        .nav-link {
+                          font-size: 20px;
+                        }
                       }
-                    }
-                  `}</style>
-                  <span className="nav-link">{link.text}</span>
-                </a>
+                    `}</style>
+                    <span className="nav-link">{link.text}</span>
+                  </a>
+                ) : (
+                  <Link
+                    key={link.text}
+                    to={link.path}
+                    style={{ textDecoration: 'none', color: '#ffffff', fontSize: '38px', fontWeight: '300', letterSpacing: '-0.02em', lineHeight: '1.2' }}
+                  >
+                    <style>{`
+                      @media (max-width: 1024px) {
+                        .nav-link {
+                          font-size: 32px;
+                        }
+                      }
+                      @media (max-width: 768px) {
+                        .nav-link {
+                          font-size: 26px;
+                          text-align: center;
+                          display: block;
+                          width: 100%;
+                        }
+                      }
+                      @media (max-width: 640px) {
+                        .nav-link {
+                          font-size: 20px;
+                        }
+                      }
+                    `}</style>
+                    <span className="nav-link">{link.text}</span>
+                  </Link>
+                )
               ))}
             </div>
           </nav>
@@ -453,7 +489,7 @@ const Footer = () => {
           stroke="currentColor"
           strokeWidth="2"
         >
-          <path d="M12 19V5M5 12l7-7 7 7"/>
+          <path d="M12 19V5M5 12l7-7 7 7" />
         </svg>
         <span className="[writing-mode:vertical-rl] rotate-180 text-[10px] tracking-[3px] text-[#606060] font-medium transition-colors duration-300 ease-in-out hover:text-[#ff9500] md:text-[9px] md:tracking-[2.5px] sm:text-[7px] sm:tracking-[1.5px] max-sm:text-[6px] max-sm:tracking-[1px]">BACK TO TOP</span>
       </button>

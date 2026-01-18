@@ -72,16 +72,16 @@ const Personal = () => {
                   {/* Left Column - Text Content */}
                   <div className="col-lg-6">
                     <div className="mil-personal-text">
-                      <p className="mil-mb-60 mil-up">Hello! My name is</p>
-                      <h1 className="mil-mb-60 mil-up">Rudvish <br />Patel</h1>
+                      <p className="mil-mb-60">Hello! My name is</p>
+                      <h1 className="mil-mb-60">Rudvish <br />Patel</h1>
                       <div className="row justify-content-center">
                         <div className="col-lg-8">
-                          <span className="mil-suptitle mil-suptitle-dark mil-mb-60 mil-up">
+                          <span className="mil-suptitle mil-suptitle-dark mil-mb-60">
                             Passionately Creating Design Wonders: <br />Unleashing Boundless Creativity
                           </span>
-                          <a href="#about" className="mil-link mil-dark mil-arrow-place mil-up">
+                          <Link to="/services" className="mil-link mil-dark mil-arrow-place">
                             <span>More about me</span>
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -89,15 +89,17 @@ const Personal = () => {
 
                   {/* Right Column - Portrait */}
                   <div className="col-lg-6">
-                    <div className="mil-portrait-frame mil-up">
-                      <div className="mil-nimbus"></div>
-                      <img src="/images/rudvishPatel-removebg-preview.png" alt="Rudvish Patel" />
+                    <div className="mil-portrait-frame">
+                      <img
+                        src="/images/rudvishPatel-removebg-preview.png"
+                        alt="Rudvish Patel"
+                      />
                     </div>
                   </div>
                 </div>
 
                 {/* Banner Panel */}
-                <div className="mil-banner-panel mil-up">
+                <div className="mil-banner-panel mil-up" style={{ zIndex: 2 }}>
                   <h5>Designing a Better World Today</h5>
 
                   <div className="mil-right">
@@ -125,11 +127,7 @@ const Personal = () => {
                         </li>
                       </ul>
                     </div>
-                    <Link
-                      to="/projects"
-                      className="mil-button mil-arrow-place"
-                      onClick={(e) => { e.preventDefault(); window.location.href = '/projects'; }}
-                    >
+                    <Link to="/projects" className="mil-button mil-arrow-place">
                       <span>View Portfolio</span>
                     </Link>
                   </div>
@@ -210,7 +208,7 @@ const Personal = () => {
 
         /* Personal Text */
         .mil-personal-text {
-          text-align: center;
+          text-align: left;
           padding-right: 30px;
         }
 
@@ -226,10 +224,6 @@ const Personal = () => {
           line-height: 1.1;
           color: #1a1a1a;
           letter-spacing: -0.02em;
-        }
-
-        .mil-personal-text h1 br + br {
-          display: none;
         }
 
         @media (max-width: 1200px) {
@@ -303,25 +297,16 @@ const Personal = () => {
 
         .mil-portrait-frame img {
           max-width: 100%;
-          width: 500px;
+          width: 100%;
+          max-width: 650px;
           height: auto;
           position: relative;
           z-index: 2;
           object-fit: contain;
           object-position: bottom;
-        }
-
-        /* Orange glow nimbus behind portrait */
-        .mil-portrait-frame .mil-nimbus {
-          background: radial-gradient(50% 50% at 50% 50%, rgba(255, 168, 1, 0.8) 0%, rgba(255, 168, 1, 0) 70%);
-          width: 500px;
-          height: 500px;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          z-index: 1;
-          border-radius: 50%;
+          /* Remove white background */
+          mix-blend-mode: multiply;
+          filter: contrast(1.1) brightness(1.05);
         }
 
         @media (max-width: 992px) {
@@ -332,10 +317,6 @@ const Personal = () => {
           .mil-portrait-frame img {
             width: 380px;
           }
-          .mil-portrait-frame .mil-nimbus {
-            width: 380px;
-            height: 380px;
-          }
         }
 
         @media (max-width: 768px) {
@@ -344,10 +325,6 @@ const Personal = () => {
           }
           .mil-portrait-frame img {
             width: 300px;
-          }
-          .mil-portrait-frame .mil-nimbus {
-            width: 300px;
-            height: 300px;
           }
         }
 
@@ -374,6 +351,35 @@ const Personal = () => {
           gap: 40px;
         }
 
+        /* Button Styling - Matching HTML Template */
+        .mil-button {
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border: none;
+          letter-spacing: 2px;
+          font-size: 12px;
+          background-color: rgb(255, 152, 0);
+          color: rgb(0, 0, 0);
+          border-radius: 70px;
+          padding: 0 15px 0 50px;
+          height: 70px;
+          text-transform: uppercase;
+          font-weight: 500;
+          text-decoration: none;
+          transition: 0.4s cubic-bezier(0, 0, 0.3642, 1);
+        }
+
+        .mil-button span {
+          white-space: nowrap;
+        }
+
+        .mil-button:hover {
+          transform: scale(1.015);
+          filter: brightness(110%);
+        }
+
         @media (max-width: 992px) {
           .mil-banner-panel {
             flex-direction: column;
@@ -384,9 +390,13 @@ const Personal = () => {
             flex-direction: column;
             gap: 20px;
           }
+          .mil-button {
+            height: 60px;
+            padding: 0 10px 0 40px;
+          }
         }
 
-        /* Social Icons */
+        /* Social Icons - Matching HTML Template */
         .mil-social-frame {
           display: flex;
           align-items: center;
@@ -405,14 +415,13 @@ const Personal = () => {
         }
 
         .mil-social-icons.mil-dark a {
-          color: #1a1a1a;
+          color: rgb(0, 0, 0);
           font-size: 18px;
-          transition: color 0.3s ease, transform 0.3s ease;
+          transition: 0.4s cubic-bezier(0, 0, 0.3642, 1);
         }
 
         .mil-social-icons.mil-dark a:hover {
-          color: #FFA801;
-          transform: translateY(-3px);
+          color: rgb(255, 152, 0);
         }
 
         /* Suptitle Dark */
@@ -428,10 +437,15 @@ const Personal = () => {
         /* Dark Link */
         .mil-link.mil-dark {
           color: #1a1a1a;
-        }
-
-        .mil-link.mil-dark svg path {
-          fill: #1a1a1a;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          transition: color 0.3s ease;
         }
 
         .mil-link.mil-dark:hover {

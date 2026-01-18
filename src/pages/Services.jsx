@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Footer from './HomeSection/footers';
 import Navbar from '../component/Navbar/Navbar';
-import Preloader from '../component/Preloader/Preloader';
+
 
 // Service Card Component
-const ServiceCard = ({ service, hasOffset }) => {
+// Service Card Component
+const ServiceCard = ({ service, hasOffset, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -30,7 +31,8 @@ const ServiceCard = ({ service, hasOffset }) => {
   return (
     <div className="col-md-6 col-lg-6">
       <a
-        href={`#service-${service.id}`}
+        href="#service-details"
+        onClick={(e) => { e.preventDefault(); onClick(service); }}
         className={`mil-service-card-lg mil-more mil-accent-cursor ${hasOffset ? 'mil-offset' : ''}`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -93,41 +95,121 @@ const ServiceCard = ({ service, hasOffset }) => {
   );
 };
 
+// Service Modal Component
+const ServiceModal = ({ service, onClose }) => {
+  useEffect(() => {
+    // Prevent scrolling when modal is open
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow || '';
+    };
+  }, []);
+
+  if (!service) return null;
+
+  return (
+    <div className="mil-service-modal-backdrop" onClick={onClose}>
+      <div className="mil-service-modal" onClick={e => e.stopPropagation()}>
+        <button className="mil-modal-close" onClick={onClose}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <div className="mil-modal-content">
+          <h3 className="mil-modal-title mil-up" dangerouslySetInnerHTML={{ __html: service.title }}></h3>
+          <div className="mil-divider mil-up"></div>
+          <p className="mil-descr mil-light-soft mil-up mil-mb-40 text-lg" style={{ fontSize: '18px', lineHeight: '1.6' }}>{service.description}</p>
+
+          <h5 className="mil-light mil-up mil-mb-30">Key Features & Offerings</h5>
+          <div className="row">
+            {service.features.map((feature, index) => (
+              <div key={index} className="col-md-6" style={{ color: '#fff' }}>
+                <div className="mil-service-feature-item mil-up">
+                  <span className="mil-accent-dot"></span>
+                  <span>{feature}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Services data
 const servicesData = [
   {
     id: 1,
-    title: 'Branding and <br>Identity Design',
-    description: 'Our creative agency is a team of professionals focused on helping your brand grow.',
-    features: ['UX Audits', 'Design thinking', 'Methodologies', 'Wireframing'],
+    title: 'Web & App <br>Development',
+    description: 'Full-cycle development of dynamic websites and cross-platform mobile applications with robust backend systems.',
+    features: [
+      'Dynamic websites (Next.js, React, Node.js)',
+      'Mobile apps (iOS, Android, Flutter)',
+      'Secure backend systems & APIs'
+    ],
     hasOffset: true
   },
   {
     id: 2,
-    title: 'Website Design <br>and Development',
-    description: 'Our creative agency is a team of professionals focused on helping your brand grow.',
-    features: ['UX Audits', 'Design thinking', 'Methodologies', 'Wireframing'],
+    title: 'AI & Machine <br>Learning',
+    description: 'Advanced AI solutions ranging from computer vision and natural language processing to predictive analytics.',
+    features: [
+      'Computer Vision & Object Detection',
+      'NLP, Chatbots & Sentiment Analysis',
+      'Predictive Analytics & Automation'
+    ],
     hasOffset: false
   },
   {
     id: 3,
-    title: 'Advertising and <br>Marketing Campaigns',
-    description: 'Our creative agency is a team of professionals focused on helping your brand grow.',
-    features: ['UX Audits', 'Design thinking', 'Methodologies', 'Wireframing'],
+    title: 'Cloud & DevOps <br>Solutions',
+    description: 'Scalable cloud architecture and automated DevOps pipelines to optimize infrastructure and performance.',
+    features: [
+      'Cloud deployments (AWS, Azure, GCP)',
+      'Migration & Cost Optimization',
+      'CI/CD, Docker & Kubernetes'
+    ],
     hasOffset: true
   },
   {
     id: 4,
-    title: 'Creative Consulting <br>Concept Development',
-    description: 'Our creative agency is a team of professionals focused on helping your brand grow.',
-    features: ['UX Audits', 'Design thinking', 'Methodologies', 'Wireframing'],
+    title: 'Digital Marketing <br>& SEO',
+    description: 'Strategic digital marketing and SEO specifically tailored for targeted industries to drive growth.',
+    features: [
+      'Industry-targeted SEO optimization',
+      'Multi-platform campaigns',
+      'AI-powered lead generation'
+    ],
     hasOffset: false
+  },
+  {
+    id: 5,
+    title: 'Consulting <br>& Research',
+    description: 'Expert advisory services, collaborative research, and specialized training to drive business transformation.',
+    features: [
+      'AI-driven business transformation',
+      'Collaborative research',
+      'Training: AI, ML, Cloud Strategy'
+    ],
+    hasOffset: true
   }
 ];
 
 const Services = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [logoColor, setLogoColor] = useState('white');
+  const [selectedService, setSelectedService] = useState(null);
+
+  const handleServiceClick = (service) => {
+    setSelectedService(service);
+  };
+
+  const closeServiceModal = () => {
+    setSelectedService(null);
+  };
 
   const toggleMenu = () => {
     const newState = !isMenuOpen;
@@ -160,7 +242,7 @@ const Services = () => {
   return (
     <div className="mil-wrapper" id="top">
       {/* Preloader */}
-      <Preloader />
+
 
       {/* Navbar */}
       <Navbar
@@ -196,8 +278,8 @@ const Services = () => {
                   </div>
                   <div className="container">
                     <ul className="mil-breadcrumbs mil-light mil-mb-60">
-                      <li><Link to="/" onClick={(e) => { e.preventDefault(); window.location.href = '/'; }}>Homepage</Link></li>
-                      <li><Link to="/services" onClick={(e) => { e.preventDefault(); window.location.href = '/services'; }}>Services</Link></li>
+                      <li><Link to="/">Homepage</Link></li>
+                      <li><Link to="/services">Services</Link></li>
                     </ul>
                     <h1 className="mil-muted mil-mb-60">This is <span className="mil-thin">what</span><br /> we do <span className="mil-thin">best</span></h1>
                     <a href="#services" className="mil-link mil-accent mil-arrow-place mil-down-arrow">
@@ -220,15 +302,15 @@ const Services = () => {
                     <div className="col-lg-5">
                       <div className="mil-lines-place mil-light">
                         <svg width="250" viewBox="0 0 300 1404" fill="none" xmlns="http://www.w3.org/2000/svg" class="mil-lines">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M1 892L1 941H299V892C299 809.71 232.29 743 150 743C67.7096 743 1 809.71 1 892ZM0 942H300V892C300 809.157 232.843 742 150 742C67.1573 742 0 809.157 0 892L0 942Z" class="mil-move"></path>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M299 146V97L1 97V146C1 228.29 67.7096 295 150 295C232.29 295 299 228.29 299 146ZM300 96L0 96V146C0 228.843 67.1573 296 150 296C232.843 296 300 228.843 300 146V96Z" class="mil-move"></path>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M299 1H1V1403H299V1ZM0 0V1404H300V0H0Z"></path>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M150 -4.37115e-08L150 1404L149 1404L149 0L150 -4.37115e-08Z"></path>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M150 1324C232.29 1324 299 1257.29 299 1175C299 1092.71 232.29 1026 150 1026C67.7096 1026 1 1092.71 1 1175C1 1257.29 67.7096 1324 150 1324ZM150 1325C232.843 1325 300 1257.84 300 1175C300 1092.16 232.843 1025 150 1025C67.1573 1025 0 1092.16 0 1175C0 1257.84 67.1573 1325 150 1325Z" class="mil-move"></path>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M300 1175H0V1174H300V1175Z" class="mil-move"></path>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M150 678C232.29 678 299 611.29 299 529C299 446.71 232.29 380 150 380C67.7096 380 1 446.71 1 529C1 611.29 67.7096 678 150 678ZM150 679C232.843 679 300 611.843 300 529C300 446.157 232.843 379 150 379C67.1573 379 0 446.157 0 529C0 611.843 67.1573 679 150 679Z" class="mil-move"></path>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M299 380H1V678H299V380ZM0 379V679H300V379H0Z" class="mil-move"></path>
-                    </svg>
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M1 892L1 941H299V892C299 809.71 232.29 743 150 743C67.7096 743 1 809.71 1 892ZM0 942H300V892C300 809.157 232.843 742 150 742C67.1573 742 0 809.157 0 892L0 942Z" class="mil-move"></path>
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M299 146V97L1 97V146C1 228.29 67.7096 295 150 295C232.29 295 299 228.29 299 146ZM300 96L0 96V146C0 228.843 67.1573 296 150 296C232.843 296 300 228.843 300 146V96Z" class="mil-move"></path>
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M299 1H1V1403H299V1ZM0 0V1404H300V0H0Z"></path>
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M150 -4.37115e-08L150 1404L149 1404L149 0L150 -4.37115e-08Z"></path>
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M150 1324C232.29 1324 299 1257.29 299 1175C299 1092.71 232.29 1026 150 1026C67.7096 1026 1 1092.71 1 1175C1 1257.29 67.7096 1324 150 1324ZM150 1325C232.843 1325 300 1257.84 300 1175C300 1092.16 232.843 1025 150 1025C67.1573 1025 0 1092.16 0 1175C0 1257.84 67.1573 1325 150 1325Z" class="mil-move"></path>
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M300 1175H0V1174H300V1175Z" class="mil-move"></path>
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M150 678C232.29 678 299 611.29 299 529C299 446.71 232.29 380 150 380C67.7096 380 1 446.71 1 529C1 611.29 67.7096 678 150 678ZM150 679C232.843 679 300 611.843 300 529C300 446.157 232.843 379 150 379C67.1573 379 0 446.157 0 529C0 611.843 67.1573 679 150 679Z" class="mil-move"></path>
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M299 380H1V678H299V380ZM0 379V679H300V379H0Z" class="mil-move"></path>
+                        </svg>
                       </div>
                     </div>
                     <div className="col-lg-7">
@@ -238,6 +320,7 @@ const Services = () => {
                             key={service.id}
                             service={service}
                             hasOffset={service.hasOffset}
+                            onClick={handleServiceClick}
                           />
                         ))}
                       </div>
@@ -246,6 +329,9 @@ const Services = () => {
                 </div>
               </div>
             </section>
+
+            {/* Service Modal */}
+            {selectedService && <ServiceModal service={selectedService} onClose={closeServiceModal} />}
           </div>
           {/* Services End */}
 
@@ -441,6 +527,128 @@ const Services = () => {
           color: #fff;
         }
 
+
+        /* Modal Styles */
+        .mil-service-modal-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.9);
+          backdrop-filter: blur(5px);
+          z-index: 9999;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          animation: mil-fade-in 0.3s ease;
+        }
+
+        .mil-service-modal {
+          background: rgba(18, 18, 18, 0.75);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          width: 90%;
+          max-width: 900px;
+          max-height: 90vh;
+          overflow-y: auto;
+          position: relative;
+          padding: 60px;
+          border-radius: 30px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+          animation: mil-scale-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mil-modal-close {
+          position: absolute;
+          top: 30px;
+          right: 30px;
+          background: transparent;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.5);
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          z-index: 10;
+        }
+
+        .mil-modal-close:hover {
+          background: #FFA801;
+          border-color: #FFA801;
+          color: #000;
+          transform: rotate(90deg);
+        }
+
+        .mil-modal-title {
+          font-size: 42px;
+          line-height: 1.2;
+          margin-bottom: 30px;
+          color: #fff;
+        }
+
+        .mil-divider {
+          height: 1px;
+          background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+          margin-bottom: 30px;
+          width: 100px;
+        }
+
+        .mil-service-feature-item {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-bottom: 20px;
+          padding: 20px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          transition: all 0.3s ease;
+        }
+
+        .mil-service-feature-item:hover {
+          background: rgba(255, 255, 255, 0.05);
+          border-color: rgba(255, 255, 255, 0.1);
+          transform: translateX(5px);
+        }
+
+        .mil-accent-dot {
+          width: 8px;
+          height: 8px;
+          background: #FFA801;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+
+        @keyframes mil-fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes mil-scale-up {
+          from { 
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+          }
+          to { 
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
+        }
+
+        @media (max-width: 768px) {
+          .mil-service-modal {
+            padding: 30px;
+            width: 95%;
+          }
+          .mil-modal-title {
+            font-size: 28px;
+          }
+        }
       `}</style>
     </div>
   );

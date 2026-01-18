@@ -7,7 +7,6 @@ import StudioAboutPage from './HomeSection/studioAboutPage';
 import HeroSection from './HomeSection/herosection';
 import PopularPublications from './HomeSection/popularPublication';
 import Navbar from '../component/Navbar/Navbar';
-import Preloader from '../component/Preloader/Preloader';
 
 const Home = () => {
   const topRef = useRef(null);
@@ -94,8 +93,7 @@ const Home = () => {
 
   return (
     <div className="mil-wrapper" id="top" ref={topRef}>
-      {/* Preloader */}
-      <Preloader />
+      {/* Preloader - Moved to App.jsx for global single-load behavior */}
 
       {/* Cursor */}
       <div className="mil-ball">

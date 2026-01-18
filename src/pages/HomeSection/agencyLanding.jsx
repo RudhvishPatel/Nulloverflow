@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function AgencyLandingPage() {
   const [scrolled, setScrolled] = useState(false);
@@ -67,20 +68,20 @@ export default function AgencyLandingPage() {
 
   const services = [
     {
-      title: 'Branding and\nIdentity Design',
-      description: 'Our creative agency is a team of professionals focused on helping your brand grow.'
+      title: 'Web & App\nDevelopment',
+      description: 'Dynamic websites (Next.js, React) and cross-platform mobile apps (iOS, Android, Flutter) with robust backends.'
     },
     {
-      title: 'Website Design\nand Development',
-      description: 'Our creative agency is a team of professionals focused on helping your brand grow.'
+      title: 'AI & Machine\nLearning',
+      description: 'Advanced AI solutions including Computer Vision, NLP, Chatbots, and Predictive Analytics for automation.'
     },
     {
-      title: 'Advertising and\nMarketing Campaigns',
-      description: 'Our creative agency is a team of professionals focused on helping your brand grow.'
+      title: 'Cloud & DevOps\nSolutions',
+      description: 'Scalable cloud architecture (AWS, Azure, GCP), migration services, and automated CI/CD DevOps pipelines.'
     },
     {
-      title: 'Creative Consulting\nand Development',
-      description: 'Our creative agency is a team of professionals focused on helping your brand grow.'
+      title: 'Digital Marketing\n& SEO',
+      description: 'Strategic digital marketing, industry-targeted SEO optimization, and AI-driven lead generation campaigns.'
     }
   ];
 
@@ -494,7 +495,7 @@ export default function AgencyLandingPage() {
       <div className="agency-landing-container">
         {/* Background Animation Frame */}
         <div className="mil-animation-frame">
-          <div className="mil-animation mil-position-1 mil-scale" data-value-1="2.4" data-value-2="1.4" style={{top: '300px', right: '-100px'}}>
+          <div className="mil-animation mil-position-1 mil-scale" data-value-1="2.4" data-value-2="1.4" style={{ top: '300px', right: '-100px' }}>
             <div className="mil-dodecahedron">
               {[...Array(12)].map((_, i) => (
                 <div className="mil-pentagon" key={i}>
@@ -509,7 +510,7 @@ export default function AgencyLandingPage() {
           </div>
           <div className="mil-animation mil-position-3 mil-scale" data-value-1="1.2" data-value-2=".1"></div>
 
-          <div className="mil-animation mil-position-2 mil-scale" data-value-1="2" data-value-2="1" style={{left: '150px'}}>
+          <div className="mil-animation mil-position-2 mil-scale" data-value-1="2" data-value-2="1" style={{ left: '150px' }}>
             <div className="mil-dodecahedron">
               {[...Array(12)].map((_, i) => (
                 <div className="mil-pentagon" key={i}>
@@ -548,7 +549,7 @@ export default function AgencyLandingPage() {
               animation: 'fadeInDown 0.8s ease-out'
             }}
           >
-            Professionals focused on helping your brand<br/>grow and move forward.
+            Professionals focused on helping your brand<br />grow and move forward.
           </div>
 
           {/* Main Heading */}
@@ -579,10 +580,10 @@ export default function AgencyLandingPage() {
                   overflow: 'hidden'
                 }}
               >
-                <img src="/images/2_1.jpg" alt="team" style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'top'}}/>
+                <img src="/images/2_1.jpg" alt="team" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
               </div>
-              <span style={{fontWeight:'700'}}>Unique</span>
-              <span style={{fontWeight:'200',color:'#ccc'}}>Ideas</span>
+              <span style={{ fontWeight: '700' }}>Unique</span>
+              <span style={{ fontWeight: '200', color: '#ccc' }}>Ideas</span>
             </div>
 
             {/* For Your Business Row */}
@@ -598,9 +599,10 @@ export default function AgencyLandingPage() {
                 gap: '2rem'
               }}
             >
-              <span style={{fontWeight:'700'}}>For Your</span>
-              <span style={{fontWeight:'200',color:'#ccc'}}>Business.</span>
-              <button
+              <span style={{ fontWeight: '700' }}>For Your</span>
+              <span style={{ fontWeight: '200', color: '#ccc' }}>Business.</span>
+              <Link
+                to="/services"
                 className="cta-button"
                 style={{
                   backgroundColor: '#ff9500',
@@ -617,6 +619,7 @@ export default function AgencyLandingPage() {
                   gap: '1rem',
                   transition: 'all 0.3s ease',
                   textTransform: 'uppercase',
+                  textDecoration: 'none',
                   boxShadow: ctaHovered ? '0 15px 40px rgba(255, 149, 0, 0.4)' : '0 10px 30px rgba(255, 149, 0, 0.3)',
                   transform: ctaHovered ? 'translateY(-2px)' : 'translateY(0)'
                 }}
@@ -625,7 +628,7 @@ export default function AgencyLandingPage() {
               >
                 WHAT WE DO
                 <div className='mil-button mil-arrow-place mil-icon-button mil-arrow-right'></div>
-              </button>
+              </Link>
             </div>
           </div>
 
@@ -696,7 +699,7 @@ export default function AgencyLandingPage() {
                     }}
                   ></div>
 
-                  <div className="service-card-content" style={{height: '238px', width: '223px'}}>
+                  <div className="service-card-content" style={{ height: '238px', width: '223px' }}>
                     <h3 style={{
                       fontSize: '20px',
                       fontWeight: '500',
