@@ -477,7 +477,7 @@ const Footer = () => {
 
       {/* Back to Top Button - Right Side */}
       <button
-        className="fixed right-[30px] bottom-[30px] bg-[#1a1a1a] border-none cursor-pointer flex flex-col items-center gap-3 py-4 px-3 text-[#ffffff] transition-all duration-300 ease-in-out rounded-[50px] shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:text-[#ff9500] hover:bg-[#2a2a2a] hover:-translate-y-0.5 hover:shadow-[0_6px_25px_rgba(0,0,0,0.4)] lg:bottom-[25px] lg:right-[25px] md:bottom-5 md:right-5 sm:bottom-4 sm:right-4 sm:py-2.5 sm:px-2 sm:gap-2 max-sm:bottom-3 max-sm:right-3 max-sm:py-2 max-sm:px-1.5 max-sm:gap-1.5 max-md:shadow-[0_2px_15px_rgba(0,0,0,0.4)]"
+        className="fixed right-[30px] bottom-[30px] bg-[#ffffff] border-none cursor-pointer flex flex-col items-center gap-3 py-4 px-3 text-[#000000] transition-all duration-300 ease-in-out rounded-[50px] shadow-[0_4px_20px_rgba(255,255,255,0.1)] hover:text-[#ff9500] hover:bg-[#f8f8f8] hover:-translate-y-0.5 hover:shadow-[0_6px_25px_rgba(255,255,255,0.15)] lg:bottom-[25px] lg:right-[25px] md:bottom-5 md:right-5 sm:bottom-4 sm:right-4 sm:py-2.5 sm:px-2 sm:gap-2 max-sm:bottom-3 max-sm:right-3 max-sm:py-2 max-sm:px-1.5 max-sm:gap-1.5 max-md:shadow-[0_2px_15px_rgba(255,255,255,0.15)]"
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         aria-label="Back to top"
       >
@@ -490,7 +490,7 @@ const Footer = () => {
         >
           <path d="M12 19V5M5 12l7-7 7 7" />
         </svg>
-        <span className="[writing-mode:vertical-rl] rotate-180 text-[10px] tracking-[3px] text-[#606060] font-medium transition-colors duration-300 ease-in-out hover:text-[#ff9500] md:text-[9px] md:tracking-[2.5px] sm:text-[7px] sm:tracking-[1.5px] max-sm:text-[6px] max-sm:tracking-[1px]">BACK TO TOP</span>
+        <span className="[writing-mode:vertical-rl] rotate-180 text-[10px] tracking-[3px] text-[#000000] font-medium transition-colors duration-300 ease-in-out hover:text-[#ff9500] md:text-[9px] md:tracking-[2.5px] sm:text-[7px] sm:tracking-[1.5px] max-sm:text-[6px] max-sm:tracking-[1px]">BACK TO TOP</span>
       </button>
     </footer>
   );

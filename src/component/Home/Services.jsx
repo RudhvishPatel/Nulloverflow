@@ -122,7 +122,7 @@ function Services() {
               <ul className="relative z-10 space-y-2 pl-2">
                 {points.map((p, i) => (
                   <li key={i} className="text-sm md:text-base text-white/70 leading-relaxed flex items-start">
-                    <span className="w-1.5 h-1.5 mt-2 mr-3 rounded-full bg-gradient-to-r from-[var(--color-overflow-blue)] to-[var(--color-null-purple)] flex-shrink-0" />
+                    {/* <span className="w-1.5 h-1.5 mt-2 mr-3 rounded-full bg-gradient-to-r from-[var(--color-overflow-blue)] to-[var(--color-null-purple)] flex-shrink-0" /> */}
                     {p}
                   </li>
                 ))}

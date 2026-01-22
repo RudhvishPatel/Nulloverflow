@@ -481,25 +481,83 @@ const Projects = () => {
           width: 100%;
           height: 100%;
           background: rgba(0, 0, 0, 0.9);
-          backdrop-filter: blur(8px);
+          backdrop-filter: blur(5px);
           z-index: 9999;
           display: flex;
           justify-content: center;
           align-items: center;
-          padding: 20px;
+          animation: mil-fade-in 0.3s ease;
         }
 
         .mil-project-modal {
-          background: #111;
-          width: 100%;
-          max-width: 1000px;
+          background: rgba(18, 18, 18, 0.75);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          width: 90%;
+          max-width: 900px;
           max-height: 90vh;
           overflow-y: auto;
           position: relative;
           padding: 60px;
-          border-radius: 40px;
-          border: 1px solid rgba(255, 255, 255, 0.05);
-          box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+          border-radius: 30px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+          animation: mil-scale-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mil-modal-close {
+          position: absolute;
+          top: 30px;
+          right: 30px;
+          background: transparent;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.5);
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          z-index: 10;
+        }
+
+        .mil-modal-close:hover {
+          background: #FFA801;
+          border-color: #FFA801;
+          color: #000;
+          transform: rotate(90deg);
+        }
+
+        .mil-modal-title {
+          font-size: 42px;
+          line-height: 1.2;
+          margin-bottom: 30px;
+          color: #fff;
+        }
+
+        .mil-divider {
+          height: 1px;
+          background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+          margin-bottom: 30px;
+          width: 100px;
+        }
+
+        @keyframes mil-fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes mil-scale-up {
+          from {
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+          }
         }
 
         .mil-type-label {
@@ -546,9 +604,13 @@ const Projects = () => {
           margin-top: 8px;
         }
 
-        @media screen and (max-width: 768px) {
+        @media (max-width: 768px) {
           .mil-project-modal {
-            padding: 40px 20px;
+            padding: 30px;
+            width: 95%;
+          }
+          .mil-modal-title {
+            font-size: 28px;
           }
         }
       `}</style>
@@ -655,12 +717,12 @@ const Projects = () => {
                   Ready to bring your <span className="mil-thin">ideas to</span> life? <br /> We're <span className="mil-thin">here to help</span>
                 </h2>
                 <div className="mil-up">
-                  <a href="#contact" className="mil-button mil-arrow-place">
+                  <Link to="/contact" className="mil-button mil-arrow-place">
                     <span>Contact us</span>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="mil-arrow">
                       <path d="M 14 5.3417969 C 13.744125 5.3417969 13.487969 5.4412187 13.292969 5.6367188 L 13.207031 5.7226562 C 12.816031 6.1136563 12.816031 6.7467188 13.207031 7.1367188 L 17.070312 11 L 4 11 C 3.448 11 3 11.448 3 12 C 3 12.552 3.448 13 4 13 L 17.070312 13 L 13.207031 16.863281 C 12.816031 17.254281 12.816031 17.887344 13.207031 18.277344 L 13.292969 18.363281 C 13.683969 18.754281 14.317031 18.754281 14.707031 18.363281 L 20.363281 12.707031 C 20.754281 12.316031 20.754281 11.682969 20.363281 11.292969 L 14.707031 5.6367188 C 14.511531 5.4412187 14.255875 5.3417969 14 5.3417969 z"></path>
                     </svg>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

@@ -110,12 +110,6 @@ const StudioAboutPage = () => {
           </p>
 
           <div className="flex items-center gap-[15px] py-[15px] fade-in-up delay-3">
-            <img
-              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop"
-              alt="Profile"
-              className="w-[90px] h-[90px] rounded-full object-cover"
-            />
-
             <div>
               <div className="text-lg leading-[27px] font-medium text-black mb-[3px]">
                 Passionately Creating <span className="font-light text-[#666]">Design Wonders:</span>

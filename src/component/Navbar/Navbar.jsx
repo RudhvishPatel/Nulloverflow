@@ -12,7 +12,7 @@ const Navbar = ({
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setIsMobile(window.innerWidth <= 992);
     };
 
     checkMobile();
@@ -28,7 +28,7 @@ const Navbar = ({
     <>
       {/* Mobile Navbar Styles - Black bg with white content for all pages */}
       <style>{`
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
           .mil-frame {
             background-color: #000000 !important;
             position: fixed !important;

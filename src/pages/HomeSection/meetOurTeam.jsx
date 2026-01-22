@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const MeetOurTeamPage = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -91,11 +92,12 @@ const MeetOurTeamPage = () => {
             }}
           >
             At NullOverflow, Rudhvish's vision is to democratize AI by making enterprise-grade technology accessible to businesses of all sizes. With certifications in AWS and CompTIA Security+, he leads with a client-first philosophy—delivering measurable results and transforming complex technological challenges into streamlined, scalable solutions.
-            
+
           </p>
 
           {/* CTA Button */}
-          <button
+          <Link
+            to="/projects"
             className="bg-[#ff9500] text-black border-none rounded-[50px] px-5 py-1 text-[13px] font-semibold tracking-[0.15em] cursor-pointer inline-flex items-center gap-4 transition-all duration-300 uppercase mt-[30px] mb-[100px] lg:mb-[60px] lg:text-[10px] md:px-[35px] md:py-4 md:text-[8px] md:mb-[50px] max-md:px-[30px] max-md:py-[14px] max-md:text-[7px] max-md:gap-[15px]"
             style={{
               opacity: isVisible ? 1 : 0,
@@ -110,7 +112,7 @@ const MeetOurTeamPage = () => {
           >
             READ MORE
             <div className='mil-button mil-arrow-place mil-icon-button mil-arrow-right'></div>
-          </button>
+          </Link>
 
           {/* Tagline */}
           <div

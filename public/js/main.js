@@ -38,7 +38,7 @@ $(function () {
             // Check if key React-rendered elements exist
             // Check for either .mil-banner (Home) or .mil-inner-banner (Projects)
             const preloader = document.querySelector('.mil-preloader');
-            const banner = document.querySelector('.mil-banner') || document.querySelector('.mil-inner-banner');
+            const banner = document.querySelector('.mil-banner') || document.querySelector('.mil-inner-banner') || document.querySelector('.mil-contact-page');
             const swupMain = document.querySelector('#swupMain');
 
             console.log(`Attempt ${attempts}: Preloader=${!!preloader}, Banner=${!!banner}, SwupMain=${!!swupMain}`);
@@ -375,7 +375,7 @@ $(function () {
         cursor
     
         ***************************/
-        const cursor = document.querySelector('.mil-ball');
+        let cursor = document.querySelector('.mil-ball');
 
         gsap.set(cursor, {
             xPercent: -50,
@@ -385,6 +385,10 @@ $(function () {
         document.addEventListener('pointermove', movecursor);
 
         function movecursor(e) {
+            if (!cursor) {
+                cursor = document.querySelector('.mil-ball');
+                if (!cursor) return;
+            }
             gsap.to(cursor, {
                 duration: 0.6,
                 ease: 'sine',

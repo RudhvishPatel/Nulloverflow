@@ -98,7 +98,7 @@ const HeroSection = ({ scrollToAbout }) => {
             line-height: 1.3 !important;
           }
           .hero-description {
-            font-size: 11px !important;
+            font-size: 20px !important;
             line-height: 17px !important;
           }
         }
@@ -127,8 +127,8 @@ const HeroSection = ({ scrollToAbout }) => {
               </h1>
               <div className="row w-full max-md:justify-center">
                 <div className="col-md-7 col-lg-5 max-md:max-w-full max-md:px-5">
-                  <p className="hero-description mil-light-soft mil-mb-60 max-md:text-center">
-                    Welcome to our world of endless imigination and boundless <br /> creativity. Together, let's embark on a remarkable journey where <br /> dreams become tangible realities.
+                  <p className="hero-description mil-light-soft mil-mb-60 max-md:text-center" style={{ fontSize: "34px", lineHeight: "40px" }}>
+                    {/* Welcome to our world of endless imigination and boundless <br /> creativity. Together, let's embark on a remarkable journey where <br /> */}Dreams become tangible realities.
                   </p>
                 </div>
               </div>
