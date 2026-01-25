@@ -9,18 +9,19 @@ const PopularPublications = () => {
     {
       id: 1,
       category: 'TECHNOLOGY',
-      date: 'MAY 24 2023',
-      title: 'How to Become a Graphic Designer in 10 Simple Steps',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eus sequi commodi dignissimos optio, beatae, eos necessitatibus nisi. Nam cupidita...',
-      image: 'images/1_1.jpg'
+      date: 'SEP 15 2025',
+      title: 'Novel Perspective on Ensemble Clustering for Persistent Cluster Patterns',
+      description: 'Clustering is the process of finding natural groups within a data set such that patterns within a group are more similar than patterns belonging to different groups.',
+      image: 'images/ensemble_clustering.png',
+      link: 'https://ieeexplore.ieee.org/document/11181504'
     },
     {
       id: 2,
       category: 'TECHNOLOGY',
       date: 'MAY 24 2023',
-      title: '16 Best Graphic Design Online and Offline Courses',
+      title: 'How to Become a Graphic Designer in 10 Simple Steps',
       description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eus sequi commodi dignissimos optio, beatae, eos necessitatibus nisi. Nam cupidita...',
-      image: 'images/2_3.jpg'
+      image: 'images/1_1.jpg'
     }
   ];
 
@@ -77,18 +78,16 @@ const PopularPublications = () => {
           <button
             onMouseEnter={() => setHoveredButton('viewAll')}
             onMouseLeave={() => setHoveredButton(null)}
-            className={`flex items-center gap-3 border-none px-7 py-4 rounded-[50px] text-sm font-semibold tracking-[1.5px] cursor-pointer transition-all duration-300 ease-in-out lg:px-6 lg:py-3.5 lg:text-[13px] md:px-5 md:py-3 md:text-xs md:self-start max-md:px-5 max-md:py-2.5 max-md:text-[10px] max-md:tracking-[1.2px] max-md:gap-2 ${
-              hoveredButton === 'viewAll'
-                ? 'bg-black text-white shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
-                : 'bg-[#f5f5f5] text-black'
-            }`}
+            className={`flex items-center gap-3 border-none px-7 py-4 rounded-[50px] text-sm font-semibold tracking-[1.5px] cursor-pointer transition-all duration-300 ease-in-out lg:px-6 lg:py-3.5 lg:text-[13px] md:px-5 md:py-3 md:text-xs md:self-start max-md:px-5 max-md:py-2.5 max-md:text-[10px] max-md:tracking-[1.2px] max-md:gap-2 ${hoveredButton === 'viewAll'
+              ? 'bg-black text-white shadow-[0_4px_12px_rgba(0,0,0,0.15)]'
+              : 'bg-[#f5f5f5] text-black'
+              }`}
           >
             VIEW ALL
             <ArrowRight
               size={18}
-              className={`transition-transform duration-300 ease-in-out lg:w-[16px] lg:h-[16px] md:w-[14px] md:h-[14px] max-md:w-[12px] max-md:h-[12px] ${
-                hoveredButton === 'viewAll' ? 'translate-x-1' : 'translate-x-0'
-              }`}
+              className={`transition-transform duration-300 ease-in-out lg:w-[16px] lg:h-[16px] md:w-[14px] md:h-[14px] max-md:w-[12px] max-md:h-[12px] ${hoveredButton === 'viewAll' ? 'translate-x-1' : 'translate-x-0'
+                }`}
             />
           </button>
         </div>
@@ -100,18 +99,16 @@ const PopularPublications = () => {
               key={pub.id}
               onMouseEnter={() => setHoveredCard(pub.id)}
               onMouseLeave={() => setHoveredCard(null)}
-              className={`publication-article bg-transparent overflow-visible transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] cursor-pointer flex flex-col items-start md:w-full max-md:w-full ${
-                hoveredCard === pub.id ? '-translate-y-2 max-md:-translate-y-1' : 'translate-y-0'
-              }`}
+              className={`publication-article bg-transparent overflow-visible transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] cursor-pointer flex flex-col items-start md:w-full max-md:w-full ${hoveredCard === pub.id ? '-translate-y-2 max-md:-translate-y-1' : 'translate-y-0'
+                }`}
             >
               {/* Image */}
               <div className="w-full max-w-[555px] h-[360px] overflow-hidden rounded-[20px] bg-[#f5f5f5] relative lg:max-w-full lg:h-[320px] md:h-[260px] md:rounded-[18px] max-md:h-[220px] max-md:rounded-[16px]">
                 <img
                   src={pub.image}
                   alt={pub.title}
-                  className={`w-full h-full object-cover transition-transform duration-[600ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
-                    hoveredCard === pub.id ? 'scale-[1.08]' : 'scale-100'
-                  }`}
+                  className={`w-full h-full object-cover object-top transition-transform duration-[600ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${hoveredCard === pub.id ? 'scale-[1.08]' : 'scale-100'
+                    }`}
                 />
               </div>
 
@@ -138,27 +135,28 @@ const PopularPublications = () => {
                 </p>
 
                 {/* Read More Button */}
-                <button
+                <a
+                  href={pub.link || '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onMouseEnter={() => setHoveredButton(`read-${pub.id}`)}
                   onMouseLeave={() => setHoveredButton(null)}
                   className="inline-flex items-center gap-3.5 bg-transparent border-none p-0 text-[13px] font-bold tracking-[1.5px] text-black cursor-pointer transition-all duration-300 lg:text-[12px] lg:gap-3 md:text-[11px] md:gap-2.5 max-md:text-[10px] max-md:gap-2 max-md:tracking-[1.2px]"
                 >
                   READ MORE
                   <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 lg:w-9 lg:h-9 md:w-8 md:h-8 max-md:w-[30px] max-md:h-[30px] ${
-                      hoveredButton === `read-${pub.id}`
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 lg:w-9 lg:h-9 md:w-8 md:h-8 max-md:w-[30px] max-md:h-[30px] ${hoveredButton === `read-${pub.id}`
                         ? 'bg-black translate-x-1.5 max-md:translate-x-1'
                         : 'bg-[#F0F0F0] translate-x-0'
-                    }`}
+                      }`}
                   >
                     <ArrowRight
                       size={18}
-                      className={`transition-colors duration-300 lg:w-[16px] lg:h-[16px] md:w-[14px] md:h-[14px] max-md:w-[12px] max-md:h-[12px] ${
-                        hoveredButton === `read-${pub.id}` ? 'text-white' : 'text-black'
-                      }`}
+                      className={`transition-colors duration-300 lg:w-[16px] lg:h-[16px] md:w-[14px] md:h-[14px] max-md:w-[12px] max-md:h-[12px] ${hoveredButton === `read-${pub.id}` ? 'text-white' : 'text-black'
+                        }`}
                     />
                   </div>
-                </button>
+                </a>
               </div>
             </article>
           ))}

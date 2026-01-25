@@ -33,7 +33,9 @@ const Home = () => {
     setIsMenuOpen(!isMenuOpen);
   };
   useEffect(() => {
-    const handleScroll = () => {
+    let ticking = false;
+
+    const updateUI = () => {
       if (aboutRef.current) {
         setShowTop(window.scrollY >= aboutRef.current.offsetTop - 100);
       }
@@ -41,34 +43,58 @@ const Home = () => {
       // Change logo color based on which section is currently in view
       const scrollPosition = window.scrollY + 100; // Offset for navbar height
 
+      // Helper to check if scroll position is within a ref's element
+      const isInSection = (ref) => {
+        if (!ref.current) return false;
+        const { offsetTop, offsetHeight } = ref.current;
+        return scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight;
+      };
+
+      // Determine logo color
       // Section 1: Hero (Black background) - White text
-      if (heroRef.current && scrollPosition < heroRef.current.offsetTop + heroRef.current.offsetHeight) {
+      if (isInSection(heroRef)) {
         setLogoColor('white');
       }
       // Section 2: About (White background) - Black text
-      else if (aboutRef.current && scrollPosition < aboutRef.current.offsetTop + aboutRef.current.offsetHeight) {
+      else if (isInSection(aboutRef)) {
         setLogoColor('black');
       }
       // Section 3: Services (Black background) - White text
-      else if (servicesRef.current && scrollPosition < servicesRef.current.offsetTop + servicesRef.current.offsetHeight) {
+      else if (isInSection(servicesRef)) {
         setLogoColor('white');
       }
       // Section 4: Case Studies (White background) - Black text
-      else if (caseStudiesRef.current && scrollPosition < caseStudiesRef.current.offsetTop + caseStudiesRef.current.offsetHeight) {
+      else if (isInSection(caseStudiesRef)) {
         setLogoColor('black');
       }
       // Section 5+: Team, Testimonials, Publications (White backgrounds) - Black text
-      else if (publicationsRef.current && scrollPosition < publicationsRef.current.offsetTop + publicationsRef.current.offsetHeight) {
+      else if (
+        isInSection(publicationsRef) ||
+        isInSection(teamRef) ||
+        isInSection(testimonialsRef)
+      ) {
         setLogoColor('black');
       }
       // Section Last: Footer (Black background) - White text
       else {
+        // Default to white for footer or other areas
         setLogoColor('white');
+      }
+
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateUI);
+        ticking = true;
       }
     };
 
-    handleScroll(); // Run once on mount
-    window.addEventListener('scroll', handleScroll);
+    // Run once on mount to set initial state
+    updateUI();
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
