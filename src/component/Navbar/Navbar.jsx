@@ -193,7 +193,7 @@ const Navbar = ({
                         </ul>
                       </div>
                       <div className="col-lg-4 mil-mb-60">
-                        <h6 className="mil-muted mil-mb-30">Our studio</h6>
+                        <h6 className="mil-muted mil-mb-30">Our Services</h6>
                         <ul className="mil-menu-list">
                           <li><Link to="/services" className="mil-light-soft" onClick={() => isMenuOpen && toggleMenu()}>AI Services</Link></li>
                           <li><Link to="/services" className="mil-light-soft" onClick={() => isMenuOpen && toggleMenu()}>Agentic Systems</Link></li>

@@ -174,23 +174,21 @@ const Personal = () => {
 
       {/* CSS Styles */}
       <style>{`
-        /* Banner Personal Section */
+        /* ─── Section: strict 100vh so panel is ALWAYS at the bottom ─── */
         .mil-banner-personal {
           position: relative;
-          min-height: 100vh;
+          height: 100vh;
+          min-height: 620px;
           display: flex;
-          align-items: center;
+          flex-direction: column;
           background-color: #E5E5E5;
-          overflow: hidden;
-          padding: 120px 0;
+          overflow-x: hidden;
         }
 
+        /* Background animation clipped inside the section */
         .mil-banner-personal .mil-animation-frame {
           position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
+          inset: 0;
           pointer-events: none;
           z-index: 0;
         }
@@ -201,12 +199,22 @@ const Personal = () => {
           transform: translateY(-50%);
         }
 
-        .mil-banner-personal .container {
+        /* ─── Main content: flex:1 + min-height:0 lets it fill & shrink ─── */
+        .mil-banner-main {
+          flex: 1;
+          min-height: 0;
+          display: flex;
+          align-items: center;
           position: relative;
           z-index: 1;
+          padding: 90px 0 20px;
         }
 
-        /* Personal Text */
+        .mil-banner-main .container {
+          width: 100%;
+        }
+
+        /* ─── Personal Text ─── */
         .mil-personal-text {
           text-align: left;
           padding-right: 30px;
@@ -219,127 +227,55 @@ const Personal = () => {
         }
 
         .mil-personal-text h1 {
-          font-size: 80px;
+          font-size: 76px;
           font-weight: 400;
-          line-height: 1.1;
+          line-height: 1.05;
           color: #1a1a1a;
           letter-spacing: -0.02em;
         }
 
-        @media (max-width: 1200px) {
-          .mil-personal-text h1 {
-            font-size: 60px;
-          }
-        }
-
-        @media (max-width: 992px) {
-          .mil-personal-text {
-            padding-right: 0;
-            margin-bottom: 60px;
-          }
-          .mil-personal-text h1 {
-            font-size: 50px;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .mil-banner-personal {
-            background-color: #000000 !important;
-          }
-
-          .mil-personal-text h1 {
-            font-size: 40px;
-            color: #ffffff;
-          }
-
-          .mil-personal-text p {
-            color: #ffffff;
-          }
-
-          .mil-suptitle-dark {
-            color: #ffffff;
-          }
-
-          .mil-link.mil-dark {
-            color: #ffffff;
-          }
-
-          .mil-link.mil-dark:hover {
-            color: #FFA801;
-          }
-
-          .mil-banner-panel {
-            border-top-color: rgba(255, 255, 255, 0.1);
-          }
-
-          .mil-banner-panel h5 {
-            color: #ffffff;
-          }
-
-          .mil-social-icons.mil-dark a {
-            color: #ffffff;
-          }
-
-          .mil-social-icons.mil-dark a:hover {
-            color: #FFA801;
-          }
-        }
-
-        /* Portrait Frame */
+        /* ─── Portrait: viewport-relative height so it never overflows ─── */
         .mil-portrait-frame {
-          position: relative;
-          text-align: center;
           display: flex;
           justify-content: center;
           align-items: flex-end;
-          min-height: 500px;
+          height: calc(100vh - 260px);
+          max-height: 580px;
         }
 
         .mil-portrait-frame img {
+          height: 100%;
+          width: auto;
           max-width: 100%;
-          width: 100%;
-          max-width: 650px;
-          height: auto;
-          position: relative;
-          z-index: 2;
           object-fit: contain;
           object-position: bottom;
-          /* Remove white background */
           mix-blend-mode: multiply;
           filter: contrast(1.1) brightness(1.05);
         }
 
-        @media (max-width: 992px) {
-          .mil-portrait-frame {
-            min-height: 400px;
-            margin-top: 40px;
-          }
-          .mil-portrait-frame img {
-            width: 380px;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .mil-portrait-frame {
-            min-height: 350px;
-          }
-          .mil-portrait-frame img {
-            width: 300px;
-          }
-        }
-
-        /* Banner Panel */
+        /* ─── Bottom panel: flex-shrink:0 so it's never squished ─── */
         .mil-banner-panel {
+          flex-shrink: 0;
+          position: relative;
+          z-index: 2;
+          padding: 24px 0;
+          background-color: rgba(255, 255, 255, 0.5);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border-radius: 20px 20px 0 0;
+          box-shadow: 0 -6px 32px rgba(0, 0, 0, 0.07);
+        }
+
+        .mil-banner-panel-inner {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-top: 60px;
-          padding-top: 40px;
-          border-top: 1px solid rgba(0, 0, 0, 0.1);
+          flex-wrap: wrap;
+          gap: 16px;
         }
 
         .mil-banner-panel h5 {
-          font-size: 18px;
+          font-size: 17px;
           font-weight: 400;
           color: #1a1a1a;
           margin: 0;
@@ -348,10 +284,10 @@ const Personal = () => {
         .mil-banner-panel .mil-right {
           display: flex;
           align-items: center;
-          gap: 40px;
+          gap: 32px;
         }
 
-        /* Button Styling - Matching HTML Template */
+        /* ─── Button ─── */
         .mil-button {
           cursor: pointer;
           display: inline-flex;
@@ -363,8 +299,8 @@ const Personal = () => {
           background-color: rgb(255, 152, 0);
           color: rgb(0, 0, 0);
           border-radius: 70px;
-          padding: 0 15px 0 50px;
-          height: 70px;
+          padding: 0 20px 0 50px;
+          height: 64px;
           text-transform: uppercase;
           font-weight: 500;
           text-decoration: none;
@@ -380,23 +316,7 @@ const Personal = () => {
           filter: brightness(110%);
         }
 
-        @media (max-width: 992px) {
-          .mil-banner-panel {
-            flex-direction: column;
-            gap: 30px;
-            text-align: center;
-          }
-          .mil-banner-panel .mil-right {
-            flex-direction: column;
-            gap: 20px;
-          }
-          .mil-button {
-            height: 60px;
-            padding: 0 10px 0 40px;
-          }
-        }
-
-        /* Social Icons - Matching HTML Template */
+        /* ─── Social icons ─── */
         .mil-social-frame {
           display: flex;
           align-items: center;
@@ -404,7 +324,7 @@ const Personal = () => {
 
         .mil-social-icons {
           display: flex;
-          gap: 15px;
+          gap: 16px;
           list-style: none;
           padding: 0;
           margin: 0;
@@ -415,7 +335,7 @@ const Personal = () => {
         }
 
         .mil-social-icons.mil-dark a {
-          color: rgb(0, 0, 0);
+          color: #1a1a1a;
           font-size: 18px;
           transition: 0.4s cubic-bezier(0, 0, 0.3642, 1);
         }
@@ -424,17 +344,16 @@ const Personal = () => {
           color: rgb(255, 152, 0);
         }
 
-        /* Suptitle Dark */
+        /* ─── Suptitle / link ─── */
         .mil-suptitle-dark {
           display: block;
-          font-size: 14px;
+          font-size: 13px;
           text-transform: uppercase;
           letter-spacing: 2px;
           color: #1a1a1a;
           line-height: 1.8;
         }
 
-        /* Dark Link */
         .mil-link.mil-dark {
           color: #1a1a1a;
           text-decoration: none;
@@ -452,12 +371,12 @@ const Personal = () => {
           color: #FFA801;
         }
 
-        /* Dark Dodecahedron */
+        /* ─── Dodecahedron dark variant ─── */
         .mil-animation.mil-dark .mil-dodecahedron .mil-pentagon div {
           border-color: rgba(0, 0, 0, 0.1);
         }
 
-        /* Animation helpers */
+        /* ─── Animation helpers ─── */
         .mil-up {
           opacity: 0;
           transform: translateY(30px);
@@ -469,18 +388,107 @@ const Personal = () => {
           transform: translateY(0);
         }
 
-        /* Margin bottom utilities */
-        .mil-mb-60 {
-          margin-bottom: 60px;
+        /* ─── Spacing ─── */
+        .mil-mb-60 { margin-bottom: 48px; }
+
+        .align-items-center  { align-items: center; }
+        .justify-content-center { justify-content: center; }
+
+        /* ─── Large desktop (≥1440px) ─── */
+        @media (min-width: 1440px) {
+          .mil-personal-text h1  { font-size: 88px; }
+          .mil-portrait-frame    { max-height: 680px; }
+          .mil-banner-panel      { padding: 30px 0; }
+          .mil-banner-panel h5   { font-size: 19px; }
         }
 
-        /* Row alignment */
-        .align-items-center {
-          align-items: center;
+        /* ─── XL / 1080p (≥1920px) ─── */
+        @media (min-width: 1920px) {
+          .mil-personal-text h1  { font-size: 108px; }
+          .mil-portrait-frame    { max-height: 820px; }
+          .mil-personal-text p   { font-size: 22px; }
+          .mil-suptitle-dark     { font-size: 15px; }
+          .mil-banner-panel      { padding: 36px 0; }
+          .mil-banner-panel h5   { font-size: 22px; }
+          .mil-button            { height: 76px; font-size: 13px; }
+          .mil-social-icons.mil-dark a { font-size: 22px; }
         }
 
-        .justify-content-center {
-          justify-content: center;
+        /* ─── 4K / ultrawide (≥2560px) ─── */
+        @media (min-width: 2560px) {
+          .mil-personal-text h1  { font-size: 140px; }
+          .mil-portrait-frame    { max-height: 1100px; }
+          .mil-personal-text p   { font-size: 26px; }
+          .mil-suptitle-dark     { font-size: 17px; }
+          .mil-banner-panel      { padding: 44px 0; border-radius: 28px 28px 0 0; }
+          .mil-banner-panel h5   { font-size: 26px; }
+          .mil-button            { height: 90px; font-size: 14px; padding: 0 30px 0 70px; }
+          .mil-social-icons.mil-dark a { font-size: 26px; }
+          .mil-mb-60             { margin-bottom: 72px; }
+        }
+
+        /* ─── Laptop (≤1280px) ─── */
+        @media (max-width: 1280px) {
+          .mil-personal-text h1 { font-size: 64px; }
+          .mil-portrait-frame   { max-height: 520px; }
+        }
+
+        /* ─── Tablet (≤992px): stack portrait below text ─── */
+        @media (max-width: 992px) {
+          .mil-banner-personal {
+            height: auto;
+            min-height: 100vh;
+          }
+          .mil-banner-main {
+            padding: 100px 0 24px;
+            align-items: flex-start;
+          }
+          .mil-personal-text {
+            padding-right: 0;
+            margin-bottom: 32px;
+          }
+          .mil-personal-text h1 { font-size: 50px; }
+          .mil-portrait-frame {
+            height: 340px;
+            max-height: 340px;
+            margin-top: 0;
+          }
+          .mil-banner-panel-inner {
+            flex-direction: column;
+            gap: 20px;
+            text-align: center;
+          }
+          .mil-banner-panel .mil-right {
+            flex-direction: column;
+            gap: 16px;
+          }
+          .mil-button {
+            height: 58px;
+            padding: 0 16px 0 40px;
+          }
+        }
+
+        /* ─── Mobile (≤768px): dark theme ─── */
+        @media (max-width: 768px) {
+          .mil-banner-personal {
+            background-color: #0d0d0d !important;
+          }
+          .mil-personal-text h1 {
+            font-size: 40px;
+            color: #ffffff;
+          }
+          .mil-personal-text p        { color: rgba(255,255,255,0.7); }
+          .mil-suptitle-dark          { color: rgba(255,255,255,0.7); }
+          .mil-link.mil-dark          { color: #ffffff; }
+          .mil-link.mil-dark:hover    { color: #FFA801; }
+          .mil-portrait-frame         { height: 280px; max-height: 280px; }
+          .mil-banner-panel {
+            background-color: rgba(255,255,255,0.08);
+            box-shadow: 0 -4px 24px rgba(0,0,0,0.25);
+          }
+          .mil-banner-panel h5        { color: #ffffff; }
+          .mil-social-icons.mil-dark a { color: #ffffff; }
+          .mil-social-icons.mil-dark a:hover { color: #FFA801; }
         }
       `}</style>
     </div>
