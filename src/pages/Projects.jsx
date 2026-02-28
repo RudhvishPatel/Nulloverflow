@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Footer from './HomeSection/footers';
 import Navbar from '../component/Navbar/Navbar';
-import Preloader from '../component/Preloader/Preloader';
 
 // Portfolio Item Component with hover effect
 const PortfolioItem = ({ item, onClick }) => {
@@ -303,8 +302,6 @@ const Projects = () => {
 
   return (
     <div className="mil-wrapper" id="top">
-      {/* Preloader */}
-      <Preloader />
 
       {/* Cursor */}
       <div className="mil-ball">

@@ -373,8 +373,30 @@ export default function AgencyLandingPage() {
             display: none !important;
           }
 
+          /* Show all 3 dodecahedrons on mobile, scaled up */
           .mil-animation-frame {
-            display: none !important;
+            display: block !important;
+          }
+
+          .mil-animation-frame .mil-animation.mil-position-1 {
+            transform: scale(1.2) !important;
+            opacity: 0.35 !important;
+          }
+
+          // .mil-animation-frame .mil-animation.mil-position-2 {
+          //   display: inline-block !important;
+          //   transform: scale(0.7) !important;
+          //   opacity: 0.2 !important;
+          // }
+
+          // .mil-animation-frame .mil-animation.mil-position-3 {
+          //   display: inline-block !important;
+          //   transform: scale(0.6) !important;
+          //   opacity: 0.18 !important;
+          // }
+
+          .mil-animation-frame .mil-pentagon div {
+            border-top-width: 1px !important;
           }
 
           /* Mobile menu adjustments */
@@ -495,7 +517,7 @@ export default function AgencyLandingPage() {
       <div className="agency-landing-container">
         {/* Background Animation Frame */}
         <div className="mil-animation-frame">
-          <div className="mil-animation mil-position-1 mil-scale" data-value-1="2.4" data-value-2="1.4" style={{ top: '300px', right: '-100px' }}>
+          <div className="mil-animation mil-position-1 mil-scale" data-value-1="3.1" data-value-2="1.8" style={{ top: '30%', right: '0%' }}>
             <div className="mil-dodecahedron">
               {[...Array(12)].map((_, i) => (
                 <div className="mil-pentagon" key={i}>

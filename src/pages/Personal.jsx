@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../component/Navbar/Navbar';
-import Preloader from '../component/Preloader/Preloader';
 
 const Personal = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,8 +31,6 @@ const Personal = () => {
 
   return (
     <div className="mil-wrapper" id="top">
-      {/* Preloader */}
-      <Preloader />
 
       {/* Navbar */}
       <Navbar

@@ -1987,6 +1987,22 @@ dodecahedron
 .mil-position-1 .mil-pentagon div {
   border-top: 0.1px solid rgb(255, 255, 255);
 }
+@media screen and (max-width: 1400px) {
+  .mil-position-1 {
+    top: 80px;
+    right: 50px;
+    transform: scale(0.6);
+    opacity: 0.15;
+  }
+}
+@media screen and (max-width: 768px) {
+  .mil-position-1 {
+    top: 120px;
+    right: -30px;
+    transform: scale(0.4);
+    opacity: 0.12;
+  }
+}
 
 .mil-position-2 {
   top: -60px;

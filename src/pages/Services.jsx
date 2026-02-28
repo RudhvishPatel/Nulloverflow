@@ -241,9 +241,6 @@ const Services = () => {
 
   return (
     <div className="mil-wrapper" id="top">
-      {/* Preloader */}
-
-
       {/* Navbar */}
       <Navbar
         activePage="services"

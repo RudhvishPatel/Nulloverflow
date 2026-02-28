@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const Preloader = () => {
+const Preloader = ({ onComplete }) => {
   useEffect(() => {
     if (typeof gsap === 'undefined') return;
 
@@ -93,6 +93,7 @@ const Preloader = () => {
       display: 'none',
       onComplete: () => {
         document.querySelector('.mil-preloader')?.classList.add("mil-hidden");
+        if (onComplete) onComplete();
       }
     });
 

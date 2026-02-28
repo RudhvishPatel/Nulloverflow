@@ -8,7 +8,6 @@ import HeroSection from './HomeSection/herosection';
 import PopularPublications from './HomeSection/popularPublication';
 import CaseStudies from './HomeSection/caseStudies';
 import Navbar from '../component/Navbar/Navbar';
-import Preloader from '../component/Preloader/Preloader';
 
 const Home = () => {
   const topRef = useRef(null);
@@ -126,8 +125,6 @@ const Home = () => {
 
   return (
     <div className="mil-wrapper" id="top" ref={topRef}>
-      {/* Preloader */}
-      <Preloader />
 
       {/* Cursor */}
       <div className="mil-ball">
@@ -144,41 +141,6 @@ const Home = () => {
 
       {/* Mobile Responsive Styles */}
       <style>{`
-        /* Ensure preloader works on all devices */
-        .mil-preloader {
-          z-index: 9999 !important;
-        }
-
-
-        /* Center preloader text on mobile */
-        @media screen and (max-width: 992px) {
-          .mil-preloader .mil-preloader-animation .mil-pos-abs {
-            text-align: center !important;
-          }
-
-          .mil-preloader .mil-preloader-animation .mil-pos-abs p {
-            margin-left: auto !important;
-            margin-right: auto !important;
-          }
-        }
-
-        /* Mobile preloader text adjustments */
-        @media screen and (max-width: 768px) {
-          .mil-preloader .mil-h3 {
-            font-size: 28px !important;
-          }
-
-          .mil-preloader .mil-preloader-animation .mil-pos-abs .mil-reveal-frame {
-            padding: 0 20px;
-          }
-        }
-
-        @media screen and (max-width: 480px) {
-          .mil-preloader .mil-h3 {
-            font-size: 24px !important;
-          }
-        }
-
         /* Laptop view - move navbar lower */
         @media screen and (min-width: 1024px) and (max-width: 1440px) {
           .mil-frame-top {

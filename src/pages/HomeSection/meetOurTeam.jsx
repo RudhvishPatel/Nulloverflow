@@ -135,7 +135,7 @@ const MeetOurTeamPage = () => {
 
           {/* Single Founder Image Card */}
           <div
-            className="w-full max-w-[500px] h-[650px] rounded-[30px] overflow-hidden cursor-pointer transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] bg-[#e8e8e8] lg:h-[580px] lg:rounded-[28px] md:h-[500px] md:rounded-[25px] max-md:h-[400px] max-md:max-w-full max-md:rounded-[20px]"
+            className="w-full max-w-[500px] h-[650px] rounded-[30px] overflow-hidden cursor-pointer transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] bg-[#e8e8e8] relative lg:h-[580px] lg:rounded-[28px] md:h-[500px] md:rounded-[25px] max-md:h-[400px] max-md:max-w-full max-md:rounded-[20px]"
             style={{
               opacity: isVisible ? 1 : 0,
               transform: isVisible ? 'scale(1)' : 'scale(0.8)',
@@ -164,7 +164,7 @@ const MeetOurTeamPage = () => {
               }}
             >
               <div className="px-6 py-4 w-full max-w-full text-center">
-                <h3 className="text-[52px] leading-[84px] font-bold m-0 mb-3 lg:text-[42px] lg:leading-[68px] md:text-[32px] md:leading-[52px] max-md:text-[26px] max-md:leading-[42px]" style={{ color: '#ffffff' }}>
+                <h3 className="text-[52px] leading-[84px] font-bold m-0 mb-3 lg:text-[42px] lg:leading-[68px] md:text-[32px] md:leading-[52px] max-md:text-[26px] max-md:leading-[42px]" style={{ color: '#ffffff', paddingLeft: '10px' }}>
                   {founder.name}
                 </h3>
                 <p className="text-[20px] leading-[32px] font-semibold tracking-[2px] m-0 lg:text-[16px] lg:leading-[26px] md:text-[13px] md:leading-[21px] max-md:text-[12px] max-md:leading-[19px]" style={{ color: '#ffffff' }}>
