@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef } from 'react'
-import Home from './pages/Home.jsx'
-import Projects from './pages/Projects.jsx'
+import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import Services from './pages/Services.jsx'
-import Personal from './pages/Personal.jsx'
-import Contact from './pages/Contact.jsx'
 import Preloader from './component/Preloader/Preloader.jsx'
+
+const Home = lazy(() => import('./pages/Home.jsx'))
+const Projects = lazy(() => import('./pages/Projects.jsx'))
+const Services = lazy(() => import('./pages/Services.jsx'))
+const Personal = lazy(() => import('./pages/Personal.jsx'))
+const Contact = lazy(() => import('./pages/Contact.jsx'))
 
 /**
  * Re-initializes jQuery/GSAP animations after React Router page transitions.
@@ -187,13 +188,15 @@ function App() {
     <BrowserRouter>
       {showPreloader && <Preloader onComplete={() => setShowPreloader(false)} />}
       <RouteChangeHandler />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/personal" element={<Personal />} />
-        <Route path="/contact" element={<Contact />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/personal" element={<Personal />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   )
 }

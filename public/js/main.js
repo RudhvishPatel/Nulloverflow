@@ -110,7 +110,7 @@ $(function () {
         register gsap plugins
     
         ***************************/
-        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+        gsap.registerPlugin(ScrollTrigger);
         /***************************
     
         color variables
@@ -625,25 +625,9 @@ $(function () {
             });
         });
         /***************************
-    
-        fancybox
-    
-        ***************************/
-        $('[data-fancybox="gallery"]').fancybox({
-            buttons: [
-                "slideShow",
-                "zoom",
-                "fullScreen",
-                "close"
-            ],
-            loop: false,
-            protect: true
-        });
-        $.fancybox.defaults.hash = false;
-        /***************************
-    
+
         reviews slider
-    
+
         ***************************/
 
         var menu = ['<div class="mil-custom-dot mil-slide-1"></div>', '<div class="mil-custom-dot mil-slide-2"></div>', '<div class="mil-custom-dot mil-slide-3"></div>', '<div class="mil-custom-dot mil-slide-4"></div>', '<div class="mil-custom-dot mil-slide-5"></div>', '<div class="mil-custom-dot mil-slide-6"></div>', '<div class="mil-custom-dot mil-slide-7"></div>']
@@ -1074,25 +1058,9 @@ $(function () {
                 });
             });
             /***************************
-    
-            fancybox
-    
-            ***************************/
-            $('[data-fancybox="gallery"]').fancybox({
-                buttons: [
-                    "slideShow",
-                    "zoom",
-                    "fullScreen",
-                    "close"
-                ],
-                loop: false,
-                protect: true
-            });
-            $.fancybox.defaults.hash = false;
-            /***************************
-    
+
             reviews slider
-    
+
             ***************************/
 
             var menu = ['<div class="mil-custom-dot mil-slide-1"></div>', '<div class="mil-custom-dot mil-slide-2"></div>', '<div class="mil-custom-dot mil-slide-3"></div>', '<div class="mil-custom-dot mil-slide-4"></div>', '<div class="mil-custom-dot mil-slide-5"></div>', '<div class="mil-custom-dot mil-slide-6"></div>', '<div class="mil-custom-dot mil-slide-7"></div>']
