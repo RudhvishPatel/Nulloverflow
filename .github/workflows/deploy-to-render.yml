@@ -1,0 +1,93 @@
+name: deploy to production
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+concurrency:
+  group: ci-deploy-main
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    name: Build, Test, Deploy (production)
+    runs-on: ubuntu-latest
+    # Run on push to main OR when a PR is merged (closed + merged)
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    environment: prod    # <-- uses secrets configured in the "production" environment
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: |
+          if npm run -s test --silent --version >/dev/null 2>&1; then
+            npm test -- --ci || npm test
+          else
+            echo "No test script defined; skipping test step"
+          fi
+
+      - name: Build
+        run: |
+          if npm run -s build --silent --version >/dev/null 2>&1; then
+            npm run build
+          else
+            echo "No build script defined; skipping build step"
+          fi
+
+      - name: Trigger Render deploy
+        if: ${{ success() }}
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          if [ -z "${RENDER_DEPLOY_HOOK}" ]; then
+            echo "RENDER_DEPLOY_HOOK is not set. Skipping Render deploy." >&2
+            exit 1
+          fi
+
+          echo "Triggering deploy on Render..."
+          response=$(curl -sS -X POST "${RENDER_DEPLOY_HOOK}")
+
+          echo "Render response: $response"
+          # Deploy hooks return an empty response or simple confirmation on success
+          if [ $? -eq 0 ]; then
+            echo "Render deploy triggered successfully."
+          else
+            echo "Failed to trigger Render deploy"
+            exit 1
+          fi
+
+      - name: Send success email (SMTP)
+        if: ${{ success() }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          secure: false
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "Build & Deploy succeeded - main"
+          to: ${{ secrets.RECIPIENT_EMAIL }}
+          from: ${{ secrets.SENDER_EMAIL }}
+          body: |
+            Build, tests and deploy triggered by push to main succeeded.
+            Repository: ${{ github.repository }}
+            Commit: ${{ github.sha }}
+            Ref: ${{ github.ref }}
+            Render service: srv-d487jnemcj7s73dq4opg
+            Workflow: ${{ github.workflow }}
+            Run URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

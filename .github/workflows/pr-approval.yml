@@ -1,0 +1,521 @@
+name: PR Approval Workflow
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  # Job 1: Create approval issue when PR is opened from development to main
+  create-approval-issue:
+    name: 📋 Create Approval Issue
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
+    outputs:
+      issue_number: ${{ steps.get_issue.outputs.issue_number }}
+    steps:
+      - name: Check if approval issue already exists
+        id: check_issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          EXISTING_ISSUE=$(gh issue list --repo ${{ github.repository }} --state open --search "PR #$PR_NUMBER Approval Request" --json number --jq '.[0].number' 2>/dev/null || echo "")
+
+          if [[ -n "$EXISTING_ISSUE" ]]; then
+            echo "issue_exists=true" >> $GITHUB_OUTPUT
+            echo "issue_number=$EXISTING_ISSUE" >> $GITHUB_OUTPUT
+            echo "✅ Approval issue already exists: #$EXISTING_ISSUE"
+          else
+            echo "issue_exists=false" >> $GITHUB_OUTPUT
+            echo "📝 No existing approval issue found, will create one"
+          fi
+
+      - name: Create approval issue
+        id: create_issue
+        if: steps.check_issue.outputs.issue_exists == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          ISSUE_BODY="## 🔐 Manual Approval Required
+
+          A pull request is waiting for your approval to be merged into **main**.
+
+          ---
+
+          ### Pull Request Details
+
+          | Field | Value |
+          |-------|-------|
+          | **PR Number** | #$PR_NUMBER |
+          | **Title** | $PR_TITLE |
+          | **Author** | @$PR_AUTHOR |
+          | **Link** | $PR_URL |
+
+          ---
+
+          ### Description
+          $PR_BODY
+
+          ---
+
+          ## ✅ How to Approve
+
+          To approve and merge this PR, comment one of the following (case-insensitive):
+          - \`approved\`
+          - \`approve\`
+          - \`yes\`
+          - \`confirm\`
+
+          The PR will be automatically merged and this issue will be closed.
+
+          ---
+
+          ## ❌ How to Reject
+
+          To reject this PR, comment (case-insensitive):
+          - \`rejected\`
+          - \`reject\`
+          - \`no\`
+          - \`deny\`
+
+          The PR will remain open but marked as needing changes.
+
+          ---
+
+          **Authorized Approvers:** @dhrupeshbrahmbhatt
+
+          ---
+          *This issue was automatically created by the PR approval workflow.*"
+
+          ISSUE_URL=$(gh issue create \
+            --repo ${{ github.repository }} \
+            --title "🔒 PR #$PR_NUMBER Approval Request: $PR_TITLE" \
+            --body "$ISSUE_BODY" \
+            --label "approval-required,pr-review" \
+            --assignee "dhrupeshbrahmbhatt")
+
+          ISSUE_NUM=$(echo "$ISSUE_URL" | grep -oE '[0-9]+$')
+          echo "issue_number=$ISSUE_NUM" >> $GITHUB_OUTPUT
+          echo "✅ Created approval issue #$ISSUE_NUM"
+
+      - name: Get issue number
+        id: get_issue
+        run: |
+          if [[ "${{ steps.check_issue.outputs.issue_exists }}" == "true" ]]; then
+            echo "issue_number=${{ steps.check_issue.outputs.issue_number }}" >> $GITHUB_OUTPUT
+          else
+            echo "issue_number=${{ steps.create_issue.outputs.issue_number }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment on PR with approval instructions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          EXISTING_COMMENT=$(gh pr view $PR_NUMBER --repo ${{ github.repository }} --comments --json comments --jq '.comments[] | select(.body | contains("requires manual approval")) | .id' | head -1)
+
+          if [[ -z "$EXISTING_COMMENT" ]]; then
+            gh pr comment $PR_NUMBER --repo ${{ github.repository }} --body "## ⏳ Awaiting Manual Approval
+
+          This PR targets the **main** branch and requires manual approval before merging.
+
+          An approval issue has been created. An authorized user must comment \`approved\`, \`approve\`, \`yes\`, or \`confirm\` on the approval issue to merge this PR.
+
+          **Note:** Direct merges to main are blocked until approval is granted.
+
+          ---
+          *This is an automated message from the PR approval workflow.*"
+          fi
+
+  # Job 2: Wait for approval (polls for 5 minutes)
+  wait-for-approval:
+    name: ⏳ Waiting for Approval (5 min)
+    runs-on: ubuntu-latest
+    needs: create-approval-issue
+    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'development'
+    outputs:
+      approved: ${{ steps.poll_approval.outputs.approved }}
+      rejected: ${{ steps.poll_approval.outputs.rejected }}
+    steps:
+      - name: Poll for manual approval
+        id: poll_approval
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          ISSUE_NUMBER: ${{ needs.create-approval-issue.outputs.issue_number }}
+        run: |
+          echo "=========================================="
+          echo "🕐 WAITING FOR MANUAL APPROVAL"
+          echo "=========================================="
+          echo "PR Number: #$PR_NUMBER"
+          echo "Issue Number: #$ISSUE_NUMBER"
+          echo ""
+          echo "Authorized approver: @dhrupeshbrahmbhatt"
+          echo "Valid approval commands: approved, approve, yes, confirm"
+          echo ""
+          echo "Checking every 30 seconds for 5 minutes..."
+          echo "=========================================="
+
+          TIMEOUT=300
+          INTERVAL=30
+          ELAPSED=0
+
+          while [ $ELAPSED -lt $TIMEOUT ]; do
+            echo ""
+            echo "⏳ [${ELAPSED}s / ${TIMEOUT}s] Checking for approval comments..."
+
+            if [[ -n "$ISSUE_NUMBER" ]]; then
+              COMMENTS=$(gh api repos/${{ github.repository }}/issues/$ISSUE_NUMBER/comments --jq '.[] | "\(.user.login)|\(.body)"' 2>/dev/null || echo "")
+
+              while IFS= read -r comment; do
+                [[ -z "$comment" ]] && continue
+                USER=$(echo "$comment" | cut -d'|' -f1)
+                BODY=$(echo "$comment" | cut -d'|' -f2- | tr '[:upper:]' '[:lower:]' | xargs)
+
+                if [[ "$USER" == "dhrupeshbrahmbhatt" ]]; then
+                  echo "   Found comment from @$USER: '$BODY'"
+
+                  if [[ "$BODY" == "approved" || "$BODY" == "approve" || "$BODY" == "yes" || "$BODY" == "confirm" ]]; then
+                    echo ""
+                    echo "=========================================="
+                    echo "✅ APPROVAL RECEIVED!"
+                    echo "=========================================="
+                    echo "Approved by: @$USER"
+                    echo "Comment: $BODY"
+                    echo "=========================================="
+                    echo "approved=true" >> $GITHUB_OUTPUT
+                    echo "rejected=false" >> $GITHUB_OUTPUT
+                    exit 0
+                  elif [[ "$BODY" == "rejected" || "$BODY" == "reject" || "$BODY" == "no" || "$BODY" == "deny" ]]; then
+                    echo ""
+                    echo "=========================================="
+                    echo "❌ REJECTION RECEIVED!"
+                    echo "=========================================="
+                    echo "Rejected by: @$USER"
+                    echo "Comment: $BODY"
+                    echo "=========================================="
+                    echo "approved=false" >> $GITHUB_OUTPUT
+                    echo "rejected=true" >> $GITHUB_OUTPUT
+                    exit 0
+                  fi
+                fi
+              done <<< "$COMMENTS"
+            else
+              echo "   ⚠️ Issue number not found, skipping check"
+            fi
+
+            sleep $INTERVAL
+            ELAPSED=$((ELAPSED + INTERVAL))
+          done
+
+          echo ""
+          echo "=========================================="
+          echo "⏰ TIMEOUT - No approval received"
+          echo "=========================================="
+          echo "The workflow will end, but you can still approve via issue comment."
+          echo "A new workflow will trigger when you comment on the approval issue."
+          echo "=========================================="
+          echo "approved=false" >> $GITHUB_OUTPUT
+          echo "rejected=false" >> $GITHUB_OUTPUT
+
+  # Job 3: Merge PR if approved during polling
+  merge-from-polling:
+    name: 🚀 Auto-Merge PR
+    runs-on: ubuntu-latest
+    needs: [create-approval-issue, wait-for-approval]
+    if: needs.wait-for-approval.outputs.approved == 'true'
+    steps:
+      - name: Merge the PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          echo "=========================================="
+          echo "🚀 AUTO-MERGING PR #$PR_NUMBER"
+          echo "=========================================="
+          gh pr merge $PR_NUMBER --merge --repo ${{ github.repository }}
+          echo "✅ PR #$PR_NUMBER merged successfully!"
+          echo "=========================================="
+
+      - name: Close the approval issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ needs.create-approval-issue.outputs.issue_number }}
+        run: |
+          gh issue close $ISSUE_NUMBER \
+            --repo ${{ github.repository }} \
+            --comment "## ✅ PR Merged Successfully!
+
+          The PR has been approved and merged into main.
+
+          - **Approved by:** @dhrupeshbrahmbhatt
+          - **Merged at:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+
+          This issue is now closed."
+
+  # Job 4: Handle rejection from polling
+  handle-rejection-from-polling:
+    name: ❌ Handle Rejection
+    runs-on: ubuntu-latest
+    needs: [create-approval-issue, wait-for-approval]
+    if: needs.wait-for-approval.outputs.rejected == 'true'
+    steps:
+      - name: Comment on PR about rejection
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          echo "=========================================="
+          echo "❌ PR #$PR_NUMBER REJECTED"
+          echo "=========================================="
+          gh pr comment $PR_NUMBER \
+            --repo ${{ github.repository }} \
+            --body "## ❌ PR Rejected
+
+          This PR has been rejected by an authorized reviewer.
+
+          Please review the feedback and make necessary changes before requesting approval again."
+
+  # ===========================================
+  # ISSUE COMMENT TRIGGERED JOBS (for late approvals)
+  # ===========================================
+
+  # Job 5: Process approval comment
+  process-approval-comment:
+    name: 🔍 Process Approval Comment
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issue_comment' && !github.event.issue.pull_request
+    outputs:
+      is_valid: ${{ steps.validate.outputs.is_valid }}
+      approved: ${{ steps.validate.outputs.approved }}
+      rejected: ${{ steps.validate.outputs.rejected }}
+      pr_number: ${{ steps.validate.outputs.pr_number }}
+    steps:
+      - name: Validate and process comment
+        id: validate
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
+        run: |
+          echo "=========================================="
+          echo "🔍 PROCESSING ISSUE COMMENT"
+          echo "=========================================="
+          echo "Issue Title: $ISSUE_TITLE"
+          echo "Comment Author: @$COMMENT_AUTHOR"
+          echo "Comment Body: $COMMENT_BODY"
+          echo "=========================================="
+
+          # Check if this is an approval request issue
+          if [[ "$ISSUE_TITLE" != *"Approval Request"* ]]; then
+            echo "❌ Not an approval request issue, skipping"
+            echo "is_valid=false" >> $GITHUB_OUTPUT
+            echo "approved=false" >> $GITHUB_OUTPUT
+            echo "rejected=false" >> $GITHUB_OUTPUT
+            echo "pr_number=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Extract PR number
+          PR_NUMBER=$(echo "$ISSUE_TITLE" | grep -oE 'PR #[0-9]+' | grep -oE '[0-9]+' || echo "")
+          if [[ -z "$PR_NUMBER" ]]; then
+            echo "❌ Could not extract PR number from title"
+            echo "is_valid=false" >> $GITHUB_OUTPUT
+            echo "approved=false" >> $GITHUB_OUTPUT
+            echo "rejected=false" >> $GITHUB_OUTPUT
+            echo "pr_number=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "📋 PR Number: #$PR_NUMBER"
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+
+          # Check if author is authorized
+          if [[ "$COMMENT_AUTHOR" != "dhrupeshbrahmbhatt" ]]; then
+            echo "⚠️ @$COMMENT_AUTHOR is not authorized to approve"
+            echo "is_valid=false" >> $GITHUB_OUTPUT
+            echo "approved=false" >> $GITHUB_OUTPUT
+            echo "rejected=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Process the comment
+          COMMENT_LOWER=$(echo "$COMMENT_BODY" | tr '[:upper:]' '[:lower:]' | xargs)
+          echo "Normalized comment: '$COMMENT_LOWER'"
+
+          if [[ "$COMMENT_LOWER" == "approved" || "$COMMENT_LOWER" == "approve" || "$COMMENT_LOWER" == "yes" || "$COMMENT_LOWER" == "confirm" ]]; then
+            echo ""
+            echo "=========================================="
+            echo "✅ APPROVAL DETECTED!"
+            echo "=========================================="
+            echo "is_valid=true" >> $GITHUB_OUTPUT
+            echo "approved=true" >> $GITHUB_OUTPUT
+            echo "rejected=false" >> $GITHUB_OUTPUT
+          elif [[ "$COMMENT_LOWER" == "rejected" || "$COMMENT_LOWER" == "reject" || "$COMMENT_LOWER" == "no" || "$COMMENT_LOWER" == "deny" ]]; then
+            echo ""
+            echo "=========================================="
+            echo "❌ REJECTION DETECTED!"
+            echo "=========================================="
+            echo "is_valid=true" >> $GITHUB_OUTPUT
+            echo "approved=false" >> $GITHUB_OUTPUT
+            echo "rejected=true" >> $GITHUB_OUTPUT
+          else
+            echo "ℹ️ Comment is not an approval/rejection command"
+            echo "is_valid=false" >> $GITHUB_OUTPUT
+            echo "approved=false" >> $GITHUB_OUTPUT
+            echo "rejected=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Warn unauthorized user
+        if: steps.validate.outputs.is_valid == 'false' && github.event.comment.user.login != 'dhrupeshbrahmbhatt'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
+        run: |
+          COMMENT_LOWER=$(echo "$COMMENT_BODY" | tr '[:upper:]' '[:lower:]' | xargs)
+
+          if [[ "$COMMENT_LOWER" == "approved" || "$COMMENT_LOWER" == "approve" || "$COMMENT_LOWER" == "yes" || "$COMMENT_LOWER" == "confirm" ]]; then
+            gh issue comment ${{ github.event.issue.number }} \
+              --repo ${{ github.repository }} \
+              --body "⚠️ @$COMMENT_AUTHOR is not authorized to approve this PR.
+
+          Only **@dhrupeshbrahmbhatt** can approve PRs."
+          fi
+
+  # Job 6: Auto-merge from comment approval
+  auto-merge-from-comment:
+    name: 🚀 Auto-Merge PR (from comment)
+    runs-on: ubuntu-latest
+    needs: process-approval-comment
+    if: needs.process-approval-comment.outputs.approved == 'true' && needs.process-approval-comment.outputs.pr_number != ''
+    steps:
+      - name: Check PR status and merge
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ needs.process-approval-comment.outputs.pr_number }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          APPROVER: ${{ github.event.comment.user.login }}
+        run: |
+          echo "=========================================="
+          echo "🚀 AUTO-MERGING PR #$PR_NUMBER"
+          echo "=========================================="
+          echo "Approved by: @$APPROVER"
+          echo "Issue: #$ISSUE_NUMBER"
+          echo "=========================================="
+
+          # Check if PR is still open
+          PR_STATE=$(gh pr view $PR_NUMBER --repo ${{ github.repository }} --json state --jq '.state' 2>/dev/null || echo "UNKNOWN")
+          echo "PR State: $PR_STATE"
+
+          if [[ "$PR_STATE" != "OPEN" ]]; then
+            echo "⚠️ PR is not open (state: $PR_STATE), skipping merge"
+            exit 0
+          fi
+
+          # Merge the PR
+          echo ""
+          echo "Merging PR..."
+          gh pr merge $PR_NUMBER --merge --repo ${{ github.repository }}
+          echo "✅ PR #$PR_NUMBER merged successfully!"
+
+          # Add success comment to issue
+          echo ""
+          echo "Adding success comment to issue..."
+          gh issue comment $ISSUE_NUMBER \
+            --repo ${{ github.repository }} \
+            --body "## ✅ PR Merged Successfully!
+
+          **PR #$PR_NUMBER** has been merged into main.
+
+          - **Approved by:** @$APPROVER
+          - **Merged at:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+
+          This issue will now be closed."
+
+          # Close the issue
+          echo ""
+          echo "Closing issue..."
+          gh issue close $ISSUE_NUMBER --repo ${{ github.repository }}
+          echo "✅ Issue #$ISSUE_NUMBER closed"
+
+          # Add reaction
+          echo ""
+          echo "Adding reaction to approval comment..."
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions \
+            -f content='rocket' || true
+
+          echo ""
+          echo "=========================================="
+          echo "✅ WORKFLOW COMPLETE"
+          echo "=========================================="
+
+  # Job 7: Handle rejection from comment
+  handle-rejection-from-comment:
+    name: ❌ Handle Rejection (from comment)
+    runs-on: ubuntu-latest
+    needs: process-approval-comment
+    if: needs.process-approval-comment.outputs.rejected == 'true' && needs.process-approval-comment.outputs.pr_number != ''
+    steps:
+      - name: Process rejection
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ needs.process-approval-comment.outputs.pr_number }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REJECTOR: ${{ github.event.comment.user.login }}
+        run: |
+          echo "=========================================="
+          echo "❌ PROCESSING PR REJECTION"
+          echo "=========================================="
+          echo "PR: #$PR_NUMBER"
+          echo "Rejected by: @$REJECTOR"
+          echo "=========================================="
+
+          # Comment on PR
+          gh pr comment $PR_NUMBER \
+            --repo ${{ github.repository }} \
+            --body "## ❌ PR Rejected
+
+          This PR has been rejected by @$REJECTOR.
+
+          Please review the feedback and make necessary changes before requesting approval again."
+
+          # Comment on issue
+          gh issue comment $ISSUE_NUMBER \
+            --repo ${{ github.repository }} \
+            --body "## ❌ PR Rejected
+
+          **PR #$PR_NUMBER** has been rejected.
+
+          - **Rejected by:** @$REJECTOR
+          - **Time:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+
+          The PR author should address any concerns and request a new review."
+
+          # Add reaction
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions \
+            -f content='eyes' || true
+
+          echo "=========================================="
+          echo "✅ REJECTION PROCESSED"
+          echo "=========================================="
