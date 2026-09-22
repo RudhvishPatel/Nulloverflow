@@ -1,18 +1,44 @@
-# Logs
+# deps / build
+node_modules/
+.next/
+out/
+dist/
+dist-ssr
+*.tsbuildinfo
+
+# secrets & local env — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+credentials.json
+credentials/
+secrets/
+vault/
+*.vault
+
+# PII and lab progress stores (AppSec)
+data/
+lab-progress/
+lab-progress.json
+lab-progress/*.json
+**/*lab-progress*
+**/*progress*.json
+
+# logs
 logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
+# editor / OS
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -22,3 +48,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.local
