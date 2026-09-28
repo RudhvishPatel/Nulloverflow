@@ -1,0 +1,270 @@
+/* ==========================================================================
+   lab/01 Scale Arena: Title-fight weigh-in
+   A vs B are the red and blue corners, the stage is a roped ring under a
+   spotlight, the streak is a championship belt, the end is a knockout card.
+   Intro: CRT pops like flashbulbs, collapses into a spotlight, ROUND 1 sweeps.
+   ========================================================================== */
+@font-face { font-family: "LabArena Poster"; src: url(/assets/lab/arena/anton.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "LabArena Sans"; src: url(/assets/lab/arena/oswald-500.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "LabArena Sans"; src: url(/assets/lab/arena/oswald-700.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+
+:root:has(.scale-arena) {
+  --lab-theme: arena;
+  --lab-loading: "> ladies and gentlemen… taking your seats";
+  --bg: #0b0b0f;
+  --surface: #17171d;
+  --panel: #121217;
+  --grid: #26262e;
+  --ink: #f6f3ec;
+  --ink-dim: #bdb9ae;
+  --phosphor: #f4c542;
+  --phosphor-dim: #a8a293;
+  --phosphor-glow: #fff6d6;
+  --amber: #f4c542;
+  --amber-dim: #c9a13a;
+  --mono: "LabArena Sans", "Arial Narrow", sans-serif;
+  --display: "LabArena Poster", Impact, "Arial Narrow", sans-serif;
+  --arena-red: #d7263d;
+  --arena-red-deep: #3b0c13;
+  --arena-blue: #2b74e8;
+  --arena-blue-deep: #0b1a38;
+  --intro-dur: 1.25s;
+}
+
+/* ---- World: dark arena, spotlight from above, crowd lights ------------------ */
+body:has(.scale-arena) {
+  background:
+    radial-gradient(ellipse 38% 75% at 50% -12%, rgba(255, 250, 230, .16), rgba(255, 250, 230, .05) 55%, transparent 75%),
+    radial-gradient(circle at 12% 8%, rgba(255, 255, 255, .5) 0 1px, transparent 2px) 0 0 / 70px 40px,
+    linear-gradient(180deg, #121218 0%, #0b0b0f 40%);
+  background-attachment: fixed;
+}
+body:has(.scale-arena) .section-head h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2.8rem, 9vw, 5.6rem);
+  line-height: .9;
+  text-transform: uppercase;
+  letter-spacing: .01em;
+  color: #fff;
+  text-shadow: 4px 4px 0 var(--arena-red), -4px -4px 0 var(--arena-blue);
+}
+body:has(.scale-arena) .section-head .meta,
+body:has(.scale-arena) .lab-lede { color: var(--ink-dim); }
+body:has(.scale-arena) .lab-lede { font-size: 1.02rem; letter-spacing: .01em; }
+
+/* ---- The ring ---------------------------------------------------------------- */
+body:has(.scale-arena) .lab-game-panel {
+  position: relative;
+  border: 0;
+  padding: 2.25rem 2rem 2rem;
+  background:
+    linear-gradient(180deg, var(--arena-red) 0 3px, transparent 3px 11px, #f6f3ec 11px 13px, transparent 13px 21px, var(--arena-blue) 21px 24px, transparent 24px) top / 100% 24px no-repeat,
+    radial-gradient(ellipse 70% 60% at 50% 40%, #202029, #121217 80%);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .7), inset 0 -3px 0 #26262e;
+}
+/* Corner posts. */
+body:has(.scale-arena) .lab-game-panel::before,
+body:has(.scale-arena) .lab-game-panel::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  width: 14px;
+  height: 46px;
+  border-radius: 3px;
+  pointer-events: none;
+}
+body:has(.scale-arena) .lab-game-panel::before { left: -7px; background: linear-gradient(180deg, #ff5a6e, var(--arena-red)); }
+body:has(.scale-arena) .lab-game-panel::after { right: -7px; background: linear-gradient(180deg, #6aa4ff, var(--arena-blue)); }
+body:has(.scale-arena) .lab-game-head { border-bottom: 1px solid #2c2c36; }
+body:has(.scale-arena) .lab-game-head h3 { font-family: var(--display); font-weight: 400; text-transform: uppercase; letter-spacing: .04em; color: #fff; font-size: 1.5rem; }
+body:has(.scale-arena) :is(.scale-chrome, .mag-seed, .lab-game-head .mono, .lab-game-head .meta) { color: var(--ink-dim); letter-spacing: .08em; }
+body:has(.scale-arena) .scale-chrome .mono,
+body:has(.scale-arena) .mag-seed { text-transform: uppercase; }
+body:has(.scale-arena) .scale-score { color: var(--ink-dim); font-weight: 700; }
+body:has(.scale-arena) .scale-score strong { color: var(--amber) !important; text-shadow: none; }
+
+/* Announcer prompt. */
+body:has(.scale-arena) .scale-prompt {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--amber);
+}
+body:has(.scale-arena) .scale-grid { position: relative; gap: 1.5rem; }
+body:has(.scale-arena) .scale-grid::before {
+  content: "In the red corner… and in the blue corner…" / "";
+  grid-column: 1 / -1;
+  margin: 0 0 -.5rem;
+  text-align: center;
+  font: italic 500 .8rem/1 var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+/* VS badge between the corners. */
+body:has(.scale-arena) .scale-grid::after {
+  content: "VS" / "";
+  position: absolute;
+  left: 50%;
+  top: calc(50% + .6rem);
+  width: 54px;
+  height: 54px;
+  margin: -27px 0 0 -27px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font: 400 1.3rem/1 var(--display);
+  color: #111;
+  background: radial-gradient(circle at 35% 30%, #fff3c4, var(--amber) 60%, #a57d12);
+  box-shadow: 0 0 0 3px #0b0b0f, 0 6px 18px rgba(0, 0, 0, .6);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ---- Corners: A = red, B = blue ------------------------------------------------ */
+body:has(.scale-arena) .scale-card {
+  position: relative;
+  border: 0;
+  border-radius: 6px;
+  min-height: 170px;
+  padding: 1.5rem 1.35rem;
+  font-family: var(--mono);
+  color: #fff;
+  overflow: hidden;
+  transition: transform .15s, box-shadow .2s, filter .2s;
+}
+body:has(.scale-arena) .scale-card:first-child {
+  background: linear-gradient(155deg, #5a1320, var(--arena-red-deep) 70%);
+  box-shadow: inset 0 0 0 2px var(--arena-red), 0 10px 30px rgba(215, 38, 61, .18);
+}
+body:has(.scale-arena) .scale-card:last-child {
+  background: linear-gradient(205deg, #13306a, var(--arena-blue-deep) 70%);
+  box-shadow: inset 0 0 0 2px var(--arena-blue), 0 10px 30px rgba(43, 116, 232, .18);
+}
+body:has(.scale-arena) .scale-card:hover:not(:disabled) { transform: translateY(-3px); filter: brightness(1.12); background-color: transparent; }
+body:has(.scale-arena) .scale-card:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+body:has(.scale-arena) .scale-card-side {
+  font: 700 .74rem/1 var(--mono);
+  letter-spacing: .16em;
+  color: #fff;
+}
+body:has(.scale-arena) .scale-card:first-child .scale-card-side::after { content: " · RED CORNER" / ""; color: #ffc2ca; }
+body:has(.scale-arena) .scale-card:last-child .scale-card-side::after { content: " · BLUE CORNER" / ""; color: #c4dcff; }
+body:has(.scale-arena) .scale-card-name {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3.4vw, 2.3rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, .45);
+}
+body:has(.scale-arena) :is(.scale-card-hint, .scale-card-size) { color: #e6e1d6; font-weight: 500; letter-spacing: .06em; }
+body:has(.scale-arena) .scale-card-size { font: 400 1.2rem/1.1 var(--display); letter-spacing: .03em; color: var(--amber); }
+
+/* Winner: gold ring and a WINNER badge. Loser: knocked down. */
+body:has(.scale-arena) .scale-card.is-correct {
+  box-shadow: inset 0 0 0 3px var(--amber), 0 0 34px rgba(244, 197, 66, .35);
+  animation: arena-win .45s ease-out;
+}
+body:has(.scale-arena) .scale-card.is-correct::after {
+  content: "WINNER" / "";
+  position: absolute;
+  top: 12px;
+  right: -34px;
+  width: 140px;
+  padding: 4px 0;
+  transform: rotate(35deg);
+  text-align: center;
+  font: 400 .85rem/1 var(--display);
+  letter-spacing: .14em;
+  color: #111;
+  background: var(--amber);
+}
+body:has(.scale-arena) .scale-card.is-wrong { filter: grayscale(.7) brightness(.8); animation: arena-ko .5s ease-out; }
+
+/* Feedback + championship belt streak. */
+body:has(.scale-arena) .scale-feedback p { color: #fff; font-weight: 500; font-size: .95rem; letter-spacing: .02em; }
+body:has(.scale-arena) .scale-streak {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .3rem .9rem;
+  border-radius: 999px;
+  font: 700 .78rem/1 var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #2a1d00;
+  background:
+    radial-gradient(circle at 50% 50%, #fff3c4 0 5px, #b8860b 6px 7px, transparent 7.5px) left 8px center / 16px 16px no-repeat,
+    linear-gradient(180deg, #ffe38a, #f4c542 45%, #b8860b);
+  padding-left: 30px;
+  box-shadow: 0 0 0 2px #5a3f00, 0 4px 12px rgba(0, 0, 0, .5);
+}
+body:has(.scale-arena) .btn {
+  border: 2px solid #fff;
+  color: #fff;
+  font: 700 .82rem/1 var(--mono);
+  letter-spacing: .14em;
+  border-radius: 4px;
+}
+body:has(.scale-arena) .btn:hover { background: #fff; color: #111; }
+body:has(.scale-arena) .btn-signal { border-color: var(--amber); background: var(--amber); color: #111; }
+body:has(.scale-arena) .btn-signal:hover { filter: brightness(1.08); color: #111; }
+body:has(.scale-arena) .btn:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+
+/* Knockout card at the end. */
+body:has(.scale-arena) .scale-done { text-align: center; padding: 2rem 0 1rem; }
+body:has(.scale-arena) .scale-done .mono { color: var(--ink-dim); letter-spacing: .14em; text-transform: uppercase; }
+body:has(.scale-arena) .scale-done h3 {
+  font: 400 clamp(2.4rem, 7vw, 4rem)/1 var(--display);
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 4px 4px 0 var(--arena-red), -4px -4px 0 var(--arena-blue);
+}
+body:has(.scale-arena) .scale-done-copy { margin-inline: auto; color: var(--ink-dim); }
+body:has(.scale-arena) .scale-final { color: var(--amber) !important; text-shadow: none; }
+
+/* ---- Intro: flashbulbs → spotlight → ROUND 1 ----------------------------------- */
+body:has(.scale-arena)::before { animation-name: arena-intro-spot; }
+body:has(.scale-arena)::after {
+  content: "ROUND 1" / "";
+  display: grid;
+  place-items: center;
+  font: 400 clamp(3.5rem, 14vw, 10rem)/1 "LabArena Poster", Impact, sans-serif;
+  letter-spacing: .04em;
+  color: #fff;
+  text-shadow: 5px 5px 0 rgba(0, 0, 0, .35);
+  background: linear-gradient(90deg, var(--arena-red) 0 50%, var(--arena-blue) 50% 100%) center / 100% 30% no-repeat;
+  animation-name: arena-intro-round;
+}
+@keyframes arena-intro-spot {
+  0% { opacity: 1; visibility: visible; filter: none; clip-path: circle(150% at 50% 45%); }
+  16% { filter: none; }
+  19% { filter: brightness(3.2) saturate(0); }
+  22% { filter: none; }
+  27% { filter: brightness(2.6) saturate(0); }
+  30% { filter: brightness(1.4) saturate(0); clip-path: circle(150% at 50% 45%); }
+  55% { filter: brightness(2.2) saturate(0); clip-path: circle(16% at 50% 45%); opacity: 1; }
+  75% { clip-path: circle(12% at 50% 45%); opacity: 0; }
+  100% { opacity: 0; visibility: hidden; clip-path: circle(12% at 50% 45%); }
+}
+@keyframes arena-intro-round {
+  0%, 45% { opacity: 1; transform: translateX(-105%); visibility: visible; }
+  62% { transform: translateX(0); }
+  82% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(105%); opacity: 1; visibility: hidden; }
+}
+@keyframes arena-win {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+@keyframes arena-ko {
+  0% { transform: rotate(0); }
+  30% { transform: rotate(-2deg) translateY(4px); }
+  100% { transform: rotate(0); }
+}

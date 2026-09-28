@@ -1,0 +1,13 @@
+{
+  "n": "09",
+  "root": "lab-foundry",
+  "title": "Neuron Foundry",
+  "meta": "live training · backprop · 2-D data",
+  "lede": "Design a small neural network and train it live, right here in your browser: backprop and Adam, written from scratch, no libraries and no server. Three datasets a day, from gentle gaussians to a spiral. Watch the decision boundary drift into place like a current, and hit 95% test accuracy with as few parameters as you can.",
+  "description": "Neuron Foundry: design and train a neural network live in the browser, and watch its decision boundary form on classic 2-D datasets.",
+  "card": {
+    "title": "Neuron Foundry",
+    "kind": "live training · backprop",
+    "blurb": "Design a neural net and train it live in your browser. Hit 95% with the fewest params."
+  }
+}

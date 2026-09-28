@@ -1,0 +1,20 @@
+/* lab/02 Magnitude Run: layout for ruler, interval controls and the calibration report. */
+.magnitude-run [hidden] { display: none !important; }
+.magnitude-run .bp-stage { padding: 0; overflow: hidden; }
+.magnitude-run .bp-ruler { display: block; width: 100%; }
+.magnitude-run .bp-controls { display: grid; gap: .6rem; margin-top: 1rem; }
+.magnitude-run .bp-field { display: grid; grid-template-columns: 3.4rem 1fr; align-items: center; gap: .6rem; }
+.magnitude-run .bp-field span { font-weight: 600; letter-spacing: .14em; color: var(--ink-dim); }
+.magnitude-run .bp-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; background: transparent; cursor: pointer; }
+.magnitude-run .bp-slider::-webkit-slider-runnable-track { height: 4px; background: rgba(255, 255, 255, .7); }
+.magnitude-run .bp-slider::-moz-range-track { height: 4px; background: rgba(255, 255, 255, .7); }
+.magnitude-run .bp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 26px; height: 26px; margin-top: -11px; border-radius: 50%;
+  border: 2px solid var(--bp-red); background: linear-gradient(var(--bp-red), var(--bp-red)) center / 2px 100% no-repeat, linear-gradient(var(--bp-red), var(--bp-red)) center / 100% 2px no-repeat, #163f75;
+}
+.magnitude-run .bp-slider::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--bp-red); background: #163f75; }
+.magnitude-run .bp-slider:focus-visible { outline: 2px solid var(--bp-yellow); outline-offset: 2px; }
+.magnitude-run .mag-estimate { margin: .4rem 0; font-size: .85rem; }
+.magnitude-run .bp-end { margin-top: 1.5rem; padding: 1.25rem; border: 2px solid #fff; outline: 1px solid rgba(255, 255, 255, .6); outline-offset: -6px; }
+.magnitude-run .bp-end-title { margin: 0 0 .4rem; font: 400 1.5rem/1.1 var(--display); color: #fff; letter-spacing: .04em; }
+.magnitude-run .bp-end-copy { color: var(--ink-dim); margin: .6rem 0; }

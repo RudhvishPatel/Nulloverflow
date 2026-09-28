@@ -1,0 +1,91 @@
+/* ==========================================================================
+   lab/11 CNN Vision Lab: Photographic darkroom
+   Red safelight over black benches; the digit is exposed on paper and every
+   feature map develops like a print in its tray.
+   Intro: the CRT goes dark, the safelight clicks on, a print develops.
+   ========================================================================== */
+@font-face { font-family: "LabDark Serif"; src: url(/assets/lab/darkroom/dmserif.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "LabDark Serif Italic"; src: url(/assets/lab/darkroom/dmserif-italic.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "LabDark Type"; src: url(/assets/lab/bureau/courierprime-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "LabDark Type"; src: url(/assets/lab/bureau/courierprime-700.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+
+:root:has(.lab-vision) {
+  --lab-theme: darkroom;
+  --lab-loading: "> safelight on…";
+  --bg: #0a0506;
+  --surface: #150a0b;
+  --panel: #120809;
+  --grid: #2a1214;
+  --ink: #f6e7e4;
+  --ink-dim: #d7b7b2;
+  --phosphor: #ff6b5b;
+  --phosphor-dim: #e59a90;
+  --phosphor-glow: #ffd2cc;
+  --amber: #ffb199;
+  --amber-dim: #ffb199;
+  --mono: "LabDark Type", "Courier New", monospace;
+  --display: "LabDark Serif", Georgia, serif;
+  --dk-red: #ff3b2f;
+  --dk-paper: #f4efe6;
+  --intro-dur: 1.3s;
+}
+
+body:has(.lab-vision) {
+  background:
+    radial-gradient(ellipse 50% 40% at 50% -5%, rgba(255, 59, 47, .35), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 50% 110%, rgba(120, 10, 10, .35), transparent 70%),
+    #0a0506;
+  background-attachment: fixed;
+}
+body:has(.lab-vision) .section-head h2 {
+  font: 400 clamp(2.4rem, 7vw, 4.2rem)/1 var(--display);
+  color: var(--dk-paper);
+  text-shadow: 0 0 24px rgba(255, 59, 47, .55), 0 2px 0 #3a0b0b;
+}
+body:has(.lab-vision) .section-head .meta, body:has(.lab-vision) .lab-lede { color: var(--ink-dim); }
+body:has(.lab-vision) .lab-game-panel {
+  border: 0;
+  border-radius: 6px;
+  padding: 1.6rem;
+  background: linear-gradient(180deg, #1b0c0d, #0f0707);
+  box-shadow: inset 0 1px 0 rgba(255, 90, 80, .25), 0 0 0 1px #3a1618, 0 0 60px rgba(255, 59, 47, .15), 0 30px 70px rgba(0, 0, 0, .7);
+}
+body:has(.lab-vision) .lab-game-head { border-bottom: 1px solid #3a1618; }
+body:has(.lab-vision) .lab-game-head h3 { font: 400 1.6rem/1 var(--display); color: var(--dk-paper); }
+body:has(.lab-vision) :is(.scale-chrome, .mag-seed, .lab-game-head .mono, .lab-game-head .meta) { color: var(--ink-dim); }
+body:has(.lab-vision) .scale-score strong { color: var(--amber) !important; text-shadow: none; }
+body:has(.lab-vision) .scale-prompt { color: var(--phosphor-glow); }
+body:has(.lab-vision) .mag-tab { min-height: 44px; border: 1px solid #5a2224; color: var(--ink); font-family: var(--mono); text-transform: none; }
+body:has(.lab-vision) .mag-tab.is-active { background: var(--dk-red); border-color: var(--dk-red); color: #1a0405; box-shadow: none; }
+body:has(.lab-vision) .lab-game-panel .btn { border: 1px solid #7a2e2c; color: var(--ink); font-family: var(--mono); font-weight: 700; border-radius: 3px; }
+body:has(.lab-vision) .lab-game-panel .btn:hover { background: rgba(255, 59, 47, .12); color: #fff; }
+body:has(.lab-vision) .lab-game-panel .btn-signal { background: var(--dk-red); border-color: var(--dk-red); color: #1a0405; }
+body:has(.lab-vision) .lab-game-panel .btn-signal:hover { background: #ff6b5b; color: #1a0405; filter: none; }
+body:has(.lab-vision) .btn:focus-visible { outline: 2px solid var(--dk-paper); outline-offset: 3px; }
+body:has(.lab-vision) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]) { border-color: #7a2e2c; color: var(--ink); }
+body:has(.lab-vision) .lab-reveal { border: 1px solid #5a2224; background: rgba(255, 59, 47, .06); border-radius: 4px; }
+body:has(.lab-vision) .lab-reveal > .mono { color: var(--ink); }
+
+/* Intro: lights out, safelight on, a print develops. */
+body:has(.lab-vision)::before { animation-name: dk-intro-dark; }
+body:has(.lab-vision)::after {
+  background:
+    linear-gradient(#0a0506, #0a0506) center / 38% 52% no-repeat,
+    linear-gradient(var(--dk-paper), var(--dk-paper)) center / 42% 58% no-repeat,
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(255, 59, 47, .6), transparent 70%),
+    #0a0506;
+  animation-name: dk-intro-print;
+}
+@keyframes dk-intro-dark {
+  0%, 18% { opacity: 1; visibility: visible; filter: none; }
+  30% { filter: brightness(.1) sepia(1) hue-rotate(-40deg) saturate(4); opacity: 1; }
+  40% { opacity: 0; }
+  100% { opacity: 0; visibility: hidden; }
+}
+@keyframes dk-intro-print {
+  0%, 30% { opacity: 0; visibility: visible; filter: brightness(.2); }
+  38% { opacity: 1; filter: brightness(1); }
+  45% { background-size: 38% 52%, 42% 58%, auto, auto; }
+  75% { background-size: 0% 0%, 42% 58%, auto, auto; opacity: 1; }
+  100% { background-size: 0% 0%, 42% 58%, auto, auto; opacity: 0; visibility: hidden; }
+}

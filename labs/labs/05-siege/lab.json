@@ -1,0 +1,13 @@
+{
+  "n": "05",
+  "root": "lab-ops",
+  "title": "Secure ops",
+  "meta": "tower defence · WAF rules",
+  "lede": "Three waves of scripted traffic march on five gates: credential stuffing, DDoS bursts, XSS, SQL injection, scrapers and SSRF, mixed in with real visitors. Spend gold on defences per gate, upgrade them between waves, and write your own WAF regex against the intel log. Every raider you stop scores; every real visitor you turn away costs more.",
+  "description": "Secure ops: a tower-defence game with real web attack traffic, tiered defences and a regex WAF rule writer with ReDoS protection.",
+  "card": {
+    "title": "Secure ops",
+    "kind": "tower defence · WAF",
+    "blurb": "Defend five gates from real attack traffic and write your own WAF regex."
+  }
+}

@@ -1,0 +1,103 @@
+/* ==========================================================================
+   lab/12 RL Arena: 8-bit dungeon arcade
+   Neon night, pixel-stepped borders, a knight in a torchlit dungeon.
+   Intro: the CRT becomes an arcade attract screen, INSERT COIN blinks, pixel wipe.
+   ========================================================================== */
+@font-face { font-family: "LabArcade Pixel"; src: url(/assets/lab/arcade/pressstart.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "LabArcade Term"; src: url(/assets/lab/arcade/vt323.woff2) format("woff2"); font-display: swap; }
+
+:root:has(.lab-rl) {
+  --lab-theme: arcade;
+  --lab-loading: "> INSERT COIN…";
+  --bg: #0d0221;
+  --surface: #140a2e;
+  --panel: #140a2e;
+  --grid: #2a1b52;
+  --ink: #f2e9ff;
+  --ink-dim: #c9bdf0;
+  --phosphor: #05d9e8;
+  --phosphor-dim: #9ad7e6;
+  --phosphor-glow: #bff9ff;
+  --amber: #f9c80e;
+  --amber-dim: #f9c80e;
+  --mono: "LabArcade Term", "VT323", ui-monospace, monospace;
+  --display: "LabArcade Pixel", "Press Start 2P", monospace;
+  --ar-pink: #ff2a6d;
+  --ar-cyan: #05d9e8;
+  --ar-gold: #f9c80e;
+  --intro-dur: 1.3s;
+}
+
+body:has(.lab-rl) {
+  background:
+    linear-gradient(transparent 0 calc(100% - 1px), rgba(255, 42, 109, .18) calc(100% - 1px)) 0 0 / 100% 40px,
+    linear-gradient(90deg, transparent 0 calc(100% - 1px), rgba(5, 217, 232, .12) calc(100% - 1px)) 0 0 / 40px 100%,
+    radial-gradient(ellipse at 50% 120%, #3a0c5e, #0d0221 70%);
+  background-attachment: fixed;
+}
+body:has(.lab-rl) .section-head h2 {
+  font: 400 clamp(1.6rem, 5vw, 3rem)/1.2 var(--display);
+  color: var(--ar-gold);
+  text-shadow: 4px 4px 0 var(--ar-pink), 8px 8px 0 #000;
+}
+body:has(.lab-rl) .section-head .meta { color: var(--ink-dim); font-family: var(--mono); font-size: 1rem; }
+body:has(.lab-rl) .lab-lede { color: var(--ink-dim); font: 400 1.3rem/1.25 var(--mono); }
+body:has(.lab-rl) .lab-game-panel {
+  border: 0;
+  border-radius: 0;
+  padding: 1.6rem;
+  background: var(--surface);
+  box-shadow: 0 0 0 4px #000, 0 0 0 8px var(--ar-cyan), 0 0 0 12px #000, 12px 12px 0 12px var(--ar-pink);
+}
+body:has(.lab-rl) .lab-game-head { border-bottom: 4px solid #000; box-shadow: 0 2px 0 var(--ar-cyan); }
+body:has(.lab-rl) .lab-game-head h3 { font: 400 1rem/1.4 var(--display); color: var(--ar-cyan); }
+body:has(.lab-rl) :is(.scale-chrome, .mag-seed, .lab-game-head .mono, .lab-game-head .meta) { color: var(--ink-dim); font-size: 1rem; }
+body:has(.lab-rl) .scale-score { font-size: 1.05rem; }
+body:has(.lab-rl) .scale-score strong { color: var(--ar-gold) !important; text-shadow: none; }
+body:has(.lab-rl) .scale-prompt { color: var(--ar-cyan); font-size: 1.2rem; }
+body:has(.lab-rl) .lab-game-panel .btn {
+  border: 0; border-radius: 0; color: #000; background: var(--ar-cyan);
+  font: 400 .72rem/1 var(--display); letter-spacing: .02em;
+  box-shadow: 0 0 0 3px #000, 4px 4px 0 3px #000;
+}
+body:has(.lab-rl) .lab-game-panel .btn:hover { background: #bff9ff; color: #000; }
+body:has(.lab-rl) .lab-game-panel .btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 3px #000; }
+body:has(.lab-rl) .lab-game-panel .btn-signal { background: var(--ar-gold); color: #000; }
+body:has(.lab-rl) .lab-game-panel .btn-signal:hover { background: #ffe066; color: #000; filter: none; }
+body:has(.lab-rl) .btn:focus-visible { outline: 3px solid var(--ar-pink); outline-offset: 5px; }
+body:has(.lab-rl) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]) { border-radius: 0; border: 3px solid var(--ar-cyan); color: var(--ar-cyan); font: 400 .7rem/1 var(--display); }
+body:has(.lab-rl) .lab-reveal { border: 0; background: #000; box-shadow: 0 0 0 3px var(--ar-cyan); }
+body:has(.lab-rl) .lab-reveal > .mono { color: var(--ar-gold); font-size: 1.2rem; }
+
+/* Intro: arcade attract screen, blinking INSERT COIN, stepped pixel wipe. */
+body:has(.lab-rl)::before { animation-name: ar-intro-attract; }
+body:has(.lab-rl)::after {
+  content: "INSERT COIN" / "";
+  display: grid;
+  place-items: center;
+  font: 400 clamp(1.2rem, 5vw, 3rem)/1 "LabArcade Pixel", monospace;
+  color: var(--ar-gold);
+  text-shadow: 4px 4px 0 var(--ar-pink);
+  background: #0d0221;
+  animation-name: ar-intro-coin;
+  animation-timing-function: steps(1, end);
+}
+@keyframes ar-intro-attract {
+  0%, 20% { opacity: 1; visibility: visible; filter: none; }
+  22% { filter: brightness(2.5) hue-rotate(200deg); }
+  26% { filter: none; opacity: 1; }
+  30% { opacity: 0; }
+  100% { opacity: 0; visibility: hidden; }
+}
+@keyframes ar-intro-coin {
+  0%, 26% { opacity: 0; visibility: visible; clip-path: inset(0 0 0 0); color: var(--ar-gold); }
+  30% { opacity: 1; }
+  40% { color: transparent; }
+  50% { color: var(--ar-gold); }
+  60% { color: transparent; }
+  70% { color: var(--ar-gold); clip-path: inset(0 0 0 0); }
+  76% { clip-path: inset(0 0 0 25%); }
+  82% { clip-path: inset(0 0 0 50%); }
+  88% { clip-path: inset(0 0 0 75%); }
+  94%, 100% { clip-path: inset(0 0 0 100%); opacity: 1; visibility: hidden; }
+}

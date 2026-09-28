@@ -1,0 +1,204 @@
+/* ==========================================================================
+   lab/05 Secure ops: Castle under siege
+   Stone walls around a parchment campaign map. Routes are gates on roads,
+   visitors (circles) are merchants, abusive traffic (diamonds) are raiders.
+   Protections are defences: portcullis, guards, moat, treasury. Budget is gold.
+   Intro: CRT burns away like old parchment, a drawbridge lowers.
+   ========================================================================== */
+@font-face { font-family: "LabSiege Caps"; src: url(/assets/lab/siege/imfell-sc.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "LabSiege Text"; src: url(/assets/lab/siege/imfell.woff2) format("woff2"); font-display: swap; }
+
+:root:has(.lab-ops) {
+  --lab-theme: siege;
+  --lab-loading: "> raising the banners…";
+  --bg: #26221e;
+  --surface: #e9dab4;
+  --panel: #efe2c0;
+  --grid: #cdb888;
+  --ink: #f0e4c6;
+  --ink-dim: #d8c9a4;
+  --phosphor: #f0e4c6;
+  --phosphor-dim: #cbb98f;
+  --phosphor-glow: #fff5dc;
+  --amber: #f2c14e;
+  --amber-dim: #e0ad3a;
+  --mono: "LabSiege Text", Georgia, serif;
+  --display: "LabSiege Caps", Georgia, serif;
+  --sg-parch: #efe2c0;
+  --sg-parch-deep: #dcc796;
+  --sg-ink: #2b1d10;
+  --sg-ink-dim: #5a4630;
+  --sg-red: #8e1b1b;
+  --sg-gold: #b8860b;
+  --sg-gold-text: #6e5200;
+  --sg-green: #2f6b3a;
+  --intro-dur: 1.3s;
+}
+
+/* ---- World: castle stone ------------------------------------------------------ */
+body:has(.lab-ops) {
+  background:
+    linear-gradient(rgba(0, 0, 0, .35) 2px, transparent 2px) 0 0 / 96px 48px,
+    linear-gradient(90deg, rgba(0, 0, 0, .35) 2px, transparent 2px) 0 0 / 96px 96px,
+    linear-gradient(90deg, rgba(0, 0, 0, .35) 2px, transparent 2px) 48px 48px / 96px 96px,
+    radial-gradient(ellipse at 50% 30%, #3a342d, #221e1a 80%);
+  background-attachment: fixed;
+}
+body:has(.lab-ops) .section-head h2 {
+  font-family: var(--display);
+  font-size: clamp(2.4rem, 6vw, 3.8rem);
+  letter-spacing: .03em;
+  color: var(--sg-parch);
+  text-shadow: 0 2px 0 #000;
+}
+body:has(.lab-ops) .section-head h2::before { content: "⚔ " / ""; color: var(--amber); }
+body:has(.lab-ops) .section-head .meta { color: var(--ink-dim); }
+body:has(.lab-ops) .lab-lede { color: var(--ink-dim); font-size: 1.05rem; }
+
+/* ---- The campaign map (parchment) ----------------------------------------------- */
+body:has(.lab-ops) .lab-game-panel {
+  --ink: var(--sg-ink);
+  --ink-dim: var(--sg-ink-dim);
+  --phosphor: var(--sg-ink);
+  --phosphor-dim: var(--sg-ink-dim);
+  --phosphor-glow: var(--sg-ink);
+  --amber: var(--sg-red);
+  --amber-dim: var(--sg-red);
+  border: 0;
+  border-radius: 3px;
+  padding: 1.75rem;
+  color: var(--sg-ink);
+  background:
+    radial-gradient(ellipse at 50% 50%, transparent 60%, rgba(120, 80, 30, .35) 100%),
+    radial-gradient(circle at 20% 30%, rgba(160, 120, 60, .12), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(160, 120, 60, .12), transparent 40%),
+    var(--sg-parch);
+  box-shadow: 0 0 0 6px #4a3620, 0 0 0 8px var(--sg-gold), 0 30px 60px rgba(0, 0, 0, .6);
+}
+body:has(.lab-ops) .lab-game-head { border-bottom: 2px solid var(--sg-ink); }
+body:has(.lab-ops) .lab-game-head h3 { font: 400 1.6rem/1.1 var(--display); color: var(--sg-ink); }
+body:has(.lab-ops) :is(.scale-chrome, .mag-seed, .lab-game-head .mono, .lab-game-head .meta, .ops-help, .ops-legend) { color: var(--sg-ink-dim); }
+body:has(.lab-ops) .scale-prompt { color: var(--sg-ink); font-size: .95rem; font-style: italic; }
+body:has(.lab-ops) .scale-score { color: var(--sg-ink-dim); font-weight: 400; }
+/* Budget and score as gold coins. */
+body:has(.lab-ops) .scale-score strong {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.9em;
+  height: 1.9em;
+  padding: 0 .25em;
+  border-radius: 999px;
+  font-family: var(--display);
+  color: #2b1d10 !important;
+  text-shadow: none;
+  background: radial-gradient(circle at 35% 30%, #fff1b8, #e6b83c 55%, #9a6f0a);
+  box-shadow: 0 0 0 1px #6e5200, 0 2px 3px rgba(0, 0, 0, .35);
+}
+
+body:has(.lab-ops) .ops-stage {
+  border: 2px solid var(--sg-ink);
+  border-radius: 2px;
+  background: rgba(255, 250, 235, .35);
+  padding: .9rem;
+}
+/* Gates, roads, merchants and raiders. */
+body:has(.lab-ops) .ops-node { fill: #e3cf9f; stroke: var(--sg-ink); stroke-width: 2; rx: 3; }
+body:has(.lab-ops) .ops-node-label { fill: var(--sg-ink); font-family: var(--display); font-size: 15px; }
+body:has(.lab-ops) .ops-node-shields { fill: var(--sg-red); font-family: var(--mono); font-size: 10px; font-style: italic; }
+body:has(.lab-ops) .ops-lane { stroke: #8b6b3e; stroke-width: 3; stroke-dasharray: 8 5; stroke-linecap: round; }
+body:has(.lab-ops) .ops-req { opacity: 1; }
+body:has(.lab-ops) .ops-req circle { fill: var(--sg-green); stroke: #173a1f; stroke-width: 1.5; }
+body:has(.lab-ops) .ops-req rect { fill: var(--sg-red); stroke: #3d0808; stroke-width: 1.5; }
+body:has(.lab-ops) .ops-req.is-blocked :is(circle, rect) { fill: #8a7a60; stroke: #5a4a30; }
+body:has(.lab-ops) .ops-req.is-blocked-benign circle { fill: #d9822b; stroke: #6b3a08; }
+body:has(.lab-ops) .ops-legend { font-size: .8rem; }
+body:has(.lab-ops) .ops-key-dot { background: var(--sg-green); }
+body:has(.lab-ops) .ops-key-diamond { background: var(--sg-red); }
+body:has(.lab-ops) .ops-key-dim { background: #8a7a60; opacity: 1; }
+body:has(.lab-ops) .ops-legend::before { content: "● merchants · ◆ raiders" / ""; font-family: var(--display); color: var(--sg-ink); margin-right: .6rem; }
+
+/* ---- Defences (protections) ------------------------------------------------------ */
+body:has(.lab-ops) .ops-row-head span { color: var(--sg-ink-dim); font: 400 .8rem/1 var(--display); letter-spacing: .04em; text-transform: none; }
+body:has(.lab-ops) .ops-route { color: var(--sg-ink); font: 400 1rem/1 var(--display); }
+body:has(.lab-ops) .ops-toggle {
+  position: relative;
+  padding-left: 2.6rem;
+  border: 1px solid #8b6b3e;
+  border-radius: 3px;
+  color: var(--sg-ink);
+  font-family: var(--mono);
+  font-size: .85rem;
+  background: linear-gradient(180deg, #f5ead0, #e5d3a6);
+}
+body:has(.lab-ops) .ops-toggle::before {
+  content: "";
+  position: absolute;
+  left: .6rem;
+  top: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-top: -.75rem;
+  background: var(--sg-ink);
+  -webkit-mask: var(--sg-icon) center / contain no-repeat;
+  mask: var(--sg-icon) center / contain no-repeat;
+}
+/* Portcullis, guard, moat, treasury (column order: rate limit, auth, CSP, vault). */
+body:has(.lab-ops) .ops-row .ops-toggle:nth-of-type(1) { --sg-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 2h18v2H3zM5 4h2v14l-1 3-1-3zM11 4h2v14l-1 3-1-3zM17 4h2v14l-1 3-1-3zM3 8h18v2H3zM3 13h18v2H3z'/%3E%3C/svg%3E"); }
+body:has(.lab-ops) .ops-row .ops-toggle:nth-of-type(2) { --sg-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1l9 3.5V11c0 5.6-3.8 10.2-9 12-5.2-1.8-9-6.4-9-12V4.5zm0 3.2L6 6.6V11c0 3.9 2.4 7.3 6 8.8z'/%3E%3C/svg%3E"); }
+body:has(.lab-ops) .ops-row .ops-toggle:nth-of-type(3) { --sg-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 7c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4-2 2 2 4 2v3c-2 0-2-2-4-2s-2 2-4 2-2-2-4-2-2 2-4 2-2-2-4-2zm0 7c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 4-2v3c-2 0-2 2-4 2s-2-2-4-2-2 2-4 2-2-2-4-2-2 2-4 2z'/%3E%3C/svg%3E"); }
+body:has(.lab-ops) .ops-row .ops-toggle:nth-of-type(4) { --sg-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 10c0-4 4-6 9-6s9 2 9 6H3zm0 2h18v8H3zm8 2v4h2v-4z'/%3E%3C/svg%3E"); }
+body:has(.lab-ops) .ops-toggle-state { color: var(--sg-gold-text); font-weight: 400; }
+body:has(.lab-ops) .ops-toggle:hover:not(:disabled) { background: linear-gradient(180deg, #fbf3de, #eadbb4); }
+body:has(.lab-ops) .ops-toggle.is-on {
+  color: #fff5dc;
+  border-color: #4a0c0c;
+  background: linear-gradient(180deg, #a62a2a, var(--sg-red));
+  box-shadow: inset 0 0 0 2px var(--sg-gold);
+}
+body:has(.lab-ops) .ops-toggle.is-on::before { background: #fff1b8; }
+body:has(.lab-ops) .ops-toggle.is-on .ops-toggle-state { color: #ffe08a; }
+body:has(.lab-ops) .ops-toggle:disabled { opacity: .5; }
+body:has(.lab-ops) :is(.ops-toggle, .btn):focus-visible { outline: 3px solid #1f4fa0; outline-offset: 2px; }
+
+body:has(.lab-ops) .lab-game-panel .btn { border: 2px solid var(--sg-ink); color: var(--sg-ink); font: 400 1rem/1 var(--display); letter-spacing: .04em; text-transform: none; }
+body:has(.lab-ops) .lab-game-panel .btn:hover { background: rgba(43, 29, 16, .08); color: var(--sg-ink); }
+body:has(.lab-ops) .lab-game-panel .btn-signal { background: var(--sg-red); color: #fff5dc; border-color: #4a0c0c; }
+body:has(.lab-ops) .lab-game-panel .btn-signal:hover { background: #a62a2a; color: #fff5dc; filter: none; }
+body:has(.lab-ops) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]) { border-color: var(--sg-parch); color: var(--sg-parch); font: 400 1rem/1 var(--display); text-transform: none; }
+body:has(.lab-ops) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]):hover { background: var(--sg-parch); color: var(--sg-ink); }
+
+body:has(.lab-ops) .lab-reveal { border: 2px solid var(--sg-ink); background: rgba(255, 250, 235, .5); }
+body:has(.lab-ops) .lab-reveal > .mono { color: var(--sg-red); font-family: var(--display); font-size: 1.05rem; }
+body:has(.lab-ops) .lab-reveal-why { color: var(--sg-ink-dim); }
+body:has(.lab-ops) .ops-log { color: var(--sg-ink-dim); font-size: .8rem; }
+body:has(.lab-ops) .ops-log li.is-blocked { color: var(--sg-ink-dim); }
+body:has(.lab-ops) .ops-log li.is-blocked-benign { color: #8a3d05; }
+body:has(.lab-ops) .lab-reveal > .ops-log { color: var(--sg-ink-dim); }
+
+/* ---- Intro: CRT burns away, drawbridge lowers ------------------------------------------ */
+@property --sg-burn { syntax: "<percentage>"; inherits: false; initial-value: -10%; }
+body:has(.lab-ops)::before {
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 0 var(--sg-burn), #000 calc(var(--sg-burn) + 7%));
+  mask-image: radial-gradient(circle at 50% 50%, transparent 0 var(--sg-burn), #000 calc(var(--sg-burn) + 7%));
+  animation-name: sg-intro-burn;
+}
+body:has(.lab-ops)::after {
+  z-index: 199;
+  background:
+    linear-gradient(90deg, transparent 18%, #2b1d10 18% 19.5%, transparent 19.5% 80.5%, #2b1d10 80.5% 82%, transparent 82%) 0 0 / 100% 100%,
+    repeating-linear-gradient(90deg, #6b4a26 0 7%, #5a3d1e 7% 7.6%),
+    linear-gradient(0deg, rgba(0, 0, 0, .35), transparent 30%);
+  transform-origin: 50% 100%;
+  animation-name: sg-intro-bridge;
+}
+@keyframes sg-intro-burn {
+  0%, 18% { --sg-burn: -10%; opacity: 1; visibility: visible; filter: none; }
+  30% { --sg-burn: -10%; filter: sepia(1) saturate(2.4) brightness(.95) hue-rotate(-14deg); }
+  58% { --sg-burn: 90%; filter: sepia(1) saturate(2.4) brightness(.6) hue-rotate(-14deg); opacity: 1; }
+  100% { --sg-burn: 120%; opacity: 0; visibility: hidden; }
+}
+@keyframes sg-intro-bridge {
+  0%, 45% { transform: perspective(900px) rotateX(0); opacity: 1; visibility: visible; }
+  92% { transform: perspective(900px) rotateX(-88deg); opacity: 1; }
+  100% { transform: perspective(900px) rotateX(-90deg); opacity: 0; visibility: hidden; }
+}

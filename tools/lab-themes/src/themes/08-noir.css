@@ -1,0 +1,226 @@
+/* ==========================================================================
+   lab/08 Attention Lens: Noir detective's corkboard
+   A dark office striped by venetian-blind shadows. The game is a corkboard:
+   words are pinned index cards, attention arcs are red string (weight still
+   drives thickness/opacity), "it" is the yellow suspect note, calling the
+   antecedent is naming the suspect, the verdict stamps SOLVED / COLD CASE.
+   Intro: the CRT flickers like a failing bulb, the room goes dark, a desk lamp
+   clicks on and its light opens onto the board.
+   ========================================================================== */
+@font-face { font-family: "LabNoir Headline"; src: url(/assets/lab/noir/bebas.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "LabNoir Type"; src: url(/assets/lab/bureau/courierprime-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "LabNoir Type"; src: url(/assets/lab/bureau/courierprime-700.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+
+:root:has(.lab-attn) {
+  --lab-theme: noir;
+  --lab-loading: "> pulling the blinds…";
+  --bg: #111112;
+  --surface: #b98b56;
+  --panel: #b98b56;
+  --grid: #2a2a2c;
+  --ink: #ece6d6;
+  --ink-dim: #c8c0ad;
+  --phosphor: #ece6d6;
+  --phosphor-dim: #bdb49f;
+  --phosphor-glow: #fffaf0;
+  --amber: #f2d16b;
+  --amber-dim: #e4bf52;
+  --mono: "LabNoir Type", "Courier New", monospace;
+  --display: "LabNoir Headline", Impact, sans-serif;
+  --nr-cork: #b98b56;
+  --nr-card: #f7f1e1;
+  --nr-ink: #1a1208;
+  --nr-ink-dim: #3d2f1c;
+  --nr-string: #b3261e;
+  --nr-lamp: #f2d16b;
+  --intro-dur: 1.3s;
+}
+
+/* ---- World: office at night, blind shadows, lamp from the upper left ------------------ */
+body:has(.lab-attn) {
+  background:
+    radial-gradient(ellipse 55% 60% at 18% -5%, rgba(242, 209, 107, .2), transparent 70%),
+    repeating-linear-gradient(-24deg, rgba(0, 0, 0, 0) 0 34px, rgba(0, 0, 0, .45) 34px 58px),
+    linear-gradient(180deg, #1c1c1e, #0e0e0f);
+  background-attachment: fixed;
+}
+body:has(.lab-attn) .section-head h2 {
+  font: 400 clamp(3rem, 9vw, 5.5rem)/.9 var(--display);
+  letter-spacing: .03em;
+  color: var(--nr-lamp);
+  text-shadow: 0 0 30px rgba(242, 209, 107, .25);
+}
+body:has(.lab-attn) .section-head h2::after {
+  content: "Case file № 08 — who is 'it'?" / "";
+  display: block;
+  margin-top: .45rem;
+  font: 400 1rem/1 var(--mono);
+  letter-spacing: .08em;
+  color: var(--ink-dim);
+}
+body:has(.lab-attn) .section-head .meta { color: var(--ink-dim); }
+body:has(.lab-attn) .lab-lede { color: var(--ink-dim); font-size: .98rem; }
+
+/* ---- Corkboard ---------------------------------------------------------------------- */
+body:has(.lab-attn) .lab-game-panel {
+  --ink: var(--nr-ink);
+  --ink-dim: var(--nr-ink-dim);
+  --phosphor: var(--nr-ink);
+  --phosphor-dim: var(--nr-ink-dim);
+  --phosphor-glow: var(--nr-ink);
+  --amber: var(--nr-string);
+  --amber-dim: var(--nr-string);
+  border: 0;
+  border-radius: 4px;
+  padding: 1.6rem;
+  color: var(--nr-ink);
+  background:
+    radial-gradient(circle at 20% 30%, rgba(90, 55, 20, .35) 0 1.2px, transparent 1.6px) 0 0 / 11px 13px,
+    radial-gradient(circle at 70% 60%, rgba(255, 235, 200, .25) 0 1px, transparent 1.4px) 0 0 / 9px 7px,
+    radial-gradient(ellipse at 30% 0%, rgba(255, 230, 160, .25), transparent 60%),
+    var(--nr-cork);
+  box-shadow: 0 0 0 10px #4a2f18, 0 0 0 12px #2a1a0c, 0 30px 60px rgba(0, 0, 0, .7);
+}
+body:has(.lab-attn) .lab-game-head { border-bottom: 2px solid rgba(26, 18, 8, .55); }
+body:has(.lab-attn) .lab-game-head h3 { font: 400 1.9rem/1 var(--display); letter-spacing: .04em; color: var(--nr-ink); }
+body:has(.lab-attn) :is(.scale-chrome, .mag-seed, .lab-game-head .mono, .lab-game-head .meta, .attn-hint) { color: var(--nr-ink); font-weight: 700; }
+body:has(.lab-attn) .scale-score { color: var(--nr-ink); font-weight: 700; }
+body:has(.lab-attn) .scale-score strong { color: var(--nr-string) !important; text-shadow: none; }
+/* Typed strips pinned to the cork. */
+body:has(.lab-attn) :is(.scale-prompt, .attn-disclaimer) {
+  display: inline-block;
+  padding: .35rem .7rem;
+  background: var(--nr-card);
+  color: var(--nr-ink);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .35);
+}
+body:has(.lab-attn) .scale-prompt { font-weight: 700; font-size: .9rem; transform: rotate(-.4deg); }
+body:has(.lab-attn) .attn-disclaimer { font-size: .75rem; color: var(--nr-ink-dim); transform: rotate(.3deg); }
+
+/* Tabs as case-folder tabs. */
+body:has(.lab-attn) .mag-tab {
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 6px 6px 0 0;
+  background: #d9c28d;
+  color: var(--nr-ink);
+  font: 700 .8rem/1 var(--mono);
+  letter-spacing: .1em;
+}
+body:has(.lab-attn) .mag-tab:hover { background: #e6d3a4; color: var(--nr-ink); }
+body:has(.lab-attn) .mag-tab.is-active { background: var(--nr-card); color: var(--nr-ink); box-shadow: 0 -2px 0 var(--nr-string) inset; }
+
+body:has(.lab-attn) .attn-stage {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: .75rem .25rem;
+}
+/* Red string. */
+body:has(.lab-attn) .attn-arc {
+  stroke: var(--nr-string);
+  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, .45));
+  animation: nr-string .5s cubic-bezier(.3, 1.6, .5, 1) both;
+}
+
+/* Index cards (words). */
+body:has(.lab-attn) .attn-words { gap: .3rem; }
+body:has(.lab-attn) .attn-words li:nth-child(odd) .attn-word { transform: rotate(-1.4deg); }
+body:has(.lab-attn) .attn-words li:nth-child(even) .attn-word { transform: rotate(1.2deg); }
+body:has(.lab-attn) .attn-word {
+  padding: .45rem .6rem .35rem;
+  border: 0;
+  background: var(--nr-card);
+  color: var(--nr-ink);
+  font: 700 1.05rem/1 var(--mono);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, .35);
+  transition: transform .15s, box-shadow .15s;
+}
+body:has(.lab-attn) .attn-word::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff8a7a, var(--nr-string) 60%, #5e0f0a);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .5);
+}
+body:has(.lab-attn) .attn-word:hover,
+body:has(.lab-attn) .attn-word.is-focus { transform: rotate(0) translateY(-2px); box-shadow: 0 6px 12px rgba(0, 0, 0, .4); border-color: transparent; }
+body:has(.lab-attn) .attn-word:focus-visible { outline: 3px solid #1f4fa0; outline-offset: 3px; }
+body:has(.lab-attn) .attn-word.is-query { background: #ffe36e; color: var(--nr-ink); text-shadow: none; box-shadow: 0 3px 6px rgba(0, 0, 0, .35), inset 0 0 0 2px var(--nr-ink); }
+body:has(.lab-attn) .attn-word.is-top { color: var(--nr-ink); text-shadow: none; background: #fff7dd; }
+body:has(.lab-attn) .attn-word.is-answer { box-shadow: 0 0 0 3px var(--nr-string), 0 3px 6px rgba(0, 0, 0, .35); border-radius: 40%; }
+body:has(.lab-attn) .attn-word.is-wrong { color: var(--nr-string); text-decoration: line-through 2px; }
+body:has(.lab-attn) .attn-w { color: var(--nr-ink); font-weight: 700; bottom: -1.05rem; }
+
+/* Explore-mode chips as pins. */
+body:has(.lab-attn) .attn-chip { border: 0; border-radius: 3px; background: var(--nr-card); color: var(--nr-ink); font-family: var(--mono); font-weight: 700; box-shadow: 0 2px 4px rgba(0, 0, 0, .3); }
+body:has(.lab-attn) .attn-chip.is-active { background: #ffe36e; color: var(--nr-ink); box-shadow: inset 0 0 0 2px var(--nr-ink); }
+
+/* Buttons + verdict. */
+body:has(.lab-attn) .lab-game-panel .btn { border: 2px solid var(--nr-ink); background: var(--nr-card); color: var(--nr-ink); font: 700 .85rem/1 var(--mono); letter-spacing: .1em; }
+body:has(.lab-attn) .lab-game-panel .btn:hover { background: #fff; color: var(--nr-ink); }
+body:has(.lab-attn) .lab-game-panel .btn-signal { background: var(--nr-ink); color: var(--nr-lamp); }
+body:has(.lab-attn) .lab-game-panel .btn-signal:hover { background: #2c2012; color: var(--nr-lamp); filter: none; }
+body:has(.lab-attn) .btn:focus-visible { outline: 3px solid #1f4fa0; outline-offset: 3px; }
+body:has(.lab-attn) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]) { border-color: var(--nr-lamp); color: var(--nr-lamp); font: 700 .85rem/1 var(--mono); }
+body:has(.lab-attn) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]):hover { background: var(--nr-lamp); color: var(--nr-ink); }
+body:has(.lab-attn) .lab-reveal { position: relative; border: 0; background: var(--nr-card); color: var(--nr-ink); padding-right: 10rem; box-shadow: 0 3px 8px rgba(0, 0, 0, .35); }
+body:has(.lab-attn) .lab-reveal > .mono { color: var(--nr-ink); font-weight: 700; }
+body:has(.lab-attn) .lab-reveal-why { color: var(--nr-ink-dim); }
+body:has(.lab-attn) .lab-reveal::after {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  padding: .3rem .7rem;
+  border: 3px solid currentColor;
+  font: 400 1.6rem/1 var(--display);
+  letter-spacing: .1em;
+  transform: translateY(-50%) rotate(-8deg);
+  animation: nr-stamp .3s cubic-bezier(.2, 1.7, .4, 1) both;
+}
+body:has(.lab-attn) .lab-reveal.is-hit::after { content: "SOLVED" / ""; color: #1f6a3a; }
+body:has(.lab-attn) .lab-reveal.is-miss::after { content: "COLD CASE" / ""; color: var(--nr-string); }
+
+/* ---- Intro: failing bulb, darkness, desk lamp clicks on ------------------------------------ */
+@property --nr-lamp-r { syntax: "<percentage>"; inherits: false; initial-value: -25%; }
+body:has(.lab-attn)::before {
+  -webkit-mask-image: radial-gradient(ellipse 120% 90% at 22% 0%, transparent 0 var(--nr-lamp-r), #000 calc(var(--nr-lamp-r) + 18%));
+  mask-image: radial-gradient(ellipse 120% 90% at 22% 0%, transparent 0 var(--nr-lamp-r), #000 calc(var(--nr-lamp-r) + 18%));
+  animation-name: nr-intro-bulb;
+}
+body:has(.lab-attn)::after {
+  background: radial-gradient(ellipse 70% 80% at 22% 0%, rgba(255, 226, 140, .55), rgba(255, 226, 140, .12) 55%, transparent 75%);
+  animation-name: nr-intro-lamp;
+}
+@keyframes nr-intro-bulb {
+  0%, 12% { opacity: 1; visibility: visible; filter: none; --nr-lamp-r: -25%; }
+  15% { filter: brightness(.15); }
+  18% { filter: none; }
+  22% { filter: brightness(.1); }
+  24% { filter: brightness(.9); }
+  30% { filter: brightness(.05); }
+  36%, 50% { filter: brightness(0); --nr-lamp-r: -25%; opacity: 1; }
+  82% { filter: brightness(0); --nr-lamp-r: 110%; opacity: 1; }
+  100% { filter: brightness(0); --nr-lamp-r: 140%; opacity: 0; visibility: hidden; }
+}
+@keyframes nr-intro-lamp {
+  0%, 49% { opacity: 0; visibility: visible; }
+  51% { opacity: 1; }
+  54% { opacity: .75; }
+  60%, 80% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+@keyframes nr-string {
+  0% { stroke-dasharray: 0 2000; }
+  100% { stroke-dasharray: 2000 0; }
+}
+@keyframes nr-stamp {
+  0% { opacity: 0; transform: translateY(-50%) rotate(-8deg) scale(2.2); }
+  100% { opacity: 1; transform: translateY(-50%) rotate(-8deg) scale(1); }
+}

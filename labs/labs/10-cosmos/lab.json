@@ -1,0 +1,9 @@
+{
+  "n": "10",
+  "root": "lab-galaxy",
+  "title": "Embedding Galaxy",
+  "meta": "word vectors · analogies · 3-D",
+  "lede": "Eight thousand English words, placed by meaning: words used in similar ways are neighbouring stars. Fly to any word and see its closest companions, then solve five daily puzzles: word arithmetic like king − man + woman, and spotting the star that does not belong. Every answer is computed live from real GloVe vectors in your browser.",
+  "description": "Embedding Galaxy: fly through 8,000 GloVe word vectors in 3-D, search any word, and solve analogy and odd-one-out puzzles.",
+  "card": { "title": "Embedding Galaxy", "kind": "word vectors · 3-D", "blurb": "Fly through 8,000 words placed by meaning and solve analogies like king − man + woman." }
+}

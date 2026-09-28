@@ -1,0 +1,13 @@
+{
+  "n": "01",
+  "root": "scale-arena",
+  "title": "Scale Arena",
+  "meta": "ratio bets · powers of ten",
+  "lede": "Ten bouts a day, from protons to superclusters. Don't just pick the bigger fighter: bet how many times bigger it is, on a log scale. Lock in, and the camera zooms out through the powers of ten to show both at true scale. Good bets build a streak multiplier; rounds 5 and 10 are boss bouts.",
+  "description": "Scale Arena: bet on size ratios from protons to the observable universe, then watch a powers-of-ten zoom reveal the truth.",
+  "card": {
+    "title": "Scale Arena",
+    "kind": "ratio bets · powers of ten",
+    "blurb": "Bet how many times bigger, on a log scale. A powers-of-ten zoom reveals the truth."
+  }
+}

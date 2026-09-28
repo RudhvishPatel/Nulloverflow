@@ -1,0 +1,91 @@
+/* ==========================================================================
+   lab/10 Embedding Galaxy: Deep-space navigation
+   8,000 words as stars in a nebula; a starship HUD for search and puzzles.
+   Intro: the CRT jumps to hyperspace: streaks radiate, then the field settles.
+   ========================================================================== */
+@font-face { font-family: "LabCosmos Display"; src: url(/assets/lab/cosmos/orbitron-700.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "LabCosmos Display"; src: url(/assets/lab/cosmos/orbitron-500.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "LabCosmos Mono"; src: url(/assets/lab/blueprint/plexmono-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "LabCosmos Mono"; src: url(/assets/lab/blueprint/plexmono-600.woff2) format("woff2"); font-weight: 600; font-display: swap; }
+
+:root:has(.lab-galaxy) {
+  --lab-theme: cosmos;
+  --lab-loading: "> plotting a course…";
+  --bg: #04030d;
+  --surface: #0a0820;
+  --panel: #0a0820;
+  --grid: rgba(140, 170, 255, .12);
+  --ink: #eef1ff;
+  --ink-dim: #b7bfe6;
+  --phosphor: #8fd3ff;
+  --phosphor-dim: #a9b8f0;
+  --phosphor-glow: #dff3ff;
+  --amber: #ffd27a;
+  --amber-dim: #ffd27a;
+  --mono: "LabCosmos Mono", "IBM Plex Mono", ui-monospace, monospace;
+  --display: "LabCosmos Display", "Eurostile", system-ui, sans-serif;
+  --cs-violet: #a78bfa;
+  --cs-cyan: #8fd3ff;
+  --intro-dur: 1.3s;
+}
+
+body:has(.lab-galaxy) {
+  background:
+    radial-gradient(circle at 15% 25%, rgba(255, 255, 255, .7) 0 1px, transparent 1.5px) 0 0 / 90px 110px,
+    radial-gradient(circle at 60% 70%, rgba(255, 255, 255, .5) 0 1px, transparent 1.5px) 0 0 / 140px 120px,
+    radial-gradient(ellipse 50% 40% at 80% 20%, rgba(167, 139, 250, .25), transparent 70%),
+    radial-gradient(ellipse 60% 45% at 10% 90%, rgba(143, 211, 255, .18), transparent 70%),
+    #04030d;
+  background-attachment: fixed;
+}
+body:has(.lab-galaxy) .section-head h2 {
+  font: 700 clamp(2rem, 6vw, 3.8rem)/1 var(--display);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-shadow: 0 0 18px rgba(143, 211, 255, .6), 0 0 42px rgba(167, 139, 250, .35);
+}
+body:has(.lab-galaxy) .section-head .meta, body:has(.lab-galaxy) .lab-lede { color: var(--ink-dim); }
+body:has(.lab-galaxy) .lab-game-panel {
+  border: 0;
+  border-radius: 4px;
+  padding: 1.6rem;
+  background: linear-gradient(180deg, rgba(14, 12, 40, .85), rgba(4, 3, 13, .92));
+  box-shadow: 0 0 0 1px rgba(143, 211, 255, .35), inset 0 0 0 4px rgba(4, 3, 13, 1), inset 0 0 0 5px rgba(167, 139, 250, .25), 0 30px 80px rgba(0, 0, 0, .7);
+}
+body:has(.lab-galaxy) .lab-game-head { border-bottom: 1px solid rgba(143, 211, 255, .25); }
+body:has(.lab-galaxy) .lab-game-head h3 { font: 700 1.2rem/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--cs-cyan); }
+body:has(.lab-galaxy) :is(.scale-chrome, .mag-seed, .lab-game-head .mono, .lab-game-head .meta) { color: var(--ink-dim); }
+body:has(.lab-galaxy) .scale-score strong { color: var(--amber) !important; text-shadow: none; }
+body:has(.lab-galaxy) .scale-prompt { color: var(--cs-cyan); }
+body:has(.lab-galaxy) .lab-game-panel .btn { border: 1px solid rgba(143, 211, 255, .6); border-radius: 2px; color: var(--cs-cyan); font: 500 .75rem/1 var(--display); letter-spacing: .12em; }
+body:has(.lab-galaxy) .lab-game-panel .btn:hover { background: rgba(143, 211, 255, .12); color: #fff; }
+body:has(.lab-galaxy) .lab-game-panel .btn-signal { background: linear-gradient(90deg, #8fd3ff, #a78bfa); color: #06051a; border-color: transparent; }
+body:has(.lab-galaxy) .lab-game-panel .btn-signal:hover { color: #06051a; filter: brightness(1.08); }
+body:has(.lab-galaxy) .btn:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+body:has(.lab-galaxy) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]) { border-color: rgba(143, 211, 255, .6); color: var(--cs-cyan); }
+body:has(.lab-galaxy) .lab-reveal { border: 1px solid rgba(143, 211, 255, .35); background: rgba(143, 211, 255, .06); border-radius: 2px; }
+body:has(.lab-galaxy) .lab-reveal > .mono { color: var(--ink); }
+
+/* Intro: hyperspace jump. */
+body:has(.lab-galaxy)::before { animation-name: cs-intro-jump; }
+body:has(.lab-galaxy)::after {
+  background:
+    repeating-conic-gradient(from 0deg at 50% 50%, rgba(223, 243, 255, .9) 0 .6deg, transparent .6deg 7deg),
+    radial-gradient(circle at 50% 50%, #04030d 0 8%, transparent 9%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent 0 10%, #000 60%);
+  mask-image: radial-gradient(circle at 50% 50%, transparent 0 10%, #000 60%);
+  animation-name: cs-intro-streaks;
+}
+@keyframes cs-intro-jump {
+  0%, 18% { opacity: 1; visibility: visible; transform: none; filter: none; }
+  40% { transform: scale(1.4); filter: blur(4px) hue-rotate(160deg) brightness(1.5); opacity: 1; }
+  52% { opacity: 0; transform: scale(2.2); }
+  100% { opacity: 0; visibility: hidden; }
+}
+@keyframes cs-intro-streaks {
+  0%, 24% { opacity: 0; visibility: visible; transform: scale(.3); }
+  44% { opacity: 1; }
+  78% { opacity: .9; transform: scale(2.4); }
+  100% { opacity: 0; visibility: hidden; transform: scale(3); }
+}

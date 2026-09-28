@@ -1,0 +1,9 @@
+{
+  "n": "12",
+  "root": "lab-rl",
+  "title": "RL Arena",
+  "meta": "Q-learning · SARSA · reward shaping",
+  "lede": "Three pixel dungeons a day. Train a knight with tabular Q-learning or SARSA: tune the learning rate, the discount and the exploration, watch values glow like torchlight and the policy settle into arrows. Walk the cliff edge, fight the wind, find the key, and use breadcrumbs to lure a short-sighted agent past the decoy chest.",
+  "description": "RL Arena: train a reinforcement-learning agent live in pixel dungeons with Q-learning and SARSA, value heatmaps and reward shaping.",
+  "card": { "title": "RL Arena", "kind": "Q-learning · SARSA", "blurb": "Train a knight live in pixel dungeons. Cliffs, wind, a key vault, and a decoy chest." }
+}

@@ -1,0 +1,266 @@
+/* ==========================================================================
+   lab/03 Eval harness: 1950s inspection bureau
+   A desk under a lamp. The game is a manila case file; each output is a typed
+   index card; PASS / FAIL are rubber stamps; the rubric is a pinned memo; the
+   confusion grid is a pegboard tally; metrics are brass dials.
+   Intro: CRT turns to paper, a folder slides up, IN REVIEW is stamped, it flips open.
+   ========================================================================== */
+@font-face { font-family: "LabBureau Type"; src: url(/assets/lab/bureau/cutive.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "LabBureau Courier"; src: url(/assets/lab/bureau/courierprime-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "LabBureau Courier"; src: url(/assets/lab/bureau/courierprime-700.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+
+:root:has(.lab-eval) {
+  --lab-theme: bureau;
+  --lab-loading: "> pulling the case files…";
+  --bg: #2c3530;
+  --surface: #36413b;
+  --panel: #e9d8a6;
+  --grid: #4a564f;
+  --ink: #f1ead8;
+  --ink-dim: #d3cab3;
+  --phosphor: #f1ead8;
+  --phosphor-dim: #c9c0a8;
+  --phosphor-glow: #ffffff;
+  --amber: #f0c36a;
+  --amber-dim: #e0b35a;
+  --mono: "LabBureau Courier", "Courier New", monospace;
+  --display: "LabBureau Type", "Courier New", monospace;
+  --bu-manila: #e9d8a6;
+  --bu-manila-deep: #d8c287;
+  --bu-card: #fbf7ea;
+  --bu-ink: #1f1d1a;
+  --bu-ink-dim: #4d463a;
+  --bu-red: #a8231b;
+  --bu-green: #22613a;
+  --bu-brass: #a8822e;
+  --intro-dur: 1.3s;
+}
+
+/* ---- World: desk under a lamp ---------------------------------------------- */
+body:has(.lab-eval) {
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 18%, rgba(255, 236, 190, .16), transparent 70%),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .05) 0 2px, transparent 2px 7px),
+    linear-gradient(180deg, #34403a, #262e2a);
+  background-attachment: fixed;
+}
+body:has(.lab-eval) .section-head h2 {
+  font-family: var(--display);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+body:has(.lab-eval) .section-head .meta { color: var(--ink-dim); }
+body:has(.lab-eval) .lab-lede { color: var(--ink-dim); font-size: .95rem; }
+
+/* ---- The case file (manila folder) --------------------------------------------- */
+body:has(.lab-eval) .lab-game-panel {
+  --ink: var(--bu-ink);
+  --ink-dim: var(--bu-ink-dim);
+  --phosphor: var(--bu-ink);
+  --phosphor-dim: var(--bu-ink-dim);
+  --phosphor-glow: var(--bu-ink);
+  --amber: var(--bu-red);
+  --amber-dim: var(--bu-red);
+  position: relative;
+  margin-top: 2.4rem;
+  border: 0;
+  border-radius: 0 6px 6px 6px;
+  padding: 1.6rem 1.6rem 1.8rem;
+  color: var(--bu-ink);
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .06), transparent 18px),
+    var(--bu-manila);
+  box-shadow: 0 2px 0 var(--bu-manila-deep), 0 24px 50px rgba(0, 0, 0, .45);
+}
+body:has(.lab-eval) .lab-game-panel::before {
+  content: "CASE FILE · EVAL-03" / "";
+  position: absolute;
+  left: 0;
+  top: -2.1rem;
+  height: 2.1rem;
+  padding: 0 1.4rem;
+  display: flex;
+  align-items: center;
+  border-radius: 8px 14px 0 0;
+  font: 700 .78rem/1 var(--mono);
+  letter-spacing: .14em;
+  color: var(--bu-ink);
+  background: var(--bu-manila);
+}
+body:has(.lab-eval) .lab-game-head { border-bottom: 1px dashed rgba(31, 29, 26, .45); }
+body:has(.lab-eval) .lab-game-head h3 { font: 400 1.35rem/1.1 var(--display); letter-spacing: .06em; text-transform: uppercase; color: var(--bu-ink); }
+body:has(.lab-eval) :is(.scale-chrome, .mag-seed, .lab-game-head .mono, .lab-game-head .meta, .eval-note) { color: var(--bu-ink-dim); }
+body:has(.lab-eval) .scale-score { color: var(--bu-ink-dim); font-weight: 700; }
+body:has(.lab-eval) .scale-score strong { color: var(--bu-red) !important; text-shadow: none; }
+body:has(.lab-eval) .scale-prompt { color: var(--bu-ink); font-weight: 700; font-size: .85rem; }
+
+body:has(.lab-eval) .eval-stage { border: 0; background: transparent; padding: 0; }
+
+/* Rubric: pinned yellow memo. */
+body:has(.lab-eval) .eval-rubric {
+  position: relative;
+  border: 0;
+  padding: .9rem 1rem .8rem;
+  background: #fff3b0;
+  color: var(--bu-ink);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .18);
+  transform: rotate(-.6deg);
+}
+body:has(.lab-eval) .eval-rubric::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ff8a7a, var(--bu-red));
+  box-shadow: 0 2px 3px rgba(0, 0, 0, .35);
+}
+body:has(.lab-eval) .eval-rubric summary { color: var(--bu-ink); font: 700 .8rem/1.6 var(--mono); letter-spacing: .14em; min-height: 44px; display: flex; align-items: center; }
+body:has(.lab-eval) .eval-rubric ol { color: var(--bu-ink); font-size: .85rem; }
+
+/* Output as a typed index card. */
+body:has(.lab-eval) .eval-item {
+  padding: 1.1rem 1.2rem 1.1rem 2.6rem;
+  background:
+    linear-gradient(90deg, transparent 1.9rem, rgba(168, 35, 27, .55) 1.9rem 2rem, transparent 2rem),
+    repeating-linear-gradient(180deg, transparent 0 1.55rem, rgba(43, 90, 160, .22) 1.55rem calc(1.55rem + 1px)),
+    var(--bu-card);
+  background-position: 0 0, 0 .6rem, 0 0;
+  box-shadow: 0 1px 0 #e6dfca, 0 10px 22px rgba(0, 0, 0, .2);
+  color: var(--bu-ink);
+}
+body:has(.lab-eval) .eval-k { font: 400 .78rem/1 var(--display); color: var(--bu-ink-dim); letter-spacing: .16em; }
+body:has(.lab-eval) .eval-field p { font-size: .95rem; color: var(--bu-ink); }
+body:has(.lab-eval) .eval-context { border-left: 2px solid rgba(31, 29, 26, .35); color: var(--bu-ink-dim); }
+body:has(.lab-eval) .eval-output { border-left: 3px solid var(--bu-red); color: var(--bu-ink); font-weight: 700; }
+
+/* ---- Rubber stamps: PASS (first) and FAIL (second) ----------------------------- */
+body:has(.lab-eval) .lab-game-panel .lab-actions .btn {
+  border-color: currentColor !important;
+  min-width: 7.5rem;
+  justify-content: center;
+  border: 4px double currentColor;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .35);
+  font: 700 1.05rem/1 var(--mono);
+  letter-spacing: .22em;
+  transform: rotate(-2deg);
+  transition: transform .12s, background .15s;
+}
+body:has(.lab-eval) .lab-game-panel .lab-actions .btn:first-child { color: var(--bu-green); }
+body:has(.lab-eval) .lab-game-panel .lab-actions .btn:nth-child(2) { color: var(--bu-red); transform: rotate(2deg); }
+body:has(.lab-eval) .lab-actions .btn:hover:not(:disabled) { background: rgba(255, 255, 255, .7); }
+body:has(.lab-eval) .lab-actions .btn:active:not(:disabled) { transform: scale(.92) rotate(0); }
+body:has(.lab-eval) .btn:focus-visible,
+body:has(.lab-eval) summary:focus-visible { outline: 3px solid #1f4fa0; outline-offset: 3px; }
+/* Buttons inside the folder: dark ink on paper. Outside (page nav on the desk): paper on desk. */
+body:has(.lab-eval) .lab-game-panel .btn { border-color: var(--bu-ink); color: var(--bu-ink); font-family: var(--mono); font-weight: 700; }
+body:has(.lab-eval) .lab-game-panel .btn:hover { background: rgba(31, 29, 26, .08); color: var(--bu-ink); }
+body:has(.lab-eval) .lab-game-panel .btn-signal { background: var(--bu-ink); color: var(--bu-manila); }
+body:has(.lab-eval) .lab-game-panel .btn-signal:hover { background: #3a362f; color: var(--bu-manila); filter: none; }
+body:has(.lab-eval) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]) { border-color: var(--bu-manila); color: var(--bu-manila); font-family: var(--mono); font-weight: 700; background: rgba(0, 0, 0, .15); }
+body:has(.lab-eval) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]):hover { background: var(--bu-manila); color: var(--bu-ink); }
+
+/* Verdict reveal: stamped. */
+body:has(.lab-eval) .lab-reveal { position: relative; border: 2px solid rgba(31, 29, 26, .35); background: rgba(255, 255, 255, .45); padding-right: 8rem; }
+body:has(.lab-eval) .lab-reveal > .mono { color: var(--bu-ink); font-weight: 700; }
+body:has(.lab-eval) .lab-reveal-why { color: var(--bu-ink-dim); }
+body:has(.lab-eval) .lab-reveal.is-hit { border-color: var(--bu-green); }
+body:has(.lab-eval) .lab-reveal.is-miss { border-color: var(--bu-red); }
+body:has(.lab-eval) .lab-reveal.is-miss > .mono { color: var(--bu-red); }
+body:has(.lab-eval) .lab-reveal::after {
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  padding: .3rem .6rem;
+  border: 3px solid currentColor;
+  border-radius: 4px;
+  font: 700 .95rem/1 var(--mono);
+  letter-spacing: .18em;
+  transform: rotate(-9deg);
+  opacity: .85;
+  animation: bu-stamp .3s cubic-bezier(.2, 1.7, .4, 1) both;
+}
+body:has(.lab-eval) .lab-reveal.is-hit::after { content: "AGREED" / ""; color: var(--bu-green); }
+body:has(.lab-eval) .lab-reveal.is-miss::after { content: "OVERRULED" / ""; color: var(--bu-red); }
+
+/* ---- Pegboard tally (confusion grid) ------------------------------------------- */
+body:has(.lab-eval) .eval-side {
+  padding: .9rem;
+  border-radius: 4px;
+  background:
+    radial-gradient(circle, rgba(60, 40, 15, .55) 0 2px, transparent 2.5px) 0 0 / 18px 18px,
+    #c7a677;
+  box-shadow: inset 0 0 0 3px #8b6a3e, 0 8px 18px rgba(0, 0, 0, .25);
+}
+body:has(.lab-eval) :is(.eval-grid-axes, .eval-grid-rows) { color: #2a1f10; font-weight: 700; }
+body:has(.lab-eval) .eval-cell {
+  border: 0;
+  border-radius: 3px;
+  background: var(--bu-card);
+  color: var(--bu-ink-dim);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, .25);
+}
+body:has(.lab-eval) .eval-cell-label { font-weight: 700; color: var(--bu-ink); }
+body:has(.lab-eval) .eval-cell-n { font: 400 1.9rem/1 var(--display); color: var(--bu-ink); }
+body:has(.lab-eval) .eval-cell-sub { color: var(--bu-ink-dim); opacity: 1; }
+body:has(.lab-eval) .eval-cell.is-lit.is-agree { box-shadow: inset 0 0 0 3px var(--bu-green), 0 3px 6px rgba(0, 0, 0, .25); color: var(--bu-green); }
+body:has(.lab-eval) .eval-cell.is-lit.is-agree .eval-cell-n { color: var(--bu-green); text-shadow: none; }
+body:has(.lab-eval) .eval-cell.is-lit.is-disagree { box-shadow: inset 0 0 0 3px var(--bu-red), 0 3px 6px rgba(0, 0, 0, .25); color: var(--bu-red); }
+body:has(.lab-eval) .eval-cell.is-lit.is-disagree .eval-cell-n { color: var(--bu-red); }
+
+/* Brass dials (metrics). */
+body:has(.lab-eval) .eval-metrics { gap: .5rem; }
+body:has(.lab-eval) .eval-metrics div {
+  position: relative;
+  aspect-ratio: 1;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  border: 0;
+  border-radius: 50%;
+  padding: .4rem;
+  background: radial-gradient(circle at 50% 45%, #fbf4dc 0 56%, #d9b25a 58%, var(--bu-brass) 66%, #6d5418 72%, #c9a24a 76%, #8a6a22 100%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .35);
+}
+body:has(.lab-eval) .eval-metrics dt { font-size: .6rem; font-weight: 700; color: var(--bu-ink); letter-spacing: .12em; }
+body:has(.lab-eval) .eval-metrics dd { font: 400 1.1rem/1.1 var(--display); color: var(--bu-ink); text-shadow: none; }
+body:has(.lab-eval) .eval-note { color: #2a1f10; font-weight: 700; }
+
+/* ---- Intro: paper, folder slides up, IN REVIEW, flips open ------------------------ */
+body:has(.lab-eval)::before { animation-name: bu-intro-paper; }
+body:has(.lab-eval)::after {
+  content: "IN REVIEW" / "";
+  display: grid;
+  place-items: center;
+  font: 700 clamp(2.6rem, 10vw, 7rem)/1 "LabBureau Courier", "Courier New", monospace;
+  letter-spacing: .12em;
+  color: transparent;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .08), transparent 40px),
+    var(--bu-manila);
+  transform-origin: 50% 0;
+  animation-name: bu-intro-folder;
+}
+@keyframes bu-intro-paper {
+  0%, 18% { opacity: 1; visibility: visible; filter: none; }
+  36% { filter: sepia(1) saturate(.5) brightness(2.4); opacity: 1; }
+  48% { opacity: 0; }
+  100% { opacity: 0; visibility: hidden; }
+}
+@keyframes bu-intro-folder {
+  0%, 18% { transform: translateY(105%); color: transparent; visibility: visible; opacity: 1; }
+  40% { transform: translateY(0); color: transparent; }
+  48% { color: rgba(168, 35, 27, .9); }
+  72% { transform: perspective(1400px) rotateX(0); color: rgba(168, 35, 27, .9); opacity: 1; }
+  100% { transform: perspective(1400px) rotateX(-96deg); color: rgba(168, 35, 27, .9); opacity: 1; visibility: hidden; }
+}
+@keyframes bu-stamp {
+  0% { opacity: 0; transform: rotate(-9deg) scale(2.2); }
+  100% { opacity: .85; transform: rotate(-9deg) scale(1); }
+}

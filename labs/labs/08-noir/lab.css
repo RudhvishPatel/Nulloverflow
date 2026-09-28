@@ -1,0 +1,17 @@
+/* lab/08 Attention Lens: arcs canvas, line-up, workbench. Colours from the noir theme. */
+.lab-attn [hidden] { display: none !important; }
+.lab-attn .nr-wrap { position: relative; padding-top: 130px; overflow: hidden; }
+.lab-attn .nr-arcs { position: absolute; left: 0; top: 0; pointer-events: none; }
+.lab-attn .attn-words { flex-wrap: wrap; row-gap: 1.4rem; }
+.lab-attn .attn-word[data-cand] { box-shadow: 0 3px 6px rgba(0, 0, 0, .35), inset 0 -3px 0 #7a5a2e; }
+.lab-attn .attn-picker { gap: .35rem; }
+.lab-attn .attn-chip { min-width: 4.4rem; }
+.lab-attn .nr-role { font-weight: 400; font-size: .8em; }
+.lab-attn .nr-bench-wrap { border-radius: 4px; overflow: hidden; box-shadow: 0 6px 14px rgba(0, 0, 0, .35); touch-action: none; }
+.lab-attn .nr-bench { display: block; width: 100%; cursor: crosshair; }
+.lab-attn .nr-temp { display: grid; gap: .2rem; margin: .8rem 0 .3rem; font-weight: 700; color: var(--nr-ink); }
+.lab-attn .nr-temp input { width: 100%; accent-color: var(--nr-string); }
+.lab-attn .nr-bench-out { font-weight: 700; color: var(--nr-ink); }
+.lab-attn .nr-end { margin-top: 1.25rem; padding: 1.4rem; background: var(--nr-card); color: var(--nr-ink); box-shadow: 0 6px 14px rgba(0, 0, 0, .4); }
+.lab-attn .nr-end-kicker { margin: 0; letter-spacing: .2em; text-transform: uppercase; }
+.lab-attn .nr-end-score { margin: .4rem 0; font: 400 clamp(2.2rem, 6vw, 3.4rem)/1 var(--display); color: var(--nr-string); }

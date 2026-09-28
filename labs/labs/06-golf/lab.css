@@ -1,0 +1,159 @@
+/* lab/06 GD Golf 3D: layout and components. Colours come from the `green` theme tokens
+   (--gr-ink, --gr-red, --gr-cream, ... on :root:has(.lab-golf)) in lab-themes CSS. */
+
+.lab-golf [hidden] { display: none !important; }
+
+.lab-golf .golf-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin: 0 0 1rem;
+}
+.lab-golf .golf-hud-hole { font: 800 .75rem/1 var(--mono); letter-spacing: .16em; color: var(--gr-ink-dim); text-transform: uppercase; }
+.lab-golf .golf-hud-name { margin: .3rem 0 .2rem; font: 400 clamp(1.5rem, 3.5vw, 2.2rem)/1 var(--display); color: var(--gr-ink); }
+.lab-golf .golf-hud-blurb { margin: 0; max-width: 56ch; color: var(--gr-ink-dim); font-size: .95rem; }
+.lab-golf .golf-hud-stats { display: flex; gap: .5rem; flex-wrap: wrap; }
+.lab-golf .golf-hud-stats span {
+  padding: .4rem .7rem;
+  border: 2px solid var(--gr-ink);
+  border-radius: 8px;
+  background: #fffdf5;
+  font: 800 .72rem/1 var(--mono);
+  letter-spacing: .1em;
+  color: var(--gr-ink-dim);
+}
+.lab-golf .golf-hud-stats strong { font: 400 1.2rem/1 var(--display); color: var(--gr-red); margin-left: .2rem; }
+
+.lab-golf .golf-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(280px, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .lab-golf .golf-stage { grid-template-columns: minmax(0, 1fr); }
+}
+
+.lab-golf .golf-canvas-wrap { position: relative; width: 100%; max-width: none; overflow: hidden; }
+.lab-golf .golf-canvas { display: block; width: 100%; height: auto; border-radius: 6px; touch-action: none; cursor: grab; }
+.lab-golf .golf-canvas:active { cursor: grabbing; }
+.lab-golf[data-renderer="2d"] .golf-canvas { cursor: default; aspect-ratio: 1; }
+
+/* Result toast over the course. */
+.lab-golf .golf-toast {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  padding: .5rem 1.4rem;
+  border-radius: 999px;
+  font: 400 clamp(1.6rem, 5vw, 3.2rem)/1 var(--display);
+  letter-spacing: .02em;
+  color: #fff;
+  background: var(--gr-red);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.6);
+}
+.lab-golf .golf-toast.is-hazard { background: #2980b9; }
+.lab-golf .golf-toast.is-on { animation: golf-toast 1.9s cubic-bezier(.2, 1.4, .4, 1) both; }
+@keyframes golf-toast {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
+  15%, 75% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -60%) scale(1); }
+}
+
+/* Controls column. */
+.lab-golf .golf-controls { display: grid; gap: .85rem; align-content: start; }
+.lab-golf .golf-controls-title,
+.lab-golf .golf-math-title { margin: 0; font: 800 .72rem/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--gr-ink-dim); }
+.lab-golf .golf-clubs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .4rem; }
+.lab-golf .golf-club {
+  display: grid;
+  justify-items: center;
+  gap: .15rem;
+  min-height: 72px;
+  padding: .45rem .2rem;
+  border: 2px solid var(--gr-ink);
+  border-radius: 10px;
+  background: #fffdf5;
+  color: var(--gr-ink);
+  cursor: pointer;
+  font-family: var(--mono);
+  transition: transform .12s, background .15s, box-shadow .15s;
+}
+.lab-golf .golf-club:hover { transform: translateY(-2px); }
+.lab-golf .golf-club[aria-checked="true"] {
+  background: var(--gr-ink);
+  color: #fffdf5;
+  box-shadow: inset 0 -4px 0 var(--club), 0 6px 14px rgba(0, 0, 0, .18);
+}
+.lab-golf .golf-club:focus-visible { outline: 3px solid var(--gr-orange); outline-offset: 2px; }
+.lab-golf .golf-club-key { font-size: .65rem; opacity: .75; }
+.lab-golf .golf-club-name { font: 400 1rem/1 var(--display); }
+.lab-golf .golf-club-opt { font-size: .66rem; font-weight: 800; letter-spacing: .04em; }
+@media (max-width: 420px) {
+  .lab-golf .golf-clubs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.lab-golf .golf-dials { display: grid; gap: .35rem; }
+.lab-golf .golf-extras { display: grid; gap: .45rem; }
+.lab-golf .golf-extras:empty { display: none; }
+.lab-golf .golf-toggle { display: flex; align-items: center; gap: .45rem; min-height: 44px; font-weight: 800; color: var(--gr-ink); flex-wrap: wrap; }
+.lab-golf .golf-toggle input[type=checkbox] { width: 22px; height: 22px; accent-color: var(--gr-red); }
+.lab-golf .golf-toggle select { min-height: 40px; padding: 0 .5rem; border: 2px solid var(--gr-ink); border-radius: 8px; background: #fffdf5; color: var(--gr-ink); font: 800 .85rem/1 var(--mono); }
+.lab-golf .golf-unlock { padding: .15rem .45rem; border-radius: 99px; background: #f2b233; color: #3a2500; font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; }
+.lab-golf .golf-shoot { min-width: 9rem; justify-content: center; }
+
+.lab-golf .golf-math { padding: .8rem .9rem; border: 2px dashed rgba(29, 59, 36, .35); border-radius: 10px; background: rgba(255, 253, 245, .7); }
+.lab-golf .golf-formula { margin: .45rem 0 .5rem; font-size: .8rem; color: var(--gr-ink); }
+.lab-golf .golf-readout { display: grid; grid-template-columns: auto 1fr; gap: .2rem .8rem; margin: 0; font: 500 .8rem/1.35 ui-monospace, Menlo, monospace; color: var(--gr-ink-dim); }
+.lab-golf .golf-readout dd { margin: 0; color: var(--gr-ink); font-weight: 700; }
+
+.lab-golf .golf-result { margin: 0; min-height: 2.6em; font-weight: 800; color: var(--gr-ink); }
+.lab-golf .golf-ghosts { margin: 0; padding: 0; list-style: none; display: grid; gap: .3rem; font-size: .82rem; color: var(--gr-ink-dim); }
+.lab-golf .golf-ghosts li { display: flex; align-items: center; gap: .45rem; }
+.lab-golf .golf-ghost-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--club); box-shadow: 0 0 0 2px var(--gr-ink); flex: none; }
+.lab-golf .golf-ghosts strong { color: var(--gr-ink); }
+
+/* Scorecard. */
+.lab-golf .golf-card {
+  width: 100%;
+  margin-top: 1.25rem;
+  border-collapse: collapse;
+  background: #fffdf5;
+  border: 2px solid var(--gr-ink);
+  font: 800 .85rem/1 var(--mono);
+  color: var(--gr-ink);
+  text-align: center;
+}
+.lab-golf .golf-card caption { caption-side: top; text-align: left; padding: .6rem 0 .45rem; background: transparent; font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--gr-ink-dim); }
+.lab-golf .golf-card :is(th, td) { padding: .55rem .3rem; border: 1px solid rgba(29, 59, 36, .2); }
+.lab-golf .golf-card th[scope=row] { text-align: left; padding-left: .7rem; color: var(--gr-ink-dim); }
+.lab-golf .golf-card th.is-current { background: var(--gr-ink); color: #fffdf5; }
+.lab-golf .golf-card td { font: 400 1.05rem/1 var(--display); }
+.lab-golf .golf-card td.is-eagle, .lab-golf .golf-card td.is-birdie { color: #fff; background: var(--gr-red); border-radius: 50%; }
+.lab-golf .golf-card td.is-bogey, .lab-golf .golf-card td.is-doubleplus { box-shadow: inset 0 0 0 2px var(--gr-ink); }
+
+/* End card. */
+.lab-golf .golf-end {
+  margin-top: 1.25rem;
+  padding: 1.5rem;
+  border-radius: 14px;
+  background: var(--gr-ink);
+  color: #fffdf5;
+  text-align: center;
+}
+.lab-golf .golf-end-kicker { margin: 0; font: 800 .75rem/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: #f2b233; }
+.lab-golf .golf-end-score { margin: .6rem 0; font: 400 clamp(2rem, 6vw, 3.4rem)/1 var(--display); color: #fffdf5; }
+.lab-golf .golf-end-best { margin: 0 0 1rem; color: #e5f0dc; }
+.lab-golf .golf-end .lab-actions { justify-content: center; }
+.lab-golf .golf-end .btn { border-color: #fffdf5; color: #fffdf5; }
+.lab-golf .golf-end .btn-signal { background: var(--gr-red); border-color: var(--gr-red); }
+
+@media (prefers-reduced-motion: reduce) {
+  .lab-golf .golf-toast { display: none; }
+  .lab-golf .golf-club:hover { transform: none; }
+}

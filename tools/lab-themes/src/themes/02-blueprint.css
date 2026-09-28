@@ -1,0 +1,276 @@
+/* ==========================================================================
+   lab/02 MAGNITUDE RUN: Architect's blueprint table
+   Cyan-blue drafting sheet, white pencil reference trace, red-pencil guess,
+   rulers along the stage, compass-point drag handle, APPROVED / REVISE stamps,
+   save panel as the drawing's title block.
+   Intro: phosphor shifts to cyan, a blueprint sheet unrolls top to bottom.
+   ========================================================================== */
+@font-face { font-family: "LabBlueprint Hand"; src: url(/assets/lab/blueprint/architects.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "LabBlueprint Mono"; src: url(/assets/lab/blueprint/plexmono-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "LabBlueprint Mono"; src: url(/assets/lab/blueprint/plexmono-600.woff2) format("woff2"); font-weight: 600; font-display: swap; }
+
+:root:has(.magnitude-run) {
+  --lab-theme: blueprint;
+  --lab-loading: "> sharpening the pencils…";
+  --bg: #1b4a88;
+  --surface: #163f75;
+  --panel: #1b4a88;
+  --grid: rgba(255, 255, 255, .14);
+  --ink: #f4f8ff;
+  --ink-dim: #d0e0f7;
+  --phosphor: #ffffff;
+  --phosphor-dim: #c3d6f2;
+  --phosphor-glow: #ffffff;
+  --amber: #ffb3ab;
+  --amber-dim: #ffb3ab;
+  --mono: "LabBlueprint Mono", "IBM Plex Mono", ui-monospace, monospace;
+  --display: "LabBlueprint Hand", "Comic Neue", cursive;
+  --bp-red: #ff8a80;
+  --bp-red-text: #ffc2bc;
+  --bp-yellow: #ffe08a;
+  --intro-dur: 1.2s;
+}
+
+/* ---- World: drafting sheet ------------------------------------------------ */
+body:has(.magnitude-run) {
+  background:
+    linear-gradient(rgba(255, 255, 255, .16) 1px, transparent 1px) 0 0 / 120px 120px,
+    linear-gradient(90deg, rgba(255, 255, 255, .16) 1px, transparent 1px) 0 0 / 120px 120px,
+    linear-gradient(rgba(255, 255, 255, .06) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, rgba(255, 255, 255, .06) 1px, transparent 1px) 0 0 / 24px 24px,
+    radial-gradient(ellipse at 50% 40%, #215597, #173f75 85%);
+  background-attachment: fixed;
+}
+body:has(.magnitude-run) .section-head h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  letter-spacing: .04em;
+  color: #fff;
+  border-bottom: 2px solid #fff;
+  padding-bottom: .2rem;
+}
+body:has(.magnitude-run) .section-head .meta { color: var(--ink-dim); }
+body:has(.magnitude-run) .lab-lede { color: var(--ink-dim); font-size: .95rem; }
+
+/* Drawing frame (double border) + title block corner. */
+body:has(.magnitude-run) .lab-game-panel {
+  position: relative;
+  border: 2px solid #fff;
+  outline: 1px solid rgba(255, 255, 255, .7);
+  outline-offset: -8px;
+  background: rgba(22, 63, 117, .75);
+  padding: 1.75rem 1.75rem 3.5rem;
+}
+body:has(.magnitude-run) .lab-game-panel::after {
+  content: "DWG LAB-02  ·  MAGNITUDE RUN  ·  SCALE 1:1  ·  DRAWN: N∅" / "";
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: .45rem .8rem;
+  border-top: 1px solid rgba(255, 255, 255, .7);
+  border-left: 1px solid rgba(255, 255, 255, .7);
+  font: 400 .72rem/1.2 var(--display);
+  letter-spacing: .08em;
+  color: var(--ink-dim);
+  white-space: pre;
+  pointer-events: none;
+}
+body:has(.magnitude-run) .lab-game-head { border-bottom: 1px solid rgba(255, 255, 255, .5); }
+body:has(.magnitude-run) .lab-game-head h3 { font: 400 1.5rem/1.1 var(--display); color: #fff; letter-spacing: .05em; }
+body:has(.magnitude-run) :is(.scale-chrome, .mag-seed, .lab-game-head .mono, .lab-game-head .meta, .mag-hint, .mag-zoom-label) { color: var(--ink-dim); }
+body:has(.magnitude-run) .scale-score { color: var(--ink-dim); }
+body:has(.magnitude-run) .scale-score strong { color: #fff !important; text-shadow: none; }
+body:has(.magnitude-run) .scale-prompt { color: #fff; font-size: .85rem; }
+body:has(.magnitude-run) .scale-prompt strong { font-family: var(--display); font-weight: 400; font-size: 1.1em; letter-spacing: .03em; }
+
+/* Mode tabs as drawing-sheet tabs. */
+body:has(.magnitude-run) .mag-tab {
+  min-height: 44px;
+  padding: 0 1rem;
+  border: 1px solid rgba(255, 255, 255, .7);
+  color: #fff;
+  font: 400 .95rem/1 var(--display);
+  letter-spacing: .06em;
+  text-transform: none;
+}
+body:has(.magnitude-run) .mag-tab:hover { background: rgba(255, 255, 255, .1); color: #fff; border-color: #fff; }
+body:has(.magnitude-run) .mag-tab.is-active { background: #fff; color: #163f75; border-color: #fff; box-shadow: none; }
+body:has(.magnitude-run) :is(.mag-tab, .mag-zoom-btn, .mag-handle, .btn, input):focus-visible { outline: 2px solid var(--bp-yellow); outline-offset: 2px; }
+
+/* ---- Stage: drafting board with rulers --------------------------------------- */
+body:has(.magnitude-run) .mag-zoom,
+body:has(.magnitude-run) .mag-zoom-btn { border-color: rgba(255, 255, 255, .7); }
+body:has(.magnitude-run) .mag-zoom-btn { color: #fff; }
+body:has(.magnitude-run) .mag-zoom-btn:hover:not(:disabled) { background: rgba(255, 255, 255, .12); box-shadow: none; }
+body:has(.magnitude-run) .mag-stage {
+  border: 1px solid #fff;
+  background: #163f75;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .15);
+}
+/* Top and left rulers. */
+body:has(.magnitude-run) .mag-stage::before,
+body:has(.magnitude-run) .mag-stage::after {
+  content: "";
+  position: absolute;
+  z-index: 6;
+  pointer-events: none;
+  background-color: rgba(255, 255, 255, .92);
+}
+body:has(.magnitude-run) .mag-stage::before {
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 14px;
+  background-image:
+    repeating-linear-gradient(90deg, #163f75 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(90deg, #163f75 0 1px, transparent 1px 50px);
+  background-size: 100% 5px, 100% 11px;
+  background-repeat: no-repeat;
+  background-position: 0 100%, 0 100%;
+}
+body:has(.magnitude-run) .mag-stage::after {
+  left: 0;
+  top: 14px;
+  bottom: 0;
+  width: 14px;
+  background-image:
+    repeating-linear-gradient(0deg, #163f75 0 1px, transparent 1px 10px),
+    repeating-linear-gradient(0deg, #163f75 0 1px, transparent 1px 50px);
+  background-size: 5px 100%, 11px 100%;
+  background-repeat: no-repeat;
+  background-position: 100% 100%, 100% 100%;
+}
+body:has(.magnitude-run) .mag-grid {
+  background-image: linear-gradient(rgba(255, 255, 255, .13) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .13) 1px, transparent 1px);
+  opacity: 1;
+}
+body:has(.magnitude-run) .mag-baseline { background: #fff; box-shadow: none; height: 2px; }
+
+/* Silhouettes: white pencil trace (ref), red pencil (guess), yellow answer outline. */
+body:has(.magnitude-run) .mag-sil--ref path {
+  fill: rgba(255, 255, 255, .1);
+  stroke: #fff;
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+  filter: none;
+}
+body:has(.magnitude-run) .mag-sil--guess path {
+  fill: rgba(255, 138, 128, .22);
+  stroke: var(--bp-red);
+  stroke-width: 1.6;
+  stroke-dasharray: 6 3;
+  vector-effect: non-scaling-stroke;
+  filter: none;
+}
+body:has(.magnitude-run) .mag-sil--actual path {
+  fill: rgba(255, 224, 138, .14);
+  stroke: var(--bp-yellow);
+  stroke-width: 1.6;
+  stroke-dasharray: 2 3;
+  filter: none;
+}
+body:has(.magnitude-run) .mag-sil-label { font: 400 .8rem/1 var(--display); letter-spacing: .1em; top: -1.4rem; }
+body:has(.magnitude-run) .mag-sil-slot--ref .mag-sil-label { color: #fff; }
+body:has(.magnitude-run) .mag-sil-slot--guess .mag-sil-label { color: var(--bp-red-text); }
+body:has(.magnitude-run) .mag-sil-slot--actual .mag-sil-label { color: var(--bp-yellow); }
+body:has(.magnitude-run) .mag-sil-name { font: 400 .78rem/1 var(--display); color: var(--ink-dim); bottom: -1.6rem; }
+
+/* Compass-point handle. */
+body:has(.magnitude-run) .mag-handle {
+  width: 26px;
+  height: 26px;
+  right: -12px;
+  top: -12px;
+  border: 2px solid var(--bp-red);
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--bp-red), var(--bp-red)) center / 2px 100% no-repeat,
+    linear-gradient(var(--bp-red), var(--bp-red)) center / 100% 2px no-repeat,
+    #163f75;
+  box-shadow: 0 0 0 3px rgba(255, 138, 128, .25);
+}
+body:has(.magnitude-run) .mag-handle:hover,
+body:has(.magnitude-run) .mag-handle:focus-visible { background-color: #24528f; box-shadow: 0 0 0 5px rgba(255, 138, 128, .35); }
+
+/* ---- Readout, buttons, stamps ------------------------------------------------- */
+body:has(.magnitude-run) .mag-estimate { color: var(--ink-dim); margin-top: 2rem; }
+body:has(.magnitude-run) .mag-estimate strong { color: #fff; font: 400 1.25rem/1 var(--display); text-shadow: none; }
+body:has(.magnitude-run) .btn { border-color: #fff; color: #fff; font-family: var(--mono); font-weight: 600; }
+body:has(.magnitude-run) .btn:hover { background: rgba(255, 255, 255, .12); color: #fff; }
+body:has(.magnitude-run) .btn-signal { background: #fff; color: #163f75; border-color: #fff; }
+body:has(.magnitude-run) .btn-signal:hover { background: #e8f0fb; color: #163f75; filter: none; }
+body:has(.magnitude-run) .mag-reveal {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, .7);
+  background: rgba(255, 255, 255, .06);
+  padding-right: 9rem;
+}
+body:has(.magnitude-run) .mag-reveal > .mono { color: #fff; }
+body:has(.magnitude-run) .mag-reveal.is-miss > .mono:first-child { color: var(--bp-red-text); }
+body:has(.magnitude-run) .mag-truth { color: var(--ink-dim) !important; }
+body:has(.magnitude-run) .mag-truth-sep { color: var(--ink-dim); }
+body:has(.magnitude-run) .mag-reveal::after {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  padding: .3rem .7rem;
+  border: 3px double currentColor;
+  border-radius: 4px;
+  font: 600 .95rem/1 var(--mono);
+  letter-spacing: .16em;
+  transform: translateY(-50%) rotate(-8deg);
+  pointer-events: none;
+  animation: bp-stamp .35s cubic-bezier(.2, 1.6, .4, 1) both;
+}
+body:has(.magnitude-run) .mag-reveal.is-hit::after { content: "APPROVED" / ""; color: #9df0b4; }
+body:has(.magnitude-run) .mag-reveal.is-miss::after { content: "REVISE" / ""; color: var(--bp-red-text); }
+
+/* Save panel as the title block. */
+body:has(.magnitude-run) .save-progress {
+  border: 2px solid #fff;
+  outline: 1px solid rgba(255, 255, 255, .6);
+  outline-offset: -6px;
+  background: rgba(22, 63, 117, .85);
+  color: var(--ink-dim);
+}
+body:has(.magnitude-run) .save-progress h3 { font: 400 1.2rem/1 var(--display); color: #fff; letter-spacing: .08em; }
+body:has(.magnitude-run) .save-progress :is(label, .meta, .mono, p) { color: var(--ink-dim); }
+body:has(.magnitude-run) .save-progress input {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .7);
+  color: #fff;
+}
+
+/* ---- Intro: phosphor → cyan, sheet unrolls ------------------------------------ */
+body:has(.magnitude-run)::before { animation-name: bp-intro-shift; }
+body:has(.magnitude-run)::after {
+  background:
+    linear-gradient(180deg, transparent calc(100% - 26px), rgba(8, 24, 48, .55) calc(100% - 26px), rgba(255, 255, 255, .5) calc(100% - 3px), #fff 100%),
+    linear-gradient(rgba(255, 255, 255, .18) 1px, transparent 1px) 0 0 / 120px 120px,
+    linear-gradient(90deg, rgba(255, 255, 255, .18) 1px, transparent 1px) 0 0 / 120px 120px,
+    linear-gradient(rgba(255, 255, 255, .07) 1px, transparent 1px) 0 0 / 24px 24px,
+    linear-gradient(90deg, rgba(255, 255, 255, .07) 1px, transparent 1px) 0 0 / 24px 24px,
+    #1b4a88;
+  animation-name: bp-intro-unroll;
+}
+@keyframes bp-intro-shift {
+  0%, 18% { opacity: 1; visibility: visible; filter: none; }
+  42% { filter: hue-rotate(95deg) saturate(1.8) brightness(1.5); opacity: 1; }
+  60% { opacity: 0; }
+  100% { opacity: 0; visibility: hidden; }
+}
+@keyframes bp-intro-unroll {
+  0%, 25% { clip-path: inset(0 0 100% 0); opacity: 1; visibility: visible; }
+  68% { clip-path: inset(0 0 0 0); opacity: 1; }
+  100% { clip-path: inset(0 0 0 0); opacity: 0; visibility: hidden; }
+}
+@keyframes bp-stamp {
+  0% { opacity: 0; transform: translateY(-50%) rotate(-8deg) scale(2); }
+  100% { opacity: 1; transform: translateY(-50%) rotate(-8deg) scale(1); }
+}
+body:has(.magnitude-run) .mag-reveal .btn { justify-self: start; }
+@media (max-width: 600px) {
+  body:has(.magnitude-run) .lab-game-panel::after { content: "DWG LAB-02 · 1:1" / ""; white-space: nowrap; }
+}

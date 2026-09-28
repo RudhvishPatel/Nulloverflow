@@ -1,0 +1,30 @@
+/* lab/04 Prompt Forge: layout for the anvil, meter, mould and version tree. Colours from the forge theme. */
+.lab-forge [hidden] { display: none !important; }
+.lab-forge .fg-anvil-wrap { margin: 0 0 1rem; border-radius: 4px; overflow: hidden; box-shadow: inset 0 0 0 1px #3d3129; }
+.lab-forge .fg-anvil { display: block; width: 100%; }
+.lab-forge .fg-palette .forge-block { grid-template-columns: minmax(0, 1fr); }
+.lab-forge .fg-palette .forge-block[data-kind="defence"] .forge-toggle { box-shadow: inset 3px 0 0 #7fd1ff, inset 0 1px 0 rgba(255, 255, 255, .14), 0 2px 4px rgba(0, 0, 0, .5); }
+.lab-forge .fg-palette .forge-block[data-kind="example"] .forge-toggle { box-shadow: inset 3px 0 0 #ffc24a, inset 0 1px 0 rgba(255, 255, 255, .14), 0 2px 4px rgba(0, 0, 0, .5); }
+.lab-forge .fg-mould .fg-mould-item { grid-template-columns: minmax(0, 1fr) 44px 44px 44px; cursor: grab; }
+.lab-forge .fg-mould .fg-mould-item.is-dragging { opacity: .5; }
+.lab-forge .fg-mould-label { cursor: grab; }
+.lab-forge .fg-empty { padding: .8rem; color: var(--ink-dim); border: 1px dashed #4a3a2e; border-radius: 4px; list-style: none; }
+.lab-forge .fg-meter { position: relative; height: 26px; margin: 0 0 .6rem; border: 1px solid #4a3a2e; border-radius: 4px; background: #17110d; overflow: hidden; }
+.lab-forge .fg-meter-fill { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, #b8400f, #ff8a2a 70%, #ffd98a); transition: width .25s; }
+.lab-forge .fg-meter.is-over .fg-meter-fill { background: repeating-linear-gradient(45deg, #b5543a 0 10px, #7a2a18 10px 20px); }
+.lab-forge .fg-meter-text { position: relative; display: block; padding: 0 .6rem; line-height: 26px; font-size: .75rem; font-weight: 700; color: #f3e6d8; text-shadow: 0 1px 2px #000; }
+.lab-forge .fg-result { min-height: 1.5em; margin: .4rem 0 1rem; color: var(--ink); font-weight: 700; }
+.lab-forge .fg-attacks strong { color: var(--ink); }
+.lab-forge .fg-tree { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
+.lab-forge .fg-tree-row { display: flex; align-items: center; gap: .6rem; padding-left: calc(var(--lane, 0) * 1.6rem); position: relative; }
+.lab-forge .fg-tree-row::before { content: ""; position: absolute; left: calc(var(--lane, 0) * 1.6rem - .9rem); top: -.4rem; bottom: 50%; width: .8rem; border-left: 2px solid #6b5a4c; border-bottom: 2px solid #6b5a4c; border-bottom-left-radius: 6px; }
+.lab-forge .fg-tree-row:first-child::before { display: none; }
+.lab-forge .fg-node { display: inline-flex; gap: .5rem; align-items: center; min-height: 40px; padding: 0 .75rem; border: 1px solid #6b5a4c; border-radius: 99px; background: #221a15; color: #efe4da; font-family: var(--mono); cursor: pointer; }
+.lab-forge .fg-node strong { color: #ffc24a; }
+.lab-forge .fg-node.is-head { border-color: #ff8a2a; box-shadow: 0 0 12px rgba(255, 138, 42, .45); }
+.lab-forge .fg-node.is-best::after { content: "★" / ""; color: #ffd98a; }
+.lab-forge .fg-node:focus-visible { outline: 2px solid #ffd98a; outline-offset: 2px; }
+.lab-forge .fg-tree-meta { font-size: .72rem; color: var(--ink-dim); }
+.lab-forge .fg-end { margin-top: 1.25rem; padding: 1.4rem; border: 1px solid #5a4a3e; border-radius: 6px; background: linear-gradient(180deg, #2e2722, #221c18); }
+.lab-forge .fg-end-kicker { margin: 0; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-dim); }
+.lab-forge .fg-end-score { margin: .4rem 0; font: 400 clamp(1.8rem, 5vw, 2.8rem)/1 var(--display); color: #ffb347; }

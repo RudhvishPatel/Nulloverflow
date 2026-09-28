@@ -1,0 +1,13 @@
+{
+  "n": "08",
+  "root": "lab-attn",
+  "title": "Attention Lens",
+  "meta": "12 heads · Winograd cases · Q·K",
+  "lede": "Five case files, each a sentence where one word decides what \"it\" means. Interrogate twelve attention heads across three layers: some look at the previous word, some at the verb, one grabs the nearest noun, and one reads the clue. Name the suspect, then pick out the head that knew. The workbench lets you drag query and key vectors and watch softmax turn dot products into attention.",
+  "description": "Attention Lens: interrogate 12 illustrative attention heads to resolve Winograd pronouns, and build attention by hand on a Q·K workbench.",
+  "card": {
+    "title": "Attention Lens",
+    "kind": "12 heads · Winograd",
+    "blurb": "Interrogate twelve attention heads to find who 'it' really is."
+  }
+}

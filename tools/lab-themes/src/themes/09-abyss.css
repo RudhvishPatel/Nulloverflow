@@ -1,0 +1,98 @@
+/* ==========================================================================
+   lab/09 Neuron Foundry: Bioluminescent deep sea
+   Neurons glow like jellyfish, weights are luminous tendrils, the decision
+   boundary drifts like currents. Light shafts fall from the surface.
+   Intro: the CRT sinks: it turns cyan, blurs, and bubbles rise past it.
+   ========================================================================== */
+@font-face { font-family: "LabAbyss Display"; src: url(/assets/lab/abyss/syne-700.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "LabAbyss Display"; src: url(/assets/lab/abyss/syne-500.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "LabAbyss Mono"; src: url(/assets/lab/blueprint/plexmono-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "LabAbyss Mono"; src: url(/assets/lab/blueprint/plexmono-600.woff2) format("woff2"); font-weight: 600; font-display: swap; }
+
+:root:has(.lab-foundry) {
+  --lab-theme: abyss;
+  --lab-loading: "> descending…";
+  --bg: #03101c;
+  --surface: #06192b;
+  --panel: #071d31;
+  --grid: rgba(94, 242, 224, .12);
+  --ink: #e2fbff;
+  --ink-dim: #a6cfd8;
+  --phosphor: #5ef2e0;
+  --phosphor-dim: #8fd3db;
+  --phosphor-glow: #c8fff8;
+  --amber: #ffd166;
+  --amber-dim: #f2c14e;
+  --mono: "LabAbyss Mono", "IBM Plex Mono", ui-monospace, monospace;
+  --display: "LabAbyss Display", "Avenir Next", system-ui, sans-serif;
+  --ab-cyan: #5ef2e0;
+  --ab-magenta: #ff6ad5;
+  --ab-deep: #020a14;
+  --intro-dur: 1.3s;
+}
+
+body:has(.lab-foundry) {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(94, 242, 224, .35) 0 1px, transparent 2px) 0 0 / 120px 140px,
+    radial-gradient(circle at 70% 60%, rgba(255, 106, 213, .3) 0 1px, transparent 2px) 0 0 / 170px 150px,
+    repeating-linear-gradient(100deg, rgba(120, 220, 255, .045) 0 26px, transparent 26px 90px),
+    linear-gradient(180deg, #0a2a44 0%, #03101c 45%, #01060d 100%);
+  background-attachment: fixed;
+}
+body:has(.lab-foundry) .section-head h2 {
+  font: 700 clamp(2.4rem, 7vw, 4.4rem)/1 var(--display);
+  letter-spacing: -.01em;
+  color: var(--ab-cyan);
+  text-shadow: 0 0 18px rgba(94, 242, 224, .55), 0 0 42px rgba(255, 106, 213, .25);
+}
+body:has(.lab-foundry) .section-head .meta,
+body:has(.lab-foundry) .lab-lede { color: var(--ink-dim); }
+body:has(.lab-foundry) .lab-lede { font-size: .98rem; }
+body:has(.lab-foundry) .lab-game-panel {
+  border: 0;
+  border-radius: 18px;
+  padding: 1.6rem;
+  background: linear-gradient(180deg, rgba(10, 42, 68, .72), rgba(3, 16, 28, .9));
+  box-shadow: 0 0 0 1px rgba(94, 242, 224, .28), inset 0 0 70px rgba(94, 242, 224, .05), 0 30px 80px rgba(0, 0, 0, .6);
+  backdrop-filter: blur(4px);
+}
+body:has(.lab-foundry) .lab-game-head { border-bottom: 1px solid rgba(94, 242, 224, .25); }
+body:has(.lab-foundry) .lab-game-head h3 { font: 700 1.5rem/1 var(--display); color: var(--ink); }
+body:has(.lab-foundry) :is(.scale-chrome, .mag-seed, .lab-game-head .mono, .lab-game-head .meta) { color: var(--ink-dim); }
+body:has(.lab-foundry) .scale-score strong { color: var(--amber) !important; text-shadow: none; }
+body:has(.lab-foundry) .scale-prompt { color: var(--ab-cyan); }
+body:has(.lab-foundry) .lab-game-panel .btn { border: 1px solid rgba(94, 242, 224, .6); border-radius: 99px; color: var(--ab-cyan); font-family: var(--mono); font-weight: 600; }
+body:has(.lab-foundry) .lab-game-panel .btn:hover { background: rgba(94, 242, 224, .12); color: #fff; }
+body:has(.lab-foundry) .lab-game-panel .btn-signal { background: linear-gradient(90deg, #2fd4c3, #5ef2e0); color: #02121c; border-color: transparent; }
+body:has(.lab-foundry) .lab-game-panel .btn-signal:hover { color: #02121c; filter: brightness(1.08); }
+body:has(.lab-foundry) .btn:focus-visible { outline: 2px solid var(--ab-magenta); outline-offset: 3px; }
+body:has(.lab-foundry) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]) { border-color: rgba(94, 242, 224, .6); border-radius: 99px; color: var(--ab-cyan); }
+body:has(.lab-foundry) .lab-reveal { border: 1px solid rgba(94, 242, 224, .35); border-radius: 12px; background: rgba(94, 242, 224, .06); }
+body:has(.lab-foundry) .lab-reveal > .mono { color: var(--ink); }
+
+/* Intro: the CRT sinks into the deep. */
+body:has(.lab-foundry)::before { animation-name: ab-intro-sink; }
+body:has(.lab-foundry)::after {
+  background:
+    radial-gradient(circle at 20% 90%, rgba(200, 255, 248, .8) 0 3px, transparent 4px),
+    radial-gradient(circle at 35% 75%, rgba(200, 255, 248, .7) 0 5px, transparent 6px),
+    radial-gradient(circle at 62% 85%, rgba(200, 255, 248, .7) 0 4px, transparent 5px),
+    radial-gradient(circle at 78% 70%, rgba(200, 255, 248, .6) 0 6px, transparent 7px),
+    radial-gradient(circle at 50% 95%, rgba(200, 255, 248, .7) 0 3px, transparent 4px),
+    radial-gradient(circle at 88% 92%, rgba(200, 255, 248, .6) 0 4px, transparent 5px),
+    repeating-linear-gradient(100deg, rgba(120, 220, 255, .08) 0 30px, transparent 30px 110px),
+    linear-gradient(180deg, #0a2a44, #03101c 60%, #01060d);
+  animation-name: ab-intro-water;
+}
+@keyframes ab-intro-sink {
+  0%, 18% { opacity: 1; visibility: visible; filter: none; transform: none; }
+  45% { filter: hue-rotate(60deg) saturate(1.6) blur(3px) brightness(1.2); transform: translateY(6%) scale(.98); opacity: 1; }
+  60% { opacity: 0; transform: translateY(14%) scale(.94); }
+  100% { opacity: 0; visibility: hidden; }
+}
+@keyframes ab-intro-water {
+  0%, 28% { opacity: 0; visibility: visible; background-position: 0 30%, 0 30%, 0 30%, 0 30%, 0 30%, 0 30%, 0 0, 0 0; }
+  48% { opacity: 1; }
+  82% { opacity: 1; background-position: 0 -40%, 0 -60%, 0 -50%, 0 -70%, 0 -45%, 0 -55%, 0 0, 0 0; }
+  100% { opacity: 0; visibility: hidden; background-position: 0 -60%, 0 -80%, 0 -70%, 0 -90%, 0 -65%, 0 -75%, 0 0, 0 0; }
+}

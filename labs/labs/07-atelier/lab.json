@@ -1,0 +1,13 @@
+{
+  "n": "07",
+  "root": "lab-overfit",
+  "title": "Overfit or Not",
+  "meta": "bias vs variance · CV · double descent",
+  "lede": "Three hidden curves under noise, three fittings. Choose a polynomial with ridge regularisation, k-nearest neighbours or a regression tree; buy extra training data at a point a sample; run animated 5-fold cross-validation; see variance as a fan of twenty bootstrap threads; and push degree past the data to watch double descent. Then lock the fit that generalises.",
+  "description": "Overfit or Not: a bias-variance workbench with ridge regression, kNN and trees, cross-validation, bootstrap fans and double descent.",
+  "card": {
+    "title": "Overfit or Not",
+    "kind": "bias vs variance · CV",
+    "blurb": "Ridge, kNN or trees; cross-validate, see the variance fan, find double descent."
+  }
+}

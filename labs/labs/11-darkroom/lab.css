@@ -1,0 +1,26 @@
+/* lab/11 CNN Vision Lab: layout. Colours from the darkroom theme. */
+.lab-vision [hidden] { display: none !important; }
+.lab-vision .dk-stage { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 1.4rem; border: 0; background: transparent; padding: 0; }
+@media (max-width: 760px) { .lab-vision .dk-stage { grid-template-columns: minmax(0, 1fr); } }
+.lab-vision .dk-pad-wrap { box-shadow: 0 0 0 1px #5a2224, 0 0 40px rgba(255, 59, 47, .2); }
+.lab-vision .dk-pad { display: block; width: 100%; aspect-ratio: 1; touch-action: none; cursor: crosshair; }
+.lab-vision .dk-toggle { display: flex; gap: .45rem; align-items: center; min-height: 44px; font-size: .9rem; color: var(--ink); }
+.lab-vision .dk-toggle input { width: 20px; height: 20px; accent-color: #ff3b2f; }
+.lab-vision .dk-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 1rem; align-items: start; }
+.lab-vision .dk-fig { margin: 0; }
+.lab-vision .dk-input { display: block; width: 120px; height: 120px; image-rendering: pixelated; box-shadow: 0 0 0 4px #f4efe6, 0 6px 16px rgba(0, 0, 0, .6); }
+.lab-vision figcaption, .lab-vision .dk-cap { margin: .5rem 0 .3rem; font-size: .75rem; letter-spacing: .08em; color: var(--ink-dim); }
+.lab-vision .dk-probs { list-style: none; margin: 0; padding: 0; display: grid; gap: .15rem; }
+.lab-vision .dk-probs li { display: grid; grid-template-columns: 1.2rem minmax(0, 1fr) 2.6rem; align-items: center; gap: .4rem; font-size: .8rem; color: var(--ink-dim); }
+.lab-vision .dk-bar { height: 10px; background: linear-gradient(90deg, #ff3b2f var(--p), rgba(255, 255, 255, .06) var(--p)); border-radius: 2px; }
+.lab-vision .dk-probs li.is-top { color: #fff; font-weight: 700; }
+.lab-vision .dk-pct { text-align: right; }
+.lab-vision .dk-tray { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: .35rem; padding: .5rem; border-radius: 4px; background: linear-gradient(180deg, #2a1214, #1a0b0c); box-shadow: inset 0 2px 8px rgba(0, 0, 0, .7); }
+.lab-vision .dk-print { display: block; width: 100%; aspect-ratio: 1; image-rendering: pixelated; box-shadow: 0 0 0 2px #f4efe6; }
+.lab-vision .dk-print.is-developing { animation: dk-develop .9s ease-out both; animation-delay: calc(var(--i) * 40ms); }
+@keyframes dk-develop { 0% { filter: brightness(3.5) contrast(.3); } 100% { filter: none; } }
+.lab-vision .dk-end { margin-top: 1.25rem; padding: 1.4rem; background: #f4efe6; color: #1a0405; box-shadow: 0 0 40px rgba(255, 59, 47, .25); }
+.lab-vision .dk-end-kicker { margin: 0; letter-spacing: .2em; text-transform: uppercase; }
+.lab-vision .dk-end-score { margin: .4rem 0; font: 400 clamp(2rem, 6vw, 3.2rem)/1 var(--display); color: #b3261e; }
+.lab-vision .dk-end .btn { color: #1a0405; border-color: #1a0405; }
+.lab-vision .scale-prompt { min-height: 2.9em; }

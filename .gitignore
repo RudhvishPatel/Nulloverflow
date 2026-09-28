@@ -1,0 +1,22 @@
+# Dependencies (reinstall with npm ci)
+node_modules/
+
+# Build scratch and caches
+labs/.build/
+labs/scripts/data/.cache/
+tools/lab-themes/.fontcache/
+
+# QA artefacts (regenerate with check.mjs / play.mjs / lighthouse)
+tools/lab-themes/shots/
+tools/lab-themes/lh/
+tools/lab-themes/dom/
+
+# Local-only working state
+.superpowers/
+.backup/
+.claude/
+.DS_Store
+
+# Secrets never belong here
+.env
+.env.*

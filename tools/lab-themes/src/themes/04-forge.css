@@ -1,0 +1,270 @@
+/* ==========================================================================
+   lab/04 Prompt forge: Blacksmith's forge
+   Soot, ember, hot metal. Blocks are ingots (cold iron off / glowing hot on),
+   regression lights are furnace gauges, the diff is an engraved steel plate.
+   Intro: CRT cools to black iron, doors part, embers + sparks flare.
+   ========================================================================== */
+@font-face { font-family: "LabForge Slab"; src: url(/assets/lab/forge/alfaslab.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "LabForge Serif"; src: url(/assets/lab/forge/bitter-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "LabForge Serif"; src: url(/assets/lab/forge/bitter-700.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+
+:root:has(.lab-forge) {
+  --lab-theme: forge;
+  --lab-loading: "> stoking the furnace…";
+  --bg: #0e0b09;
+  --surface: #17110d;
+  --panel: #1c1511;
+  --grid: #3a2a1e;
+  --ink: #f3e6d8;
+  --ink-dim: #c9b09a;
+  --phosphor: #ff9a3d;
+  --phosphor-dim: #c98a55;
+  --phosphor-glow: #ffd7a8;
+  --amber: #ffc24a;
+  --amber-dim: #d99155;
+  --mono: "LabForge Serif", Georgia, serif;
+  --display: "LabForge Slab", Rockwell, Georgia, serif;
+  --forge-iron-hi: #45403b;
+  --forge-iron-lo: #24201d;
+  --forge-hot-hi: #ffd98a;
+  --forge-hot-mid: #ff8a2a;
+  --forge-hot-lo: #b8400f;
+  --intro-dur: 1.2s;
+}
+
+/* ---- World ---------------------------------------------------------------- */
+body:has(.lab-forge) {
+  background:
+    radial-gradient(ellipse 90% 45% at 50% 105%, rgba(255, 110, 30, .28), transparent 70%),
+    radial-gradient(ellipse 60% 30% at 50% 100%, rgba(255, 170, 60, .18), transparent 70%),
+    linear-gradient(0deg, rgba(0, 0, 0, .55) 1px, transparent 1px) 0 0 / 100% 38px,
+    linear-gradient(90deg, rgba(0, 0, 0, .45) 1px, transparent 1px) 0 0 / 76px 38px,
+    #0e0b09;
+  background-attachment: fixed;
+}
+body:has(.lab-forge) .section-head h2 {
+  font-family: var(--display);
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  letter-spacing: .01em;
+  color: #ffb347;
+  text-shadow: 0 0 18px rgba(255, 120, 30, .45), 0 2px 0 #5a2408;
+}
+body:has(.lab-forge) .section-head .meta { color: var(--ink-dim); }
+body:has(.lab-forge) .lab-lede { color: var(--ink-dim); font-size: 1rem; }
+
+/* Steel plate panel with rivets and an anvil silhouette. */
+body:has(.lab-forge) .lab-game-panel {
+  position: relative;
+  border: 1px solid #4a3a2e;
+  border-radius: 6px;
+  background:
+    radial-gradient(circle at 14px 14px, #6b5a4c 0 3px, #2a211b 3.5px 5px, transparent 5.5px),
+    radial-gradient(circle at calc(100% - 14px) 14px, #6b5a4c 0 3px, #2a211b 3.5px 5px, transparent 5.5px),
+    radial-gradient(circle at 14px calc(100% - 14px), #6b5a4c 0 3px, #2a211b 3.5px 5px, transparent 5.5px),
+    radial-gradient(circle at calc(100% - 14px) calc(100% - 14px), #6b5a4c 0 3px, #2a211b 3.5px 5px, transparent 5.5px),
+    linear-gradient(180deg, #221a15, #17110d);
+  box-shadow: inset 0 1px 0 rgba(255, 200, 150, .08), 0 20px 60px rgba(0, 0, 0, .55);
+  padding: 1.5rem 1.5rem 7rem;
+}
+body:has(.lab-forge) .lab-game-panel::after {
+  content: "";
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.25rem;
+  width: 150px;
+  height: 78px;
+  pointer-events: none;
+  opacity: .5;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 78'%3E%3Cpath fill='%23594a3f' d='M4 6h96c14 0 30 4 46 10-10 6-26 10-40 10H96c-4 0-8 4-8 8v10c0 6 4 10 10 12l6 4v10H34v-10l6-4c6-2 10-6 10-12V32c0-4-4-6-8-6H24C12 26 4 18 4 6z'/%3E%3Cpath fill='%23372d26' d='M28 66h92v8H28z'/%3E%3C/svg%3E") no-repeat center / contain;
+}
+body:has(.lab-forge) .lab-game-head { border-bottom: 1px solid #4a3a2e; }
+body:has(.lab-forge) .lab-game-head h3 { font-family: var(--display); color: #ffb347; letter-spacing: .02em; }
+body:has(.lab-forge) :is(.scale-chrome, .mag-seed, .lab-game-head .mono, .lab-game-head .meta) { color: var(--ink-dim); }
+body:has(.lab-forge) .scale-chrome .mono { font-variant: small-caps; letter-spacing: .06em; }
+body:has(.lab-forge) .scale-score strong { color: var(--amber); }
+body:has(.lab-forge) .scale-prompt { color: #ffcf8a; font-style: italic; }
+body:has(.lab-forge) .lab-subhead { color: #ffb347; font-family: var(--display); font-weight: 400; letter-spacing: .04em; text-transform: uppercase; }
+
+/* ---- Furnace gauges (regression lights) ------------------------------------ */
+body:has(.lab-forge) .forge-stage {
+  border: 1px solid #4a3a2e;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #1a1310, #120d0a);
+}
+body:has(.lab-forge) .forge-light {
+  position: relative;
+  border: 1px solid #3d3129;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #2a221d, #1a1411);
+}
+body:has(.lab-forge) .forge-bulb {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border: 3px solid #6b5a4c;
+  background: radial-gradient(circle at 35% 30%, #3a302a, #120d0a 70%);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, .8), 0 1px 0 rgba(255, 200, 150, .12);
+}
+body:has(.lab-forge) .forge-light-n { color: var(--ink-dim); font-weight: 700; }
+body:has(.lab-forge) .forge-light.is-pass .forge-bulb {
+  border-color: #c98a55;
+  background: radial-gradient(circle at 40% 35%, #fff4cf, #ffc24a 35%, #ff7a1a 70%, #a8360c);
+  box-shadow: 0 0 18px rgba(255, 150, 40, .85), 0 0 40px rgba(255, 110, 20, .35);
+}
+body:has(.lab-forge) .forge-light.is-pass .forge-light-n { color: var(--amber); }
+/* Pass: quench steam rises. */
+body:has(.lab-forge) .forge-light.is-pass::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 2px;
+  width: 26px;
+  height: 26px;
+  margin-left: -13px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 245, 235, .75), transparent 65%);
+  filter: blur(2px);
+  animation: forge-steam 1.1s ease-out both;
+  animation-delay: calc(var(--i, 0) * 90ms + 150ms);
+}
+/* Pass: sparks burst. */
+body:has(.lab-forge) .forge-light.is-pass::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 15px;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: #ffd98a;
+  box-shadow: 14px -10px 0 -1px #ffb347, -12px -14px 0 -1px #ffd98a, 18px 6px 0 -1px #ff8a2a, -16px 4px 0 -1px #ffc24a, 4px -18px 0 -1px #fff0c0;
+  animation: forge-sparks .6s ease-out both;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+/* Fail: dull red, cracked gauge glass. */
+body:has(.lab-forge) .forge-light.is-fail .forge-bulb {
+  border-color: #7a3a22;
+  background:
+    linear-gradient(118deg, transparent 46%, #0b0706 47%, #0b0706 52%, transparent 53%) 0 0 / 100% 55% no-repeat,
+    linear-gradient(62deg, transparent 46%, #0b0706 47%, #0b0706 52%, transparent 53%) 0 100% / 100% 50% no-repeat,
+    radial-gradient(circle at 40% 35%, #b5543a, #5e1f10 75%);
+}
+body:has(.lab-forge) .forge-light.is-fail .forge-light-n { color: #e0896a; }
+
+/* ---- Ingots (blocks) ---------------------------------------------------------- */
+body:has(.lab-forge) .forge-toggle {
+  border: 0;
+  border-radius: 4px;
+  color: #efe4da;
+  font-family: var(--mono);
+  font-size: .85rem;
+  background: linear-gradient(180deg, var(--forge-iron-hi), var(--forge-iron-lo));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), inset 0 -2px 0 rgba(0, 0, 0, .5), 0 2px 4px rgba(0, 0, 0, .5);
+  transition: background .35s, color .35s, box-shadow .35s, transform .15s;
+}
+body:has(.lab-forge) .forge-toggle:hover { background: linear-gradient(180deg, #544d47, #2c2723); }
+body:has(.lab-forge) .forge-toggle:active { transform: translateY(1px); }
+body:has(.lab-forge) .forge-kind { color: #d6c3b2; }
+body:has(.lab-forge) .forge-state { color: #d6c3b2; }
+body:has(.lab-forge) .forge-block.is-on .forge-toggle {
+  color: #1f0c03;
+  background: linear-gradient(180deg, var(--forge-hot-hi), var(--forge-hot-mid) 55%, var(--forge-hot-lo));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 0 16px rgba(255, 120, 30, .55), 0 2px 4px rgba(0, 0, 0, .5);
+  animation: forge-heat .45s ease-out;
+}
+body:has(.lab-forge) .forge-block.is-on :is(.forge-kind, .forge-state) { color: #3a1605; }
+body:has(.lab-forge) .forge-move {
+  border: 1px solid #4a3a2e;
+  border-radius: 4px;
+  color: #ffcf8a;
+  background: linear-gradient(180deg, #2c2520, #1a1411);
+}
+body:has(.lab-forge) .forge-move:hover:not(:disabled) { background: #3a2a1e; color: #ffe2b8; }
+body:has(.lab-forge) :is(.forge-toggle, .forge-move, .btn):focus-visible { outline: 2px solid #ffd98a; outline-offset: 2px; }
+
+/* ---- Strike button + generic buttons ------------------------------------------ */
+body:has(.lab-forge) .btn {
+  border-color: #8a5a36;
+  color: #ffcf8a;
+  font-family: var(--mono);
+  font-weight: 700;
+  border-radius: 4px;
+}
+body:has(.lab-forge) .btn:hover { background: rgba(255, 138, 42, .12); color: #ffe2b8; }
+body:has(.lab-forge) .btn-signal {
+  color: #1f0c03;
+  border: 0;
+  background: linear-gradient(180deg, #ffcf6b, #ff8a2a 60%, #c4480f);
+  box-shadow: 0 0 22px rgba(255, 120, 30, .45), inset 0 1px 0 rgba(255, 255, 255, .45);
+}
+body:has(.lab-forge) .btn-signal:hover { filter: brightness(1.08); color: #1f0c03; }
+
+/* ---- Engraved plate (diff) + suite ---------------------------------------------- */
+body:has(.lab-forge) .forge-diff {
+  border: 1px solid #5a4a3e;
+  border-radius: 4px;
+  color: #e6d9cc;
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #2e2722, #221c18);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, .6);
+}
+body:has(.lab-forge) .forge-diff-line.is-add { color: #ffc978; text-shadow: none; }
+body:has(.lab-forge) .forge-diff-line.is-del { color: #b9a797; text-decoration-color: #b9a797; }
+body:has(.lab-forge) .forge-tests li { border-left: 3px solid #4a3a2e; color: var(--ink-dim); }
+body:has(.lab-forge) .forge-tests li .mono { color: var(--ink-dim); }
+body:has(.lab-forge) .forge-tests li.is-pass { border-left-color: #ff8a2a; color: var(--ink); }
+body:has(.lab-forge) .forge-tests li.is-pass .mono { color: var(--amber); }
+body:has(.lab-forge) .forge-tests li.is-fail { border-left-color: #b5543a; }
+body:has(.lab-forge) .forge-needs { color: #e0a070; }
+body:has(.lab-forge) .lab-reveal { border: 1px solid #5a4a3e; background: rgba(255, 138, 42, .06); border-radius: 4px; }
+body:has(.lab-forge) .lab-reveal > .mono { color: var(--amber); }
+
+/* ---- Intro: CRT cools to iron, forge doors part, embers flare -------------------- */
+body:has(.lab-forge)::before {
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), rgba(0, 0, 0, .6) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, .35) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at center, #123018 0%, #0a140b 55%, #050805 100%);
+  animation-name: forge-intro-doors;
+}
+body:has(.lab-forge)::after {
+  background:
+    radial-gradient(circle at 30% 70%, #ffd98a 0 2px, transparent 3px),
+    radial-gradient(circle at 62% 64%, #ffb347 0 2px, transparent 3px),
+    radial-gradient(circle at 45% 80%, #fff0c0 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 70% 78%, #ff8a2a 0 2px, transparent 3px),
+    radial-gradient(circle at 38% 58%, #ffc24a 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 56% 86%, #ffd98a 0 2px, transparent 3px),
+    radial-gradient(ellipse 70% 45% at 50% 105%, rgba(255, 120, 30, .85), rgba(255, 80, 10, .25) 55%, transparent 75%);
+  animation-name: forge-intro-embers;
+}
+@keyframes forge-intro-doors {
+  0% { filter: none; clip-path: polygon(0 0, 50% 0, 50% 100%, 50% 100%, 50% 0, 100% 0, 100% 100%, 0 100%); opacity: 1; visibility: visible; }
+  22% { filter: none; }
+  45% { filter: saturate(0) brightness(.35) sepia(.4); clip-path: polygon(0 0, 50% 0, 50% 100%, 50% 100%, 50% 0, 100% 0, 100% 100%, 0 100%); }
+  100% { filter: saturate(0) brightness(.3) sepia(.4); clip-path: polygon(0 0, 0 0, 0 100%, 100% 100%, 100% 0, 100% 0, 100% 100%, 0 100%); opacity: 1; visibility: hidden; }
+}
+@keyframes forge-intro-embers {
+  0%, 30% { opacity: 0; transform: translateY(12%); visibility: visible; }
+  55% { opacity: 1; transform: translateY(0); }
+  80% { opacity: .9; transform: translateY(-8%) scale(1.05); }
+  100% { opacity: 0; transform: translateY(-14%) scale(1.08); visibility: hidden; }
+}
+@keyframes forge-steam {
+  0% { opacity: 0; transform: translateY(0) scale(.6); }
+  30% { opacity: .9; }
+  100% { opacity: 0; transform: translateY(-26px) scale(1.6); }
+}
+@keyframes forge-sparks {
+  0% { opacity: 1; transform: scale(.2); }
+  100% { opacity: 0; transform: scale(1.6); }
+}
+@keyframes forge-heat {
+  0% { filter: brightness(1.6) saturate(1.3); }
+  100% { filter: none; }
+}

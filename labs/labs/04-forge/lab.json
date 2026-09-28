@@ -1,0 +1,13 @@
+{
+  "n": "04",
+  "root": "lab-forge",
+  "title": "Prompt forge",
+  "meta": "token budget · red team · versions",
+  "lede": "Forge a system prompt from ingots: roles, rules, examples and injection defences, each with a token cost against a tight budget. Strike to run today's eight regression tests and three red-team waves of prompt-injection attacks. Every strike is a version you can diff, roll back and branch from. Results come from a fixed rule table, not a live model.",
+  "description": "Prompt Forge: build a system prompt under a token budget, run scripted regression tests and red-team prompt-injection waves, and version it with diffs and rollback.",
+  "card": {
+    "title": "Prompt forge",
+    "kind": "token budget · red team",
+    "blurb": "Forge a prompt under a token budget, survive three red-team injection waves, version it."
+  }
+}

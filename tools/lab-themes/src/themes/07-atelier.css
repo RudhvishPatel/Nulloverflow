@@ -1,0 +1,219 @@
+/* ==========================================================================
+   lab/07 Overfit or Not: Tailor's atelier
+   Pinstripe suiting cloth around a sheet of pattern paper. The plot is a
+   dark cutting cloth: training points are pins, validation points are chalk
+   rings, the true function is a chalk line, the fitted curve is red stitching.
+   The degree slider is a tape measure; the error scope is the tailor's ledger.
+   Intro: phosphor turns to chalk, pattern paper slides in, a tape measure unspools.
+   ========================================================================== */
+@font-face { font-family: "LabAtelier Serif"; src: url(/assets/lab/atelier/cormorant-600.woff2) format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "LabAtelier Serif"; src: url(/assets/lab/atelier/cormorant-italic-500.woff2) format("woff2"); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: "LabAtelier Chalk"; src: url(/assets/lab/atelier/caveat-600.woff2) format("woff2"); font-display: swap; }
+
+:root:has(.lab-overfit) {
+  --lab-theme: atelier;
+  --lab-loading: "> threading the needle…";
+  --bg: #2a2c33;
+  --surface: #34363e;
+  --panel: #e8d9b5;
+  --grid: #cdbb91;
+  --ink: #f1ece0;
+  --ink-dim: #d4cfc2;
+  --phosphor: #f1ece0;
+  --phosphor-dim: #cfc8b8;
+  --phosphor-glow: #ffffff;
+  --amber: #e05555;
+  --amber-dim: #e05555;
+  --mono: "LabAtelier Serif", Georgia, serif;
+  --display: "LabAtelier Serif", Georgia, serif;
+  --at-paper: #eadcb9;
+  --at-ink: #2a2118;
+  --at-ink-dim: #574a39;
+  --at-thread: #c62f2f;
+  --at-thread-text: #9e1f1f;
+  --at-navy: #1f3a6b;
+  --at-chalk: #f4f1ea;
+  --at-cloth: #33353d;
+  --at-tape: #f2cf4a;
+  --intro-dur: 1.25s;
+}
+
+/* ---- World: pinstripe suiting ----------------------------------------------------- */
+body:has(.lab-overfit) {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 22px, rgba(255, 255, 255, .07) 22px 23px),
+    radial-gradient(ellipse at 50% 20%, #34363e, #25272d 85%);
+  background-attachment: fixed;
+}
+body:has(.lab-overfit) .section-head h2 {
+  font: 600 clamp(2.6rem, 7vw, 4.2rem)/1 var(--display);
+  letter-spacing: .01em;
+  color: var(--at-chalk);
+}
+body:has(.lab-overfit) .section-head h2::after {
+  content: "made to measure" / "";
+  display: block;
+  margin-top: .3rem;
+  font: 400 1.35rem/1 "LabAtelier Chalk", cursive;
+  color: var(--at-tape);
+}
+body:has(.lab-overfit) .section-head .meta { color: var(--ink-dim); }
+body:has(.lab-overfit) .lab-lede { color: var(--ink-dim); font-size: 1.12rem; }
+
+/* ---- Pattern paper panel ------------------------------------------------------------ */
+body:has(.lab-overfit) .lab-game-panel {
+  --ink: var(--at-ink);
+  --ink-dim: var(--at-ink-dim);
+  --phosphor: var(--at-ink);
+  --phosphor-dim: var(--at-ink-dim);
+  --phosphor-glow: var(--at-ink);
+  --amber: var(--at-thread-text);
+  --amber-dim: var(--at-thread-text);
+  border: 0;
+  border-radius: 2px;
+  padding: 1.75rem;
+  color: var(--at-ink);
+  font-size: 1.05rem;
+  background:
+    linear-gradient(rgba(87, 74, 57, .12) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(90deg, rgba(87, 74, 57, .12) 1px, transparent 1px) 0 0 / 22px 22px,
+    var(--at-paper);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, .5);
+}
+body:has(.lab-overfit) .lab-game-head { border-bottom: 1px dashed var(--at-ink-dim); }
+body:has(.lab-overfit) .lab-game-head h3 { font: 600 1.7rem/1.05 var(--display); color: var(--at-ink); }
+body:has(.lab-overfit) :is(.scale-chrome, .mag-seed, .lab-game-head .mono, .lab-game-head .meta, .overfit-legend, .scope-foot) { color: var(--at-ink-dim); font-size: .85rem; }
+body:has(.lab-overfit) .scale-score { color: var(--at-ink-dim); font-size: .9rem; }
+body:has(.lab-overfit) .scale-score strong { color: var(--at-thread-text) !important; text-shadow: none; }
+body:has(.lab-overfit) .scale-prompt { color: var(--at-ink); font-size: 1.05rem; font-style: italic; }
+body:has(.lab-overfit) .overfit-stage { border: 0; background: transparent; padding: 0; }
+
+/* Plot as a dark cutting cloth. */
+body:has(.lab-overfit) .overfit-plot { border-radius: 4px; box-shadow: 0 8px 20px rgba(0, 0, 0, .25); }
+body:has(.lab-overfit) .plot-frame { fill: var(--at-cloth); stroke: #1c1d22; stroke-width: 2; }
+body:has(.lab-overfit) .plot-axis { stroke: rgba(244, 241, 234, .2); }
+body:has(.lab-overfit) .plot-label { fill: var(--at-chalk); font: 400 20px/1 "LabAtelier Chalk", cursive; }
+body:has(.lab-overfit) .overfit-true { stroke: var(--at-chalk); stroke-width: 2; stroke-dasharray: 2 6; stroke-linecap: round; opacity: .9; }
+body:has(.lab-overfit) .overfit-curve {
+  stroke: var(--at-thread);
+  stroke-width: 3;
+  stroke-dasharray: 9 5;
+  stroke-linecap: round;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .6));
+}
+body:has(.lab-overfit) .overfit-train { fill: #d9dde3; stroke: #6b7280; stroke-width: 1.2; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .7)); }
+body:has(.lab-overfit) .overfit-val { fill: none; stroke: var(--at-tape); stroke-width: 2; }
+body:has(.lab-overfit) .lg-train { background: #d9dde3; box-shadow: 0 0 0 1px #6b7280; }
+body:has(.lab-overfit) .lg-val { border-color: #b58f00; }
+body:has(.lab-overfit) .lg-fit { background: repeating-linear-gradient(90deg, var(--at-thread) 0 6px, transparent 6px 9px); }
+body:has(.lab-overfit) .lg-true { background: var(--at-ink-dim); }
+
+/* Tape-measure degree slider. */
+body:has(.lab-overfit) .overfit-controls input[type=range] { -webkit-appearance: none; appearance: none; background: transparent; height: 44px; cursor: pointer; }
+body:has(.lab-overfit) .overfit-controls input[type=range]::-webkit-slider-runnable-track {
+  height: 22px;
+  border-radius: 2px;
+  background:
+    repeating-linear-gradient(90deg, #2a2118 0 1px, transparent 1px 9.09%) 0 0 / 100% 12px no-repeat,
+    repeating-linear-gradient(90deg, #2a2118 0 1px, transparent 1px 1.818%) 0 0 / 100% 6px no-repeat,
+    var(--at-tape);
+  box-shadow: 0 0 0 1px #8a6d00;
+}
+body:has(.lab-overfit) .overfit-controls input[type=range]::-moz-range-track {
+  height: 22px;
+  background: repeating-linear-gradient(90deg, #2a2118 0 1px, transparent 1px 9.09%) 0 0 / 100% 12px no-repeat, var(--at-tape);
+}
+body:has(.lab-overfit) .overfit-controls input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 34px;
+  margin-top: -6px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #8a8f96, #e6e8eb 45%, #8a8f96);
+  box-shadow: 0 0 0 1px #3a3d42, 0 2px 4px rgba(0, 0, 0, .4);
+}
+body:has(.lab-overfit) .overfit-controls input[type=range]::-moz-range-thumb { width: 18px; height: 34px; border: 0; border-radius: 3px; background: linear-gradient(90deg, #8a8f96, #e6e8eb 45%, #8a8f96); }
+body:has(.lab-overfit) .overfit-controls input[type=range]:focus-visible { outline: 3px solid var(--at-navy); outline-offset: 2px; }
+body:has(.lab-overfit) .overfit-controls :is(label, .golf-slider-label, span) { color: var(--at-ink); }
+body:has(.lab-overfit) .overfit-controls strong { color: var(--at-thread-text); text-shadow: none; font-size: 1.15em; }
+body:has(.lab-overfit) .overfit-step {
+  border: 1px solid var(--at-ink);
+  border-radius: 50%;
+  color: var(--at-ink);
+  background: var(--at-chalk);
+  font-size: 1.3rem;
+}
+body:has(.lab-overfit) .overfit-step:disabled { border-color: rgba(42, 33, 24, .35); color: rgba(42, 33, 24, .45); }
+body:has(.lab-overfit) .overfit-step:hover:not(:disabled) { background: #fff; }
+
+/* Ledger (error scope). */
+body:has(.lab-overfit) .scope {
+  border: 0;
+  border-radius: 2px;
+  background:
+    linear-gradient(90deg, transparent 2.2rem, rgba(198, 47, 47, .45) 2.2rem calc(2.2rem + 1px), transparent calc(2.2rem + 1px)),
+    repeating-linear-gradient(180deg, transparent 0 1.3rem, rgba(31, 58, 107, .16) 1.3rem calc(1.3rem + 1px)),
+    #fbf7ec;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .18);
+}
+body:has(.lab-overfit) .scope-head { color: var(--at-ink); font-size: .9rem; }
+body:has(.lab-overfit) .scope-head::before { content: "Ledger — fittings" / ""; width: 100%; font: 400 1.25rem/1 "LabAtelier Chalk", cursive; color: var(--at-ink-dim); }
+body:has(.lab-overfit) .scope-g { color: var(--at-navy); text-shadow: none; }
+body:has(.lab-overfit) .scope-a { color: var(--at-thread-text); text-shadow: none; }
+body:has(.lab-overfit) .scope-grid { stroke: rgba(42, 33, 24, .12); }
+body:has(.lab-overfit) .scope-tick { fill: var(--at-ink-dim); font: 600 12px/1 var(--mono); }
+body:has(.lab-overfit) .scope-train { stroke: var(--at-navy); filter: none; stroke-width: 2.5; }
+body:has(.lab-overfit) .scope-val { stroke: var(--at-thread); filter: none; stroke-width: 2.5; }
+body:has(.lab-overfit) .scope-dot-train { fill: var(--at-navy); }
+body:has(.lab-overfit) .scope-dot-val { fill: var(--at-thread); }
+body:has(.lab-overfit) .scope-cursor { stroke: var(--at-ink); opacity: .45; stroke-dasharray: 3 3; }
+body:has(.lab-overfit) .scope-best { stroke: #b58f00; stroke-width: 2; }
+
+/* Buttons + verdict. */
+body:has(.lab-overfit) .lab-game-panel .btn { border: 1px solid var(--at-ink); color: var(--at-ink); font: 600 1rem/1 var(--mono); letter-spacing: .06em; text-transform: none; }
+body:has(.lab-overfit) .lab-game-panel .btn:hover { background: rgba(42, 33, 24, .07); color: var(--at-ink); }
+body:has(.lab-overfit) .lab-game-panel .btn-signal { background: var(--at-ink); color: var(--at-paper); }
+body:has(.lab-overfit) .lab-game-panel .btn-signal::before { content: "✂ " / ""; }
+body:has(.lab-overfit) .lab-game-panel .btn-signal:hover { background: #3d3226; color: var(--at-paper); filter: none; }
+body:has(.lab-overfit) .btn:focus-visible { outline: 3px solid var(--at-navy); outline-offset: 3px; }
+body:has(.lab-overfit) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]) { border-color: var(--at-chalk); color: var(--at-chalk); font: 600 1rem/1 var(--mono); text-transform: none; }
+body:has(.lab-overfit) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]):hover { background: var(--at-chalk); color: var(--at-ink); }
+body:has(.lab-overfit) .lab-reveal { position: relative; border: 1px solid var(--at-ink-dim); background: #fbf7ec; padding-right: 11rem; }
+body:has(.lab-overfit) .lab-reveal > .mono { color: var(--at-ink); font-size: 1.05rem; }
+body:has(.lab-overfit) .lab-reveal-why { color: var(--at-ink-dim); font-size: 1rem; }
+body:has(.lab-overfit) .lab-reveal::after {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  padding: .35rem .7rem;
+  border: 2px dashed currentColor;
+  border-radius: 999px;
+  font: 400 1.35rem/1 "LabAtelier Chalk", cursive;
+  transform: translateY(-50%) rotate(-5deg);
+}
+body:has(.lab-overfit) .lab-reveal.is-hit::after { content: "bespoke ✂" / ""; color: #1f6a3a; }
+body:has(.lab-overfit) .lab-reveal.is-miss::after { content: "needs alterations" / ""; color: var(--at-thread-text); }
+
+/* ---- Intro: chalk, pattern paper, tape measure ------------------------------------------ */
+body:has(.lab-overfit)::before { animation-name: at-intro-chalk; }
+body:has(.lab-overfit)::after {
+  background:
+    repeating-linear-gradient(90deg, #2a2118 0 1px, transparent 1px 40px) 0 50% / 0% 16px no-repeat,
+    linear-gradient(var(--at-tape), var(--at-tape)) 0 50% / 0% 40px no-repeat,
+    repeating-linear-gradient(90deg, transparent 0 60px, rgba(87, 74, 57, .35) 60px 61px),
+    linear-gradient(rgba(87, 74, 57, .15) 1px, transparent 1px) 0 0 / 22px 22px,
+    var(--at-paper);
+  animation-name: at-intro-paper;
+}
+@keyframes at-intro-chalk {
+  0%, 18% { opacity: 1; visibility: visible; filter: none; }
+  38% { filter: grayscale(1) brightness(2.2) contrast(.7); opacity: 1; }
+  52% { opacity: 0; }
+  100% { opacity: 0; visibility: hidden; }
+}
+@keyframes at-intro-paper {
+  0%, 28% { transform: translateX(100%); opacity: 1; visibility: visible; background-size: 0% 16px, 0% 40px, auto, 22px 22px, auto; }
+  50% { transform: translateX(0); background-size: 0% 16px, 0% 40px, auto, 22px 22px, auto; }
+  78% { background-size: 100% 16px, 100% 40px, auto, 22px 22px, auto; opacity: 1; }
+  100% { transform: translateX(0); background-size: 100% 16px, 100% 40px, auto, 22px 22px, auto; opacity: 0; visibility: hidden; }
+}

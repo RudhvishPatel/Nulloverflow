@@ -1,0 +1,13 @@
+{
+  "n": "02",
+  "root": "magnitude-run",
+  "title": "MAGNITUDE RUN",
+  "meta": "90% intervals · calibration",
+  "lede": "Eight estimates a day, from the mass of the Moon to the neurons in your head. Don't give one number: bracket where you're 90% sure the truth lands. Tight brackets that hit score high; misses cost 20× their distance. At the end you'll find out, measurably, whether you're overconfident.",
+  "description": "Magnitude Run: estimate with 90% confidence intervals on a log ruler, scored with a proper scoring rule, and get a calibration report.",
+  "card": {
+    "title": "MAGNITUDE RUN",
+    "kind": "90% intervals · calibration",
+    "blurb": "Bracket eight estimates with 90% intervals and find out if you're overconfident."
+  }
+}

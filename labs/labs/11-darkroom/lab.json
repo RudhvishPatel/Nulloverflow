@@ -1,0 +1,9 @@
+{
+  "n": "11",
+  "root": "lab-vision",
+  "title": "CNN Vision Lab",
+  "meta": "real CNN · feature maps · adversary",
+  "lede": "A real convolutional network, trained on MNIST and running in your browser. Draw a digit and watch every filter develop like a print in the darkroom: eight edge detectors, then sixteen shape detectors, then the meter swings to a guess. Turn on saliency to see which pixels mattered. Then play the adversary: flip a 98%-accurate model's mind with as few pixel edits as you can.",
+  "description": "CNN Vision Lab: draw digits for a real in-browser convolutional network, watch its feature maps, see saliency, and craft adversarial pixel edits.",
+  "card": { "title": "CNN Vision Lab", "kind": "real CNN · adversary", "blurb": "Draw a digit, watch every filter develop, then fool the network with a few pixels." }
+}

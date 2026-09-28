@@ -1,0 +1,22 @@
+/* lab/12 RL Arena: layout. Colours from the arcade theme. */
+.lab-rl [hidden] { display: none !important; }
+.lab-rl .ar-blurb { margin: 0 0 1rem; font-size: 1.15rem; color: var(--ink-dim); }
+.lab-rl .ar-stage { display: grid; gap: 1rem; border: 0; background: transparent; padding: 0; box-shadow: none; justify-items: center; }
+.lab-rl .ar-dungeon-wrap { width: 100%; display: flex; justify-content: center; line-height: 0; }
+.lab-rl .ar-dungeon { box-shadow: 0 0 0 4px #000, 0 0 0 7px var(--ar-cyan); }
+.lab-rl .ar-dungeon { display: block; image-rendering: pixelated; cursor: crosshair; }
+.lab-rl .ar-curve-wrap { width: 100%; box-shadow: 0 0 0 3px #000, 0 0 0 5px var(--ar-pink); line-height: 0; }
+.lab-rl .ar-curve { display: block; width: 100%; }
+.lab-rl .ar-legend { font-size: 1rem; color: var(--ink-dim); }
+.lab-rl .ar-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: .6rem 1.2rem; margin: 1rem 0 .6rem; }
+.lab-rl .ar-field { display: grid; gap: .2rem; font-size: 1.1rem; color: var(--ink-dim); }
+.lab-rl .ar-field strong { color: var(--ar-gold); }
+.lab-rl .ar-field input[type=range] { width: 100%; accent-color: var(--ar-pink); min-height: 30px; }
+.lab-rl .ar-field select { min-height: 40px; border: 3px solid var(--ar-cyan); border-radius: 0; background: #000; color: var(--ink); font: 400 1.1rem/1 var(--mono); }
+.lab-rl .ar-toggle { display: flex; align-items: center; gap: .4rem; min-height: 44px; font-size: 1.15rem; color: var(--ink); }
+.lab-rl .ar-toggle input { width: 20px; height: 20px; accent-color: var(--ar-pink); }
+.lab-rl .ar-crumb[aria-pressed="true"] { background: var(--ar-pink) !important; color: #000; }
+.lab-rl .ar-status { min-height: 1.4em; font-size: 1.2rem; color: var(--ar-gold); }
+.lab-rl .ar-end { margin-top: 1.25rem; padding: 1.4rem; background: #000; text-align: center; box-shadow: 0 0 0 4px var(--ar-cyan); }
+.lab-rl .ar-end-kicker { margin: 0; font: 400 .9rem/1 var(--display); color: var(--ar-pink); }
+.lab-rl .ar-end-score { margin: .8rem 0; font: 400 clamp(1.6rem, 5vw, 2.6rem)/1 var(--display); color: var(--ar-gold); text-shadow: 4px 4px 0 var(--ar-pink); }

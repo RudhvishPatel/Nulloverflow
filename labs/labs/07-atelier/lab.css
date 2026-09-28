@@ -1,0 +1,25 @@
+/* lab/07 Overfit or Not: layout for the cloth, controls and ledger. Colours from the atelier theme. */
+.lab-overfit [hidden] { display: none !important; }
+.lab-overfit .at-cloth-wrap { border-radius: 4px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, .25); }
+.lab-overfit .at-cloth, .lab-overfit .at-ledger { display: block; width: 100%; }
+.lab-overfit .at-families { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0 .4rem; }
+.lab-overfit .at-family { min-height: 44px; padding: 0 1rem; border: 1px solid var(--at-ink); border-radius: 99px; background: var(--at-chalk); color: var(--at-ink); font: 600 1rem/1 var(--mono); cursor: pointer; }
+.lab-overfit .at-family[aria-checked="true"] { background: var(--at-ink); color: var(--at-paper); }
+.lab-overfit .at-family:focus-visible { outline: 3px solid var(--at-navy); outline-offset: 2px; }
+.lab-overfit .at-dials { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: .5rem 1.2rem; align-items: end; }
+.lab-overfit .at-slider { display: grid; gap: .1rem; }
+.lab-overfit .at-slider span { font-size: .9rem; color: var(--at-ink); }
+.lab-overfit .at-slider strong { color: var(--at-thread-text); }
+.lab-overfit .at-slider input[type=range] { width: 100%; }
+.lab-overfit .at-toggles { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; margin: .6rem 0; }
+.lab-overfit .at-toggle { display: inline-flex; align-items: center; gap: .3rem; min-height: 44px; font-size: .95rem; color: var(--at-ink); }
+.lab-overfit .at-toggle input { width: 20px; height: 20px; accent-color: var(--at-thread); }
+.lab-overfit .at-cv, .lab-overfit .at-errors { margin: .3rem 0; font-size: .9rem; color: var(--at-ink); }
+.lab-overfit .scope { margin-top: .8rem; }
+.lab-overfit .at-end { margin-top: 1.25rem; padding: 1.4rem; background: #fbf7ec; color: var(--at-ink); box-shadow: 0 8px 20px rgba(0, 0, 0, .3); }
+.lab-overfit .at-end-kicker { margin: 0; letter-spacing: .2em; text-transform: uppercase; color: var(--at-ink-dim); }
+.lab-overfit .at-end-score { margin: .4rem 0; font: 600 clamp(2rem, 6vw, 3rem)/1 var(--display); color: var(--at-thread-text); }
+/* Reserve canvas space before the script sizes it (no layout shift). */
+.lab-overfit .at-cloth { aspect-ratio: 2 / 1; height: auto !important; }
+@media (max-width: 540px) { .lab-overfit .at-cloth { aspect-ratio: 4 / 3; } }
+.lab-overfit .at-ledger { aspect-ratio: 1 / .34; height: auto !important; }

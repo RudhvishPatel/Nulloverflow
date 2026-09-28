@@ -1,0 +1,23 @@
+/* lab/05 Secure ops: map, WAF writer, intel and log. Colours from the siege theme. */
+.lab-ops [hidden] { display: none !important; }
+.lab-ops .sg-map-wrap { border: 2px solid var(--sg-ink); border-radius: 2px; overflow: hidden; }
+.lab-ops .sg-map { display: block; width: 100%; }
+.lab-ops .ops-row-head { display: grid; }
+.lab-ops .ops-log li.is-breach { color: var(--sg-red); font-weight: 700; }
+.lab-ops .sg-waf { margin: 1.1rem 0; padding: 1rem; border: 2px solid var(--sg-ink); background: rgba(255, 250, 235, .45); }
+.lab-ops .sg-waf .lab-subhead { margin: 0 0 .5rem; font: 400 1.1rem/1 var(--display); color: var(--sg-ink); }
+.lab-ops .sg-waf-input { width: 100%; min-height: 44px; padding: 0 .7rem; border: 2px solid var(--sg-ink); border-radius: 2px; background: #fbf4df; color: var(--sg-ink); font: 600 .95rem/1 ui-monospace, Menlo, monospace; }
+.lab-ops .sg-waf-input:focus-visible { outline: 3px solid #1f4fa0; outline-offset: 2px; }
+.lab-ops .sg-waf-status { margin: .5rem 0; font-size: .85rem; color: var(--sg-ink-dim); }
+.lab-ops .sg-waf-status.is-bad { color: var(--sg-red); font-weight: 700; }
+.lab-ops .sg-waf-status.is-good { color: var(--sg-green); font-weight: 700; }
+.lab-ops .sg-intel { list-style: none; margin: 0; padding: 0; display: grid; gap: .2rem; font-size: .78rem; color: var(--sg-ink-dim); }
+.lab-ops .sg-intel code { font-family: ui-monospace, Menlo, monospace; word-break: break-all; }
+.lab-ops .sg-intel li.is-attack .mono { color: var(--sg-red); }
+.lab-ops .sg-intel li.is-visitor .mono { color: var(--sg-green); }
+.lab-ops .sg-intel li.is-match { background: rgba(142, 27, 27, .08); }
+.lab-ops .sg-intel li.is-visitor.is-match { background: rgba(217, 130, 43, .2); }
+.lab-ops .sg-intel strong { color: var(--sg-ink); }
+.lab-ops .sg-end { margin-top: 1.25rem; padding: 1.4rem; border: 2px solid var(--sg-ink); background: rgba(255, 250, 235, .6); }
+.lab-ops .sg-end-kicker { margin: 0; letter-spacing: .2em; text-transform: uppercase; color: var(--sg-ink-dim); }
+.lab-ops .sg-end-score { margin: .4rem 0; font: 400 clamp(2rem, 6vw, 3rem)/1 var(--display); color: var(--sg-red); }

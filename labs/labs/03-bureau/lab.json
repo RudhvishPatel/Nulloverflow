@@ -1,0 +1,13 @@
+{
+  "n": "03",
+  "root": "lab-eval",
+  "title": "Eval harness",
+  "meta": "threshold · ROC · Cohen's κ",
+  "lede": "Two jobs on today's case file. First, set the ship threshold on 24 scored model outputs: the ROC and PR curves, the confusion grid and precision/recall move live as you drag, and today's spec says how precise you must be. Then grade eight borderline outputs yourself, and see how well you agree with a second inspector.",
+  "description": "Eval harness: set a model's decision threshold against a precision spec with live ROC and PR curves, then measure your grading agreement with Cohen's kappa.",
+  "card": {
+    "title": "Eval harness",
+    "kind": "threshold · ROC · κ",
+    "blurb": "Set a ship threshold with live ROC and PR curves, then grade borderline outputs."
+  }
+}

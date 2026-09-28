@@ -1,0 +1,164 @@
+/* ==========================================================================
+   lab/06 Gradient Descent Golf: Retro country-club putting green
+   Mown fairway stripes, a cream scorecard panel, the canvas as a framed green
+   (canvas colours patched in build.mjs: white ball/trail/flag, green surface,
+   water-hazard blue for a diverged ball), tee-ball slider thumbs, 70s type.
+   Intro: CRT pixels bloom into grass, a ball rolls in and drops into the cup.
+   ========================================================================== */
+@font-face { font-family: "LabGreen Display"; src: url(/assets/lab/green/fraunces-800.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "LabGreen Sans"; src: url(/assets/lab/green/nunito-500.woff2) format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "LabGreen Sans"; src: url(/assets/lab/green/nunito-800.woff2) format("woff2"); font-weight: 800; font-display: swap; }
+
+:root:has(.lab-golf) {
+  --lab-theme: green;
+  --lab-loading: "> clearing the green…";
+  --bg: #2f6b3a;
+  --surface: #fbf6e6;
+  --panel: #fbf6e6;
+  --grid: #d8e2c8;
+  --ink: #fdfaf0;
+  --ink-dim: #e5f0dc;
+  --phosphor: #fdfaf0;
+  --phosphor-dim: #d9ead0;
+  --phosphor-glow: #ffffff;
+  --amber: #ffe08a;
+  --amber-dim: #ffe08a;
+  --mono: "LabGreen Sans", "Avenir Next", system-ui, sans-serif;
+  --display: "LabGreen Display", "Cooper Black", Georgia, serif;
+  --gr-ink: #1d3b24;
+  --gr-ink-dim: #45604b;
+  --gr-red: #b3261e;
+  --gr-cream: #fbf6e6;
+  --gr-orange: #e07a1f;
+  --intro-dur: 1.3s;
+}
+
+/* ---- World: mown fairway stripes, sunny ---------------------------------------- */
+body:has(.lab-golf) {
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(255, 244, 200, .22), transparent 70%),
+    repeating-linear-gradient(135deg, #327342 0 70px, #3a7f4a 70px 140px);
+  background-attachment: fixed;
+}
+body:has(.lab-golf) .section-head h2 {
+  font-family: var(--display);
+  font-size: clamp(2.3rem, 6vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: -.01em;
+  color: var(--gr-cream);
+  text-shadow: 3px 3px 0 var(--gr-orange), 6px 6px 0 rgba(0, 0, 0, .18);
+}
+body:has(.lab-golf) .section-head .meta { color: var(--ink-dim); font-weight: 800; }
+body:has(.lab-golf) .lab-lede { color: var(--ink); font-size: 1.02rem; }
+
+/* ---- Scorecard panel --------------------------------------------------------------- */
+body:has(.lab-golf) .lab-game-panel {
+  --ink: var(--gr-ink);
+  --ink-dim: var(--gr-ink-dim);
+  --phosphor: var(--gr-ink);
+  --phosphor-dim: var(--gr-ink-dim);
+  --phosphor-glow: var(--gr-ink);
+  --amber: var(--gr-red);
+  --amber-dim: var(--gr-red);
+  border: 0;
+  border-radius: 14px;
+  padding: 1.6rem;
+  color: var(--gr-ink);
+  background:
+    linear-gradient(90deg, var(--gr-orange) 0 8px, #f2b233 8px 16px, #7aa33c 16px 24px, transparent 24px),
+    var(--gr-cream);
+  padding-left: calc(1.6rem + 24px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .3);
+}
+body:has(.lab-golf) .lab-game-head { border-bottom: 2px solid var(--gr-ink); }
+body:has(.lab-golf) .lab-game-head h3 { font: 400 1.6rem/1.05 var(--display); color: var(--gr-ink); }
+body:has(.lab-golf) :is(.scale-chrome, .mag-seed, .lab-game-head .mono, .lab-game-head .meta, .golf-formula) { color: var(--gr-ink-dim); font-weight: 500; }
+body:has(.lab-golf) .scale-score { color: var(--gr-ink-dim); font-weight: 800; letter-spacing: .08em; }
+body:has(.lab-golf) .scale-score strong { color: var(--gr-red) !important; text-shadow: none; font-family: var(--display); font-weight: 400; }
+body:has(.lab-golf) .scale-prompt { color: var(--gr-ink); font-weight: 800; font-size: .9rem; }
+
+body:has(.lab-golf) .golf-stage { border: 0; background: transparent; padding: 0; }
+body:has(.lab-golf) .golf-canvas-wrap {
+  padding: 10px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--gr-ink), 0 10px 24px rgba(0, 0, 0, .18);
+}
+body:has(.lab-golf) .golf-canvas { border-radius: 6px; }
+
+/* Controls: scorecard rows + tee-ball sliders. */
+body:has(.lab-golf) .golf-controls {
+  padding: 1rem 1.1rem;
+  border: 2px solid var(--gr-ink);
+  border-radius: 10px;
+  background: #fffdf5;
+}
+body:has(.lab-golf) .golf-slider-label { color: var(--gr-ink); font-weight: 800; font-size: .82rem; }
+body:has(.lab-golf) .golf-slider-label strong { color: var(--gr-red); text-shadow: none; font: 400 1.2em/1 var(--display); }
+body:has(.lab-golf) .golf-slider input[type=range]::-webkit-slider-runnable-track { height: 8px; border-radius: 99px; background: linear-gradient(90deg, #7aa33c, #2f6b3a); }
+body:has(.lab-golf) .golf-slider input[type=range]::-moz-range-track { height: 8px; border-radius: 99px; background: linear-gradient(90deg, #7aa33c, #2f6b3a); }
+body:has(.lab-golf) .golf-slider input[type=range]::-webkit-slider-thumb {
+  width: 28px;
+  height: 28px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0 40%, #e9e9e2 70%, #c9c9bf);
+  box-shadow: 0 0 0 2px var(--gr-ink), 0 3px 6px rgba(0, 0, 0, .3);
+}
+body:has(.lab-golf) .golf-slider input[type=range]::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0 40%, #e9e9e2 70%, #c9c9bf);
+  box-shadow: 0 0 0 2px var(--gr-ink), 0 3px 6px rgba(0, 0, 0, .3);
+}
+body:has(.lab-golf) .golf-slider input[type=range]:focus-visible { outline: 3px solid var(--gr-orange); outline-offset: 2px; border-radius: 6px; }
+body:has(.lab-golf) .golf-formula { font-family: ui-monospace, "IBM Plex Mono", Menlo, monospace; font-size: .75rem; }
+body:has(.lab-golf) .golf-rolling { color: var(--gr-ink); font-weight: 800; }
+
+/* Buttons: pill, clubhouse style. */
+body:has(.lab-golf) .lab-game-panel .btn {
+  border: 2px solid var(--gr-ink);
+  border-radius: 999px;
+  color: var(--gr-ink);
+  font: 800 .85rem/1 var(--mono);
+  letter-spacing: .08em;
+}
+body:has(.lab-golf) .lab-game-panel .btn:hover { background: rgba(29, 59, 36, .08); color: var(--gr-ink); }
+body:has(.lab-golf) .lab-game-panel .btn-signal { background: var(--gr-red); border-color: var(--gr-red); color: #fff; padding-inline: 1.6rem; }
+body:has(.lab-golf) .lab-game-panel .btn-signal::before { content: "⛳ " / ""; }
+body:has(.lab-golf) .lab-game-panel .btn-signal:hover { background: #962018; color: #fff; filter: none; }
+body:has(.lab-golf) .btn:focus-visible { outline: 3px solid var(--gr-orange); outline-offset: 3px; }
+body:has(.lab-golf) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]) { border: 2px solid var(--gr-cream); border-radius: 999px; color: var(--gr-cream); font: 800 .85rem/1 var(--mono); background: rgba(0, 0, 0, .12); }
+body:has(.lab-golf) main .btn:not(.lab-game-panel .btn):not([href="/lab/"]):hover { background: var(--gr-cream); color: var(--gr-ink); }
+
+body:has(.lab-golf) .lab-reveal { border: 2px solid var(--gr-ink); border-radius: 10px; background: #fffdf5; }
+body:has(.lab-golf) .lab-reveal > .mono { color: var(--gr-red); font: 400 1.1rem/1.2 var(--display); }
+body:has(.lab-golf) .lab-reveal-why { color: var(--gr-ink-dim); }
+
+/* ---- Intro: grass blooms, ball rolls in and drops ---------------------------------- */
+@property --gr-ball-x { syntax: "<percentage>"; inherits: false; initial-value: -5%; }
+@property --gr-ball-r { syntax: "<length>"; inherits: false; initial-value: 12px; }
+body:has(.lab-golf)::before { animation-name: gr-intro-bloom; }
+body:has(.lab-golf)::after {
+  background:
+    radial-gradient(circle at var(--gr-ball-x) 62%, #fff 0 var(--gr-ball-r), rgba(0, 0, 0, .25) calc(var(--gr-ball-r) + .5px) calc(var(--gr-ball-r) + 3px), transparent calc(var(--gr-ball-r) + 4px)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 160'%3E%3Crect x='39' y='10' width='3' height='150' fill='%23fdfaf0'/%3E%3Cpath d='M42 10l34 14-34 14z' fill='%23d7263d'/%3E%3C/svg%3E") 50% calc(62% - 60px) / 80px 160px no-repeat,
+    radial-gradient(26px 11px at 50% 62%, #0b140d 97%, transparent 100%),
+    radial-gradient(ellipse 90% 60% at 50% 40%, rgba(255, 244, 200, .25), transparent 70%),
+    repeating-linear-gradient(135deg, #327342 0 70px, #3a7f4a 70px 140px);
+  animation-name: gr-intro-roll;
+}
+@keyframes gr-intro-bloom {
+  0%, 18% { opacity: 1; visibility: visible; filter: none; }
+  40% { filter: blur(8px) saturate(2.2) brightness(1.5) hue-rotate(-12deg); opacity: 1; }
+  55% { opacity: 0; }
+  100% { opacity: 0; visibility: hidden; }
+}
+@keyframes gr-intro-roll {
+  0%, 30% { opacity: 0; visibility: visible; --gr-ball-x: -5%; --gr-ball-r: 12px; }
+  45% { opacity: 1; --gr-ball-x: -5%; }
+  74% { --gr-ball-x: 50%; --gr-ball-r: 12px; }
+  82% { --gr-ball-x: 50%; --gr-ball-r: 0px; opacity: 1; }
+  100% { --gr-ball-x: 50%; --gr-ball-r: 0px; opacity: 0; visibility: hidden; }
+}

@@ -1,0 +1,13 @@
+{
+  "n": "06",
+  "root": "lab-golf",
+  "title": "Gradient Descent Golf",
+  "meta": "optimisers · 3D loss surfaces",
+  "lede": "Six holes on real loss surfaces, dealt fresh every day. Your clubs are optimisers: SGD, Momentum, Nesterov, RMSProp and Adam. Pick one, tune its learning rate, and the ball takes real gradient-descent steps across the terrain. Then watch four tuned rival optimisers race the same shot.",
+  "description": "Gradient Descent Golf: a 3D browser game where optimisers are golf clubs. Six real loss surfaces a day, from Rosenbrock's banana valley to a gradient cliff.",
+  "card": {
+    "title": "Gradient Descent Golf",
+    "kind": "3D · optimisers as clubs",
+    "blurb": "Six real loss surfaces in 3D. SGD, Momentum, Nesterov, RMSProp and Adam are your clubs."
+  }
+}

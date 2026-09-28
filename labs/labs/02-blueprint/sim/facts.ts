@@ -1,0 +1,56 @@
+// Estimation questions: well-established reference values (rounded). Populations are
+// approximate for the stated year. All values are positive so they live on a log ruler.
+export type Category = 'length' | 'distance' | 'mass' | 'count' | 'time' | 'speed' | 'temperature';
+
+export interface Fact { label: string; value: number; unit: string; category: Category }
+
+const F = (label: string, value: number, unit: string, category: Category): Fact => ({ label, value, unit, category });
+
+export const FACTS: Fact[] = [
+  F('Height of Mount Everest', 8849, 'm', 'length'),
+  F('Height of the Eiffel Tower', 330, 'm', 'length'),
+  F('Height of the Burj Khalifa', 828, 'm', 'length'),
+  F('Length of the River Nile', 6650, 'km', 'length'),
+  F('Diameter of the Earth', 12742, 'km', 'length'),
+  F('Depth of the Mariana Trench', 10935, 'm', 'length'),
+  F('Length of an adult blue whale', 25, 'm', 'length'),
+  F('Height of an adult giraffe', 5.5, 'm', 'length'),
+  F('Wingspan of a Boeing 747-400', 64.4, 'm', 'length'),
+  F('Length of a FIFA football pitch', 105, 'm', 'length'),
+  F('Width of a human hair', 70, 'µm', 'length'),
+  F('Diameter of a red blood cell', 7.5, 'µm', 'length'),
+  F('Average Earth–Moon distance', 384400, 'km', 'distance'),
+  F('Average Earth–Sun distance', 149.6e6, 'km', 'distance'),
+  F('Great-circle distance London → New York', 5570, 'km', 'distance'),
+  F('Length of a marathon', 42.195, 'km', 'distance'),
+  F('Distance light travels in one second', 299792, 'km', 'distance'),
+  F('Distance to Proxima Centauri', 4.24, 'light-years', 'distance'),
+  F('Mass of an adult African elephant bull', 6000, 'kg', 'mass'),
+  F('Mass of an adult blue whale', 150000, 'kg', 'mass'),
+  F('Mass of the Eiffel Tower', 10100, 'tonnes', 'mass'),
+  F('Maximum take-off mass of a Boeing 747-400', 396890, 'kg', 'mass'),
+  F('Mass of the Moon', 7.35e22, 'kg', 'mass'),
+  F('Mass of the Earth', 5.97e24, 'kg', 'mass'),
+  F('Mass of a honeybee', 0.1, 'g', 'mass'),
+  F('Mass of the Great Pyramid of Giza', 5.9e6, 'tonnes', 'mass'),
+  F('Mass of an adult human brain', 1.4, 'kg', 'mass'),
+  F('Population of Iceland (2024)', 384000, 'people', 'count'),
+  F('Population of the Tokyo metro area (2024)', 37e6, 'people', 'count'),
+  F('World population (2024)', 8.1e9, 'people', 'count'),
+  F('Population of Australia (2024)', 27e6, 'people', 'count'),
+  F('Population of India (2024)', 1.44e9, 'people', 'count'),
+  F('Member states of the United Nations', 193, 'countries', 'count'),
+  F('Bones in the adult human body', 206, 'bones', 'count'),
+  F('Neurons in the human brain', 86e9, 'neurons', 'count'),
+  F('Keys on a standard piano', 88, 'keys', 'count'),
+  F('Resting human heartbeats in one day', 100000, 'beats', 'count'),
+  F('Age of the universe', 13.8e9, 'years', 'time'),
+  F('Age of the Earth', 4.54e9, 'years', 'time'),
+  F('Years since the Great Pyramid was completed', 4500, 'years', 'time'),
+  F('Speed of sound in air at 20 °C', 343, 'm/s', 'speed'),
+  F('Top speed of a cheetah', 110, 'km/h', 'speed'),
+  F('Orbital speed of the ISS', 27600, 'km/h', 'speed'),
+  F('Speed of light', 299792458, 'm/s', 'speed'),
+  F('Surface temperature of the Sun', 5772, 'K', 'temperature'),
+  F('Boiling point of water at sea level', 373.15, 'K', 'temperature'),
+];
